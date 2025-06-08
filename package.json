@@ -1,0 +1,250 @@
+{
+    "name": "vscode-new",
+    "displayName": "vscode new",
+    "description": "todo",
+    "version": "0.0.1",
+    "license": "MIT",
+    "main": "./dist/extension.js",
+    "engines": {
+        "vscode": "^1.99.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "keywords": [
+        "new",
+        "create",
+        "file",
+        "folder",
+        "project"
+    ],
+    "contributes": {
+        "commands": [
+            {
+                "command": "vscode-new.run-on-editor",
+                "title": "vscode-new: Run on editor",
+                "enablement": "editorTextFocus"
+            },
+            {
+                "command": "vscode-new.run-on-explorer",
+                "title": "vscode-new: Run on explorer",
+                "enablement": "filesExplorerFocus"
+            },
+            {
+                "command": "vscode-new.accept-keep-focus",
+                "title": "vscode-new: Accept and keep context",
+                "enablement": "vscode-new.wizard.active"
+            },
+            {
+                "command": "vscode-new.accept-move-focus",
+                "title": "vscode-new: Accept and move context",
+                "enablement": "vscode-new.wizard.active"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "vscode-new.run-on-editor",
+                "key": "ctrl+shift+a",
+                "when": "editorTextFocus"
+            },
+            {
+                "command": "vscode-new.run-on-explorer",
+                "key": "ctrl+shift+a",
+                "when": "filesExplorerFocus"
+            },
+            {
+                "command": "vscode-new.accept-keep-focus",
+                "key": "ctrl+n",
+                "when": "vscode-new.wizard.active"
+            },
+            {
+                "command": "vscode-new.accept-move-focus",
+                "key": "ctrl+shift+n",
+                "when": "vscode-new.wizard.active"
+            }
+        ],
+        "menus": {
+            "explorer/context": [
+                {
+                    "command": "vscode-new.run-on-explorer",
+                    "group": "navigation@1"
+                }
+            ]
+        },
+        "configuration": {
+            "title": "vscode new",
+            "properties": {
+                "vscode-new.csharp.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable C# features"
+                },
+                "vscode-new.csharp.enableAutoInterfaceDetection": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enables interface autodetection for files with the \"I\" prefix"
+                },
+                "vscode-new.extensions": {
+                    "type": "object",
+                    "description": "Sets custom extensions configuration",
+                    "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                            "default": {
+                                "type": "string"
+                            }
+                        },
+                        "additionalProperties": {
+                            "type": "object",
+                            "properties": {
+                                "hidden": {
+                                    "type": "boolean"
+                                },
+                                "snnipet": {
+                                    "type": "string"
+                                },
+                                "vars": {
+                                    "type": "object"
+                                },
+                                "template": {
+                                    "anyOf": [
+                                        {
+                                            "type": "string"
+                                        },
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "extension": {
+                                                        "type": "string"
+                                                    },
+                                                    "template": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "extension",
+                                                    "template"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "template"
+                            ],
+                            "additionalProperties": false
+                        }
+                    }
+                }
+            }
+        },
+        "configurationDefaults": {
+            "vscode-new.extensions": {
+                "cs": {
+                    "default": "class",
+                    "class": {
+                        "template": "cs.hbs",
+                        "vars": {
+                            "csfile": {
+                                "type": "class"
+                            }
+                        }
+                    },
+                    "interface": {
+                        "template": "cs.hbs",
+                        "vars": {
+                            "csfile": {
+                                "type": "interface"
+                            }
+                        }
+                    },
+                    "record": {
+                        "template": "cs.hbs",
+                        "vars": {
+                            "csfile": {
+                                "type": "record"
+                            }
+                        }
+                    },
+                    "enum": {
+                        "template": "cs.hbs",
+                        "vars": {
+                            "csfile": {
+                                "type": "enum"
+                            }
+                        }
+                    },
+                    "struct": {
+                        "template": "cs.hbs",
+                        "vars": {
+                            "csfile": {
+                                "type": "struct"
+                            }
+                        }
+                    }
+                },
+                "ts": {
+                    "react": {
+                        "template": "ts.react.hbs"
+                    },
+                    "class": {
+                        "template": "ts.type.hbs",
+                        "vars": {
+                            "tsfile": {
+                                "type": "class"
+                            }
+                        }
+                    },
+                    "interface": {
+                        "template": "ts.type.hbs",
+                        "vars": {
+                            "tsfile": {
+                                "type": "interface"
+                            }
+                        }
+                    }
+                },
+                "go": {
+                    "empty": {
+                        "template": "go.hbs"
+                    }
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run package",
+        "compile": "npm run check-types && npm run lint && node esbuild.js",
+        "watch": "npm-run-all -p watch:*",
+        "watch:esbuild": "node esbuild.js --watch",
+        "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+        "package": "npm run check-types && npm run lint && node esbuild.js --production",
+        "compile-tests": "tsc -p . --outDir out",
+        "watch-tests": "tsc -p . -w --outDir out",
+        "pretest": "npm run compile-tests && npm run compile && npm run lint",
+        "check-types": "tsc --noEmit",
+        "lint": "eslint src --max-warnings 0",
+        "test": "vscode-test"
+    },
+    "devDependencies": {
+        "@stylistic/eslint-plugin": "^4.4.1",
+        "@types/mocha": "^10.0.10",
+        "@types/node": "20.x",
+        "@types/vscode": "^1.99.0",
+        "@typescript-eslint/eslint-plugin": "^8.31.1",
+        "@typescript-eslint/parser": "^8.31.1",
+        "@vscode/test-cli": "^0.0.10",
+        "@vscode/test-electron": "^2.5.2",
+        "esbuild": "^0.25.3",
+        "eslint": "^9.25.1",
+        "npm-run-all": "^4.1.5",
+        "typescript": "^5.8.3"
+    },
+    "dependencies": {
+        "glob": "^11.0.2",
+        "handlebars": "^4.7.8"
+    }
+}

@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"module": "Node18",
+		"target": "ES2022",
+		"lib": [
+			"ES2022"
+		],
+		"rootDirs": [
+            "src",
+            "tests"
+        ],
+        "paths": {
+            "@src/*": ["./src/*"],
+            "@tests/*": ["./test/*"],
+        },
+		"strict": true,
+        "sourceMap": true, // todo not work
+		"noImplicitReturns": true,
+	}
+}
