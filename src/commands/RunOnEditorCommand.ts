@@ -30,7 +30,7 @@ export class RunOnEditorCommand {
 
             const version = ctx.extension.packageJSON.version;
             const extensionId = ctx.extension.packageJSON.name;
-            const extension = vscode.extensions.getExtension("vscode-new");
+            const extension = vscode.extensions.getExtension("vscode-create");
 
             await vscode.window.showErrorMessage("eeewewewew", {
                 modal: true

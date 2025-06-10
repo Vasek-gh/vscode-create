@@ -1,5 +1,5 @@
 {
-    "name": "vscode-new",
+    "name": "vscode-create",
     "displayName": "vscode new",
     "description": "todo",
     "version": "0.0.1",
@@ -21,52 +21,52 @@
     "contributes": {
         "commands": [
             {
-                "command": "vscode-new.run-on-editor",
-                "title": "vscode-new: Run on editor",
+                "command": "vscode-create.run-on-editor",
+                "title": "vscode-create: Run on editor",
                 "enablement": "editorTextFocus"
             },
             {
-                "command": "vscode-new.run-on-explorer",
-                "title": "vscode-new: Run on explorer",
+                "command": "vscode-create.run-on-explorer",
+                "title": "vscode-create: Run on explorer",
                 "enablement": "filesExplorerFocus"
             },
             {
-                "command": "vscode-new.accept-keep-focus",
-                "title": "vscode-new: Accept and keep context",
-                "enablement": "vscode-new.wizard.active"
+                "command": "vscode-create.accept-keep-focus",
+                "title": "vscode-create: Accept and keep context",
+                "enablement": "vscode-create.wizard.active"
             },
             {
-                "command": "vscode-new.accept-move-focus",
-                "title": "vscode-new: Accept and move context",
-                "enablement": "vscode-new.wizard.active"
+                "command": "vscode-create.accept-move-focus",
+                "title": "vscode-create: Accept and move context",
+                "enablement": "vscode-create.wizard.active"
             }
         ],
         "keybindings": [
             {
-                "command": "vscode-new.run-on-editor",
+                "command": "vscode-create.run-on-editor",
                 "key": "ctrl+shift+a",
                 "when": "editorTextFocus"
             },
             {
-                "command": "vscode-new.run-on-explorer",
+                "command": "vscode-create.run-on-explorer",
                 "key": "ctrl+shift+a",
                 "when": "filesExplorerFocus"
             },
             {
-                "command": "vscode-new.accept-keep-focus",
+                "command": "vscode-create.accept-keep-focus",
                 "key": "ctrl+n",
-                "when": "vscode-new.wizard.active"
+                "when": "vscode-create.wizard.active"
             },
             {
-                "command": "vscode-new.accept-move-focus",
+                "command": "vscode-create.accept-move-focus",
                 "key": "ctrl+shift+n",
-                "when": "vscode-new.wizard.active"
+                "when": "vscode-create.wizard.active"
             }
         ],
         "menus": {
             "explorer/context": [
                 {
-                    "command": "vscode-new.run-on-explorer",
+                    "command": "vscode-create.run-on-explorer",
                     "group": "navigation@1"
                 }
             ]
@@ -74,17 +74,17 @@
         "configuration": {
             "title": "vscode new",
             "properties": {
-                "vscode-new.csharp.enable": {
+                "vscode-create.csharp.enable": {
                     "type": "boolean",
                     "default": true,
                     "description": "Enable C# features"
                 },
-                "vscode-new.csharp.enableAutoInterfaceDetection": {
+                "vscode-create.csharp.enableAutoInterfaceDetection": {
                     "type": "boolean",
                     "default": true,
                     "description": "Enables interface autodetection for files with the \"I\" prefix"
                 },
-                "vscode-new.extensions": {
+                "vscode-create.extensions": {
                     "type": "object",
                     "description": "Sets custom extensions configuration",
                     "additionalProperties": {
@@ -142,7 +142,7 @@
             }
         },
         "configurationDefaults": {
-            "vscode-new.extensions": {
+            "vscode-create.extensions": {
                 "cs": {
                     "default": "class",
                     "class": {

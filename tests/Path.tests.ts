@@ -52,7 +52,7 @@ suite("Path", () => {
     });
 
     function getExtensionDir(): Path {
-        const extension = vscode.extensions.getExtension("undefined_publisher.vscode-new");
+        const extension = vscode.extensions.getExtension("undefined_publisher.vscode-create");
         if (!extension) {
             assert.ok(false, `extension is emtpy: ${extension}`);
         }
