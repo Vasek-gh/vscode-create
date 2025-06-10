@@ -1,13 +1,13 @@
 import * as vscode from "vscode";
-import { Wizard } from "../services/wizard/Wizard";
+import { Wizard } from "@src/services/wizard/Wizard";
+import { Utils } from "@src/utils/Utils";
 
 export class WizardAcceptMoveFocusCommand {
     public constructor(
         ctx: vscode.ExtensionContext,
-        extensionId: string,
         wizard: Wizard,
     ) {
-        ctx.subscriptions.push(vscode.commands.registerCommand(`${extensionId}.accept-move-focus`, async () => {
+        ctx.subscriptions.push(vscode.commands.registerCommand(`${Utils.extensionId}.accept-move-focus`, async () => {
             await wizard.accept(false, false);
         }));
     }

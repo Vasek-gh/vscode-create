@@ -22,28 +22,20 @@ import { DefaultActionFactory } from "./context/DefaultActionFactory";
 */
 class Extension implements vscode.Disposable {
     private readonly logger: Logger;
-    private readonly version: string;
-    private readonly extensionId: string;
-    private readonly disposables: vscode.Disposable[];
+    private readonly disposables: vscode.Disposable[] = [];
 
     public constructor(
         extensionContext: vscode.ExtensionContext,
     ) {
-        this.version = extensionContext.extension.packageJSON.version;
-        this.extensionId = extensionContext.extension.packageJSON.name;
+        Utils.init(extensionContext);
 
-        const config = new Config(this.extensionId);
-        const loggerChannel = vscode.window.createOutputChannel(this.extensionId, { log: true });
-
-        this.disposables = [
-            loggerChannel
-        ];
-
-        this.logger = new Logger(Utils.getTypeName(this), loggerChannel);
+        this.logger = this.createLogger();
 
         try {
             this.logger.info("Initializing...");
-            this.logger.info(`Version: ${this.version}`);
+            this.logger.info(`Version: ${Utils.version}`);
+
+            const config = new Config();
 
             const fsService = this.registerService<FileSystemService, DefaultFileSystemService>(new DefaultFileSystemService());
             const fileCreator = this.registerObject<FileCreator>(new FileCreator(this.logger, extensionContext, fsService));
@@ -74,16 +66,15 @@ class Extension implements vscode.Disposable {
                 new Wizard(
                     this.logger,
                     config,
-                    this.extensionId,
                     contextBuilder,
                     fsService
                 )
             );
 
-            new RunOnEditorCommand(extensionContext, this.extensionId, this.logger, fsService, wizard);
-            new RunOnExplorerCommand(extensionContext, this.extensionId, this.logger, fsService, wizard);
-            new WizardAcceptMoveFocusCommand(extensionContext, this.extensionId, wizard);
-            new WizardAcceptKeepFocusCommand(extensionContext, this.extensionId, wizard);
+            new RunOnEditorCommand(extensionContext, this.logger, fsService, wizard);
+            new RunOnExplorerCommand(extensionContext, this.logger, fsService, wizard);
+            new WizardAcceptMoveFocusCommand(extensionContext, wizard);
+            new WizardAcceptKeepFocusCommand(extensionContext, wizard);
 
             this.logger.info("Initialization complete");
         }
@@ -99,6 +90,14 @@ class Extension implements vscode.Disposable {
         }
 
         this.logger.trace("Disposed");
+    }
+
+    private createLogger(): Logger {
+        const loggerChannel = vscode.window.createOutputChannel(Utils.extensionId, { log: true });
+
+        this.disposables.push(loggerChannel);
+
+        return new Logger(Utils.getTypeName(this), loggerChannel);
     }
 
     private registerObject<TService>(object: TService): TService {

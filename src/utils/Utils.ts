@@ -1,5 +1,16 @@
+import * as vscode from "vscode";
+
 export class Utils {
+    public static extensionId: string = "<not-set>";
+    public static extensionFullId: string = "<not-set>";
+    public static version: string = "<not-set>";
     public static templateSelector = ":";
+
+    public static init(extensionContext: vscode.ExtensionContext): void {
+        this.extensionId = extensionContext.extension.packageJSON.name;
+        this.extensionFullId = extensionContext.extension.id;
+        this.version = extensionContext.extension.packageJSON.version;
+    }
 
     public static getTypeName<T>(obj: T): string {
         if (typeof obj === "object" && obj !== null) {

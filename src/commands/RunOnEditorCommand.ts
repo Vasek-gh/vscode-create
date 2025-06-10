@@ -14,14 +14,13 @@ import { InputInfo } from "../actions/InputInfo";
 export class RunOnEditorCommand {
     public constructor(
         ctx: vscode.ExtensionContext,
-        extensionId: string,
         logger: Logger,
         fsService: FileSystemService,
         wizard: Wizard,
     ) {
         logger = logger.create(this);
 
-        ctx.subscriptions.push(vscode.commands.registerCommand(`${extensionId}.run-on-editor`, async () => {
+        ctx.subscriptions.push(vscode.commands.registerCommand(`${Utils.extensionId}.run-on-editor`, async () => {
             const editor = vscode.window.activeTextEditor;
             if (!editor) {
                 return;

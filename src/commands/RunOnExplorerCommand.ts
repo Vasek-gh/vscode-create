@@ -1,20 +1,20 @@
 import * as vscode from "vscode";
-import { Logger } from "../utils/Logger";
-import { FileSystemService } from "../fs/FileSystemService";
 import path from "path";
-import { Wizard } from "../services/wizard/Wizard";
+import { Logger } from "@src/utils/Logger";
+import { FileSystemService } from "@src/fs/FileSystemService";
+import { Wizard } from "@src/services/wizard/Wizard";
+import { Utils } from "@src/utils/Utils";
 
 export class RunOnExplorerCommand {
     public constructor(
         ctx: vscode.ExtensionContext,
-        extensionId: string,
         logger: Logger,
         fsService: FileSystemService,
         wizard: Wizard,
     ) {
         logger = logger.create(this);
 
-        ctx.subscriptions.push(vscode.commands.registerCommand(`${extensionId}.run-on-explorer`, async (file: vscode.Uri | undefined, selectedFiles: vscode.Uri[]) => {
+        ctx.subscriptions.push(vscode.commands.registerCommand(`${Utils.extensionId}.run-on-explorer`, async (file: vscode.Uri | undefined, selectedFiles: vscode.Uri[]) => {
             logger.trace("Execute");
 
             if (!file) {

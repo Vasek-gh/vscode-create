@@ -8,6 +8,7 @@ import { SuggestionAction } from "../../actions/SuggestionAction";
 import { FileSystemService } from "../../fs/FileSystemService";
 import { InputInfo } from "../../actions/InputInfo";
 import { Config } from "../../configuration/Config";
+import { Utils } from "@src/utils/Utils";
 
 interface QuickPickItem extends vscode.QuickPickItem {
     execute(ctx: Context): Promise<void>;
@@ -22,7 +23,6 @@ export class Wizard implements vscode.Disposable {
     public constructor(
         logger: Logger,
         private readonly config: Config,
-        private readonly extensionId: string,
         private readonly contextBuilder: ContextBuilder,
         private readonly fsService: FileSystemService
     ) {
@@ -216,6 +216,6 @@ export class Wizard implements vscode.Disposable {
 
     private setActiveState(value: boolean): void {
         this.logger.trace(`Set active state: ${value}`);
-        vscode.commands.executeCommand("setContext", `${this.extensionId}.wizard.active`, value);
+        vscode.commands.executeCommand("setContext", `${Utils.extensionId}.wizard.active`, value);
     }
 }

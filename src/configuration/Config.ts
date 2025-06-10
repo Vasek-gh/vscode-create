@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { ExtensionConfig } from "./ExtensionConfig";
 import { TemplateConfig } from "./TemplateConfig";
+import { Utils } from "@src/utils/Utils";
 
 type ConfigData = {
     extensions: {
@@ -16,7 +17,6 @@ export class Config {
     public root: vscode.WorkspaceConfiguration;
 
     public constructor(
-        private readonly extensionId: string,
     ) {
         this.extensions = {};
         this.root = vscode.workspace.getConfiguration();
@@ -26,13 +26,13 @@ export class Config {
 
     public reload(): void {
         this.root = vscode.workspace.getConfiguration();
-        const rootData = this.root.get<ConfigData>(this.extensionId) ?? { extensions: {} };
+        const rootData = this.root.get<ConfigData>(Utils.extensionId) ?? { extensions: {} };
 
         this.extensions = rootData.extensions;
     }
 
     public get<T>(section: string): T | undefined {
-        return this.root.get<T>(this.extensionId + "." + section);
+        return this.root.get<T>(Utils.extensionId + "." + section);
     }
 
     public getExtension(extension: string): ExtensionConfig | undefined {
