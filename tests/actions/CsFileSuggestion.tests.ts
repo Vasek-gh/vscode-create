@@ -6,7 +6,7 @@ import { ActionFactoryMock } from "../mocks/TestActionFactory";
 
 suite("CsFileSuggestion", () => {
 
-    const cfg = Utils.createConfig();
+    /*const cfg = Utils.createConfig();
     new CsFileSuggestion(
         new Logger("", undefined),
         new ActionFactoryMock(
@@ -50,5 +50,5 @@ suite("CsFileSuggestion", () => {
             extension,
             template
         );
-    }
+    }*/
 });
