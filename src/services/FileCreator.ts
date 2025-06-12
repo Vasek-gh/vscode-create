@@ -21,11 +21,11 @@ export class FileCreator {
 
     public constructor(
         logger: Logger,
-        extensionContext: vscode.ExtensionContext,
+        extension: vscode.Extension<any>,
         private readonly fsService: FileSystemService,
     ) {
         this.logger = logger.create(this);
-        this.extensionDir = new Path(extensionContext.extension.extensionUri, vscode.FileType.Directory);
+        this.extensionDir = new Path(extension.extensionUri, vscode.FileType.Directory);
 
         this.init();
     }

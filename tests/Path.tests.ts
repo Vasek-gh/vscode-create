@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import * as assert from "assert";
 import { Path } from "../src/utils/Path";
+import { TestExtension } from "./mocks/TestExtension";
 
 suite("Path", () => {
     test("File", () => {
@@ -52,7 +53,7 @@ suite("Path", () => {
     });
 
     function getExtensionDir(): Path {
-        const extension = vscode.extensions.getExtension("undefined_publisher.vscode-create");
+        const extension = vscode.extensions.getExtension(new TestExtension().id);
         if (!extension) {
             assert.ok(false, `extension is emtpy: ${extension}`);
         }

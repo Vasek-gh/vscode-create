@@ -9,26 +9,32 @@ import { Utils } from "../utils/Utils";
 import { Config } from "../configuration/Config";
 import { FileCreator } from "../services/FileCreator";
 import { InputInfo } from "../actions/InputInfo";
+import { Extension } from "../utils/Extension";
 
 
 export class RunOnEditorCommand {
     public constructor(
-        ctx: vscode.ExtensionContext,
         logger: Logger,
+        extension: Extension,
+        extensionCtx: vscode.ExtensionContext,
         fsService: FileSystemService,
         wizard: Wizard,
     ) {
         logger = logger.create(this);
 
-        ctx.subscriptions.push(vscode.commands.registerCommand(`${Utils.extensionId}.run-on-editor`, async () => {
+        extensionCtx.subscriptions.push(vscode.commands.registerCommand(`${extension.name}.run-on-editor`, async () => {
             const editor = vscode.window.activeTextEditor;
             if (!editor) {
                 return;
             }
             var path = new Path(editor.document.uri, vscode.FileType.File);
 
-            const version = ctx.extension.packageJSON.version;
-            const extensionId = ctx.extension.packageJSON.name;
+            for (const folder of vscode.workspace.workspaceFolders ?? []) {
+                console.log(folder.uri);
+            }
+
+            const version = extensionCtx.extension.packageJSON.version;
+            const extensionId = extensionCtx.extension.packageJSON.name;
             const extension = vscode.extensions.getExtension("vscode-create");
 
             await vscode.window.showErrorMessage("eeewewewew", {
@@ -125,7 +131,6 @@ export class RunOnEditorCommand {
             };
 
             const result = template(vars);
-            console.log(result);
 
             // await vscode.commands.executeCommand("revealInExplorer", path.getDirectory().uri); todo
 

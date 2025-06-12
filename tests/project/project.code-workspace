@@ -2,7 +2,22 @@
     "folders": [
         {
             "path": "Proj1"
+        },
+        {
+            "path": "Proj2"
+        },
+        {
+            "path": "CSharpProj"
         }
     ],
-    "settings": {}
+    "settings": {
+        "vscode-create.extensions": {
+            "txt": {
+                "default": "ws",
+                "ws": {
+                    "template": ""
+                }
+            }
+        }
+    }
 }

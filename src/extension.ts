@@ -16,29 +16,36 @@ import { Config } from "./configuration/Config";
 import { ActionFactory } from "./actions/ActionFactory";
 import { FileCreator } from "./services/FileCreator";
 import { DefaultActionFactory } from "./context/DefaultActionFactory";
+import { Extension } from "./utils/Extension";
 
 /**
  * Entry point of this extension
 */
-class Extension implements vscode.Disposable {
+class Host implements Extension, vscode.Disposable {
     private readonly logger: Logger;
     private readonly disposables: vscode.Disposable[] = [];
+
+    public readonly id: string;
+    public readonly name: string;
+    public readonly version: string;
 
     public constructor(
         extensionContext: vscode.ExtensionContext,
     ) {
-        Utils.init(extensionContext);
+        this.id = extensionContext.extension.id;
+        this.name = extensionContext.extension.packageJSON.name;
+        this.version = extensionContext.extension.packageJSON.version;
 
         this.logger = this.createLogger();
 
         try {
             this.logger.info("Initializing...");
-            this.logger.info(`Version: ${Utils.version}`);
+            this.logger.info(`Version: ${this.version}`);
 
-            const config = new Config();
+            const config = new Config(this);
 
             const fsService = this.registerService<FileSystemService, DefaultFileSystemService>(new DefaultFileSystemService());
-            const fileCreator = this.registerObject<FileCreator>(new FileCreator(this.logger, extensionContext, fsService));
+            const fileCreator = this.registerObject<FileCreator>(new FileCreator(this.logger, extensionContext.extension, fsService));
             const dotnetService = this.registerObject<DotnetService>(new DotnetService(this.logger));
             const actionFactory = this.registerObject<ActionFactory>(new DefaultActionFactory(this.logger, config, fsService, fileCreator));
 
@@ -65,16 +72,17 @@ class Extension implements vscode.Disposable {
             const wizard = this.registerObject<Wizard>(
                 new Wizard(
                     this.logger,
+                    this,
                     config,
                     contextBuilder,
                     fsService
                 )
             );
 
-            new RunOnEditorCommand(extensionContext, this.logger, fsService, wizard);
-            new RunOnExplorerCommand(extensionContext, this.logger, fsService, wizard);
-            new WizardAcceptMoveFocusCommand(extensionContext, wizard);
-            new WizardAcceptKeepFocusCommand(extensionContext, wizard);
+            new RunOnEditorCommand(this.logger, this, extensionContext, fsService, wizard);
+            new RunOnExplorerCommand(this.logger, this, extensionContext, fsService, wizard);
+            new WizardAcceptMoveFocusCommand(this, extensionContext, wizard);
+            new WizardAcceptKeepFocusCommand(this, extensionContext, wizard);
 
             this.logger.info("Initialization complete");
         }
@@ -93,7 +101,7 @@ class Extension implements vscode.Disposable {
     }
 
     private createLogger(): Logger {
-        const loggerChannel = vscode.window.createOutputChannel(Utils.extensionId, { log: true });
+        const loggerChannel = vscode.window.createOutputChannel(this.name, { log: true });
 
         this.disposables.push(loggerChannel);
 
@@ -126,5 +134,5 @@ class Extension implements vscode.Disposable {
 }
 
 export function activate(context: vscode.ExtensionContext): void {
-    context.subscriptions.push(new Extension(context));
+    context.subscriptions.push(new Host(context));
 }

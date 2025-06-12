@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
 import { ExtensionConfig } from "./ExtensionConfig";
 import { TemplateConfig } from "./TemplateConfig";
-import { Utils } from "@src/utils/Utils";
+import { Path } from "../utils/Path";
+import { Extension } from "../utils/Extension";
 
 type ConfigData = {
     extensions: {
@@ -9,34 +10,40 @@ type ConfigData = {
     };
 };
 
+type ExtensionsConfig = {
+    [index:string]: ExtensionConfig | undefined;
+};
+
 export class Config {
+    private root: vscode.WorkspaceConfiguration;
     private extensions: {
         [index:string]: ExtensionConfig | undefined;
     };
 
-    public root: vscode.WorkspaceConfiguration;
-
     public constructor(
+        private readonly extension: Extension
     ) {
-        this.extensions = {};
         this.root = vscode.workspace.getConfiguration();
+        this.extensions = {};
 
         this.reload();
     }
 
-    public reload(): void {
-        this.root = vscode.workspace.getConfiguration();
-        const rootData = this.root.get<ConfigData>(Utils.extensionId) ?? { extensions: {} };
+    // todo cache + onDidChangeConfiguration
+    public reload(path?: Path): void {
+        this.root = path
+            ? vscode.workspace.getConfiguration(this.extension.name, path.uri)
+            : vscode.workspace.getConfiguration(this.extension.name);
 
-        this.extensions = rootData.extensions;
+        this.extensions = this.root.get<ExtensionsConfig>("extensions") ?? {};
     }
 
     public get<T>(section: string): T | undefined {
-        return this.root.get<T>(Utils.extensionId + "." + section);
+        return this.root.get<T>(this.extension.name + "." + section);
     }
 
-    public getExtension(extension: string): ExtensionConfig | undefined {
-        return this.extensions[extension];
+    public getExtension(extension: string): ExtensionConfig {
+        return this.extensions[extension] ?? {};
     }
 
     public getExtensionTemplate(extension: string, template: string): TemplateConfig | undefined {

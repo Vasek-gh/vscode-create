@@ -9,6 +9,7 @@ import { FileSystemService } from "../../fs/FileSystemService";
 import { InputInfo } from "../../actions/InputInfo";
 import { Config } from "../../configuration/Config";
 import { Utils } from "@src/utils/Utils";
+import { Extension } from "@src/utils/Extension";
 
 interface QuickPickItem extends vscode.QuickPickItem {
     execute(ctx: Context): Promise<void>;
@@ -22,6 +23,7 @@ export class Wizard implements vscode.Disposable {
 
     public constructor(
         logger: Logger,
+        private readonly extension: Extension,
         private readonly config: Config,
         private readonly contextBuilder: ContextBuilder,
         private readonly fsService: FileSystemService
@@ -37,7 +39,7 @@ export class Wizard implements vscode.Disposable {
     public async show(path: Path): Promise<void> {
         this.logger.trace(`Show path: ${path}`);
 
-        this.config.reload();
+        this.config.reload(path);
 
         if (this.ctx) {
             this.logger.warn("Showing when have context");
@@ -216,6 +218,6 @@ export class Wizard implements vscode.Disposable {
 
     private setActiveState(value: boolean): void {
         this.logger.trace(`Set active state: ${value}`);
-        vscode.commands.executeCommand("setContext", `${Utils.extensionId}.wizard.active`, value);
+        vscode.commands.executeCommand("setContext", `${this.extension.name}.wizard.active`, value);
     }
 }

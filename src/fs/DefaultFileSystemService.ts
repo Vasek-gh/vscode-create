@@ -13,6 +13,7 @@ export class DefaultFileSystemService implements FileSystemService {
     }
 
     public getRootDirectory(path: Path): Path | undefined {
+        // todo getWorkspaceFolder
         const ctxWorkspaceFolders = vscode.workspace.workspaceFolders?.filter(
             wf => path.uri.path.startsWith(wf.uri.path)
         ) ?? [];

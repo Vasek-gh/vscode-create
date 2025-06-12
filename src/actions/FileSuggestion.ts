@@ -103,7 +103,7 @@ export class FileSuggestion extends BaseAction implements SuggestionAction {
             return [];
         }
 
-        const config = this.config.getExtension(input.extension) ?? {};
+        const config = this.config.getExtension(input.extension);
         const templates = Object.entries(config)
             .filter(e => {
                 return typeof e[1] === "object";

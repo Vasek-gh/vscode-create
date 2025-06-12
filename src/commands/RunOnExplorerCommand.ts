@@ -3,18 +3,19 @@ import path from "path";
 import { Logger } from "@src/utils/Logger";
 import { FileSystemService } from "@src/fs/FileSystemService";
 import { Wizard } from "@src/services/wizard/Wizard";
-import { Utils } from "@src/utils/Utils";
+import { Extension } from "@src/utils/Extension";
 
 export class RunOnExplorerCommand {
     public constructor(
-        ctx: vscode.ExtensionContext,
         logger: Logger,
+        extension: Extension,
+        extensionCtx: vscode.ExtensionContext,
         fsService: FileSystemService,
         wizard: Wizard,
     ) {
         logger = logger.create(this);
 
-        ctx.subscriptions.push(vscode.commands.registerCommand(`${Utils.extensionId}.run-on-explorer`, async (file: vscode.Uri | undefined, selectedFiles: vscode.Uri[]) => {
+        extensionCtx.subscriptions.push(vscode.commands.registerCommand(`${extension.name}.run-on-explorer`, async (file: vscode.Uri | undefined, selectedFiles: vscode.Uri[]) => {
             logger.trace("Execute");
 
             if (!file) {

@@ -1,0 +1,10 @@
+{
+    "vscode-create.extensions": {
+        "txt": {
+            "default": "proj2",
+            "proj2": {
+                "template": ""
+            }
+        }
+    }
+}

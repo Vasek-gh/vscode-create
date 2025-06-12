@@ -1,12 +1,12 @@
 import * as assert from "assert";
-import { CsFileSuggestion } from "@src/services/csharp/CsFileSuggestion";
-import { Logger } from "@src/utils/Logger";
-import { Utils } from "../Utils";
+import { CsFileSuggestion } from "../../src/services/csharp/CsFileSuggestion";
+import { Logger } from "../../src/utils/Logger";
+import { TestsUtils } from "../TestsUtils";
 import { ActionFactoryMock } from "../mocks/TestActionFactory";
-
+/*
 suite("CsFileSuggestion", () => {
 
-    /*const cfg = Utils.createConfig();
+    const cfg = Utils.createConfig();
     new CsFileSuggestion(
         new Logger("", undefined),
         new ActionFactoryMock(
@@ -50,5 +50,6 @@ suite("CsFileSuggestion", () => {
             extension,
             template
         );
-    }*/
+    }
 });
+*/
