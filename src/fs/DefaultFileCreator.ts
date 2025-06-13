@@ -4,16 +4,18 @@ import Handlebars, { Exception } from "handlebars";
 import { Path } from "../utils/Path";
 import { Logger } from "../utils/Logger";
 import { TemplateConfig } from "../configuration/TemplateConfig";
-import { FileSystemService } from "../fs/FileSystemService";
+import { FileSystemService } from "./FileSystemService";
 import { Context } from "../context/Context";
 import { TemplateItemConfig } from "../configuration/TemplateItemConfig";
+import { FileCreator } from "./FileCreator";
+import { Extension } from "@src/utils/Extension";
 
 interface FileInfo {
     filename: string;
     template: string;
 }
 
-export class FileCreator {
+export class DefaultFileCreator implements FileCreator {
     public static readonly templateRawStrStart: string = ">>";
 
     private readonly logger: Logger;
@@ -21,11 +23,11 @@ export class FileCreator {
 
     public constructor(
         logger: Logger,
-        extension: vscode.Extension<any>,
+        extension: Extension,
         private readonly fsService: FileSystemService,
     ) {
         this.logger = logger.create(this);
-        this.extensionDir = new Path(extension.extensionUri, vscode.FileType.Directory);
+        this.extensionDir = extension.extensionDir;
 
         this.init();
     }
@@ -151,7 +153,7 @@ export class FileCreator {
             return "";
         }
 
-        if (template.startsWith(FileCreator.templateRawStrStart)) {
+        if (template.startsWith(DefaultFileCreator.templateRawStrStart)) {
             return this.getTemplateBodyAsRawStr(template);
         }
 
@@ -170,7 +172,7 @@ export class FileCreator {
     }
 
     private getTemplateBodyAsRawStr(template: string): string {
-        return template.substring(FileCreator.templateRawStrStart.length);
+        return template.substring(DefaultFileCreator.templateRawStrStart.length);
     }
 
     private async readFile(file?: Path): Promise<string | undefined> {

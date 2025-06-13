@@ -1,5 +1,5 @@
 import * as cp from "child_process";
-import { Logger } from "../utils/Logger";
+import { Logger } from "./Logger";
 
 export class Shell {
     public constructor(

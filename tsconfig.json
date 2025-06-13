@@ -11,7 +11,7 @@
         ],
         "paths": {
             "@src/*": ["./src/*"],
-            "@tests/*": ["./test/*"],
+            "@tests/*": ["./tests/*"],
         },
 		"strict": true,
         "sourceMap": true, // todo not work

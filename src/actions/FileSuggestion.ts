@@ -1,12 +1,12 @@
-import { BaseAction } from "./BaseAction";
-import { SuggestionAction } from "./SuggestionAction";
-import { Context } from "../context/Context";
-import { Logger } from "../utils/Logger";
+import { Logger } from "@src/utils/Logger";
+import { Context } from "@src/context/Context";
+import { Config } from "@src/configuration/Config";
+import { TemplateConfig } from "@src/configuration/TemplateConfig";
+import { FileCreator } from "@src/fs/FileCreator";
 import { InputInfo } from "./InputInfo";
+import { BaseAction } from "./BaseAction";
 import { CommandAction } from "./CommandAction";
-import { Config } from "../configuration/Config";
-import { TemplateConfig } from "../configuration/TemplateConfig";
-import { FileCreator } from "../services/FileCreator";
+import { SuggestionAction } from "./SuggestionAction";
 
 class FileTemplateInfo {
     public constructor(
@@ -31,6 +31,8 @@ export class FileSuggestion extends BaseAction implements SuggestionAction {
 
         this.logger = logger.create(this);
         this.templates = [];
+
+        this.invalidate();
     }
 
     public execute(ctx: Context): Promise<void> {
@@ -52,8 +54,10 @@ export class FileSuggestion extends BaseAction implements SuggestionAction {
     }
 
     public applyInput(input: InputInfo): void {
+        this.invalidate();
         if (!input.name) {
             this.logger.warn("Input has not file name");
+            return;
         }
 
         this.filename = input.getFilename();
@@ -96,6 +100,14 @@ export class FileSuggestion extends BaseAction implements SuggestionAction {
         }
 
         return result;
+    }
+
+    private invalidate(): void {
+        this.value = "<invalid>";
+        this.description = "<invalid>";
+        this.filename = undefined;
+        this.template = undefined;
+        this.templates = [];
     }
 
     private getTemplates(input: InputInfo): FileTemplateInfo[] {

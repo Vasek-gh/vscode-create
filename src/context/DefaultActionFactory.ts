@@ -3,7 +3,7 @@ import { Logger } from "@src/utils/Logger";
 import { FileSuggestion } from "@src/actions/FileSuggestion";
 import { FolderSuggestion } from "@src/actions/FolderSuggestion";
 import { Config } from "@src/configuration/Config";
-import { FileCreator } from "@src/services/FileCreator";
+import { FileCreator } from "@src/fs/FileCreator";
 
 export class DefaultActionFactory {
     public constructor(

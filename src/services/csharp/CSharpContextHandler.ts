@@ -54,14 +54,16 @@ interface CsFilesInfo {
 
 export class CSharpContextHandler implements ContextHandler {
     private readonly logger: Logger;
+    private readonly config: CSharpConfig;
 
     public constructor(
         logger: Logger,
-        private readonly config: Config,
+        config: Config,
         private readonly fsService: FileSystemService,
         private readonly actionFactory: ActionFactory,
     ) {
         this.logger = logger.create(this);
+        this.config = new CSharpConfig(config);
     }
 
     public dispose(): void {
@@ -73,8 +75,7 @@ export class CSharpContextHandler implements ContextHandler {
     }
 
     public async handle(ctx: Context): Promise<void> {
-        const cfg = this.config.get<CSharpConfig>("csharp");
-        if (cfg?.enable !== true) {
+        if (!this.config.enableAll.get()) {
             return;
         }
 

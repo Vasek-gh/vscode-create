@@ -1,14 +1,7 @@
 import * as vscode from "vscode";
 import { ExtensionConfig } from "./ExtensionConfig";
-import { TemplateConfig } from "./TemplateConfig";
-import { Path } from "../utils/Path";
-import { Extension } from "../utils/Extension";
-
-type ConfigData = {
-    extensions: {
-        [index:string]: ExtensionConfig | undefined;
-    };
-};
+import { Path } from "@src/utils/Path";
+import { Extension } from "@src/utils/Extension";
 
 type ExtensionsConfig = {
     [index:string]: ExtensionConfig | undefined;
@@ -39,14 +32,10 @@ export class Config {
     }
 
     public get<T>(section: string): T | undefined {
-        return this.root.get<T>(this.extension.name + "." + section);
+        return this.root.get<T>(section);
     }
 
     public getExtension(extension: string): ExtensionConfig {
         return this.extensions[extension] ?? {};
-    }
-
-    public getExtensionTemplate(extension: string, template: string): TemplateConfig | undefined {
-        return this.extensions[extension]?.[template];
     }
 }

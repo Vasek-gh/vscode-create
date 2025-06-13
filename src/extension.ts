@@ -14,9 +14,11 @@ import { WizardAcceptMoveFocusCommand } from "./commands/WizardAcceptMoveFocusCo
 import { WizardAcceptKeepFocusCommand } from "./commands/WizardAcceptKeepFocusCommand";
 import { Config } from "./configuration/Config";
 import { ActionFactory } from "./actions/ActionFactory";
-import { FileCreator } from "./services/FileCreator";
+import { DefaultFileCreator } from "./fs/DefaultFileCreator";
 import { DefaultActionFactory } from "./context/DefaultActionFactory";
 import { Extension } from "./utils/Extension";
+import { FileCreator } from "./fs/FileCreator";
+import { Path } from "./utils/Path";
 
 /**
  * Entry point of this extension
@@ -28,6 +30,7 @@ class Host implements Extension, vscode.Disposable {
     public readonly id: string;
     public readonly name: string;
     public readonly version: string;
+    public readonly extensionDir: Path;
 
     public constructor(
         extensionContext: vscode.ExtensionContext,
@@ -35,6 +38,7 @@ class Host implements Extension, vscode.Disposable {
         this.id = extensionContext.extension.id;
         this.name = extensionContext.extension.packageJSON.name;
         this.version = extensionContext.extension.packageJSON.version;
+        this.extensionDir = new Path(extensionContext.extension.extensionUri, vscode.FileType.Directory);
 
         this.logger = this.createLogger();
 
@@ -44,12 +48,20 @@ class Host implements Extension, vscode.Disposable {
 
             const config = new Config(this);
 
-            const fsService = this.registerService<FileSystemService, DefaultFileSystemService>(new DefaultFileSystemService());
-            const fileCreator = this.registerObject<FileCreator>(new FileCreator(this.logger, extensionContext.extension, fsService));
-            const dotnetService = this.registerObject<DotnetService>(new DotnetService(this.logger));
-            const actionFactory = this.registerObject<ActionFactory>(new DefaultActionFactory(this.logger, config, fsService, fileCreator));
+            const fsService = this.registerObject<FileSystemService>(
+                new DefaultFileSystemService()
+            );
+            const fileCreator = this.registerObject<FileCreator>(
+                new DefaultFileCreator(this.logger, this, fsService)
+            );
+            const dotnetService = this.registerObject<DotnetService>(
+                new DotnetService(this.logger)
+            );
+            const actionFactory = this.registerObject<ActionFactory>(
+                new DefaultActionFactory(this.logger, config, fsService, fileCreator)
+            );
 
-            const csharpContextHandler = this.registerService<ContextHandler, CSharpContextHandler>(
+            const csharpContextHandler = this.registerObject<ContextHandler>(
                 new CSharpContextHandler(
                     this.logger,
                     config,

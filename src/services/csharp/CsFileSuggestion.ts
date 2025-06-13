@@ -5,8 +5,8 @@ import { Context } from "../../context/Context";
 import { Logger } from "../../utils/Logger";
 import { InputInfo } from "../../actions/InputInfo";
 import { CommandAction } from "../../actions/CommandAction";
-import { Config } from "../../configuration/Config";
 import { ActionFactory } from "../../actions/ActionFactory";
+import { CSharpConfig } from "./CSharpConfig";
 
 export class CsFileSuggestion extends BaseAction implements SuggestionAction {
     private readonly logger: Logger;
@@ -17,7 +17,7 @@ export class CsFileSuggestion extends BaseAction implements SuggestionAction {
     public constructor(
         logger: Logger,
         actionFactory: ActionFactory,
-        private readonly config: Config,
+        private readonly config: CSharpConfig,
     ) {
         super("", "", undefined);
 

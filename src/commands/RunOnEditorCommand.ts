@@ -7,7 +7,6 @@ import { Shell } from "../utils/Shell";
 import { Wizard } from "../services/wizard/Wizard";
 import { Utils } from "../utils/Utils";
 import { Config } from "../configuration/Config";
-import { FileCreator } from "../services/FileCreator";
 import { InputInfo } from "../actions/InputInfo";
 import { Extension } from "../utils/Extension";
 

@@ -15,7 +15,30 @@
             "txt": {
                 "default": "ws",
                 "ws": {
-                    "template": ""
+                    "template": "unit-test"
+                }
+            },
+            "fstu": {
+                "template1": {
+                    "template": "template1"
+                },
+                "template2": {
+                    "template": "template2"
+                },
+                "_template3": {
+                    "template": "template3"
+                },
+                "temp4": {
+                    "template": "template4"
+                }
+            },
+            "fstd": {
+                "default": "template2",
+                "template1": {
+                    "template": "template1"
+                },
+                "template2": {
+                    "template": "template2"
                 }
             }
         }

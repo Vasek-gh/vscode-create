@@ -21,4 +21,8 @@ export class Utils {
             return map;
         }, new Map<TKey, T[]>());
     }
+
+    public static sectionName(name: string, base?: string): string {
+        return base ? `${base}.${name}` : name;
+    }
 }

@@ -1,12 +1,13 @@
 import * as vscode from "vscode";
 import * as assert from "assert";
 import { TestsUtils } from "./TestsUtils";
-import { Config } from "../src/configuration/Config";
-import { TestExtension } from "./mocks/TestExtension";
-import { Path } from "../src/utils/Path";
+import { Config } from "@src/configuration/Config";
+import { ExtensionMock } from "./mocks/ExtensionMock";
+import { Path } from "@src/utils/Path";
 
 suite("Config", () => {
-    const config = new Config(new TestExtension());
+    const extension = new ExtensionMock();
+    const config = new Config(extension);
 
     test("Reload on empty", () => {
         config.reload(undefined);
@@ -39,5 +40,25 @@ suite("Config", () => {
         TestsUtils.assertIfNull(proj2ExtCfg["ws"]?.template);
         TestsUtils.assertIfNull(proj2ExtCfg["proj2"]?.template);
         TestsUtils.assertIfNotNull(proj2ExtCfg["proj1"]?.template);
+    });
+
+    test("Change apply after reload", async () => {
+        config.reload(undefined);
+
+        const beforeChangeValue = TestsUtils.assertIfNull(config.getExtension("txt")["ws"]?.template);
+
+        const vsConfig = vscode.workspace.getConfiguration(extension.name);
+        const vsConfigSection = vsConfig.inspect("extensions")?.workspaceValue as any;
+        vsConfigSection.txt.ws.template += "qwerty";
+        await vsConfig.update("extensions", vsConfigSection, vscode.ConfigurationTarget.Workspace);
+
+        const afterChangeValue = TestsUtils.assertIfNull(config.getExtension("txt")["ws"]?.template);
+
+        config.reload(undefined);
+
+        const afterReloadValue = TestsUtils.assertIfNull(config.getExtension("txt")["ws"]?.template);
+
+        assert.strictEqual(afterChangeValue, beforeChangeValue);
+        assert.notStrictEqual(afterReloadValue, beforeChangeValue);
     });
 });
