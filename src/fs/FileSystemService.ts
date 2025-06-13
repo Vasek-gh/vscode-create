@@ -8,8 +8,15 @@ export interface FileSystemService {
      */
     path(uri: vscode.Uri): Promise<Path>;
 
-    // todo kill
-    getFiles(path: Path, includeDirectories: boolean): Promise<Path[]>;
+    /**
+     * todo kill
+     */
+    exists(path: Path): Promise<boolean>;
+
+    /**
+     * Return path status
+     */
+    stat(path: Path): Promise<vscode.FileStat | undefined>;
 
     /**
      * Return workspace root directory for given path
@@ -22,12 +29,12 @@ export interface FileSystemService {
     findFiles(path: Path, pattern: string, mode: SearchMode): Promise<Path[]>;
 
     /**
-     *
+     * todo
      */
     readTextFile(path: Path): Promise<string>;
 
     /**
-     * Create Path object from vscode.Uri
+     * todo
      */
-    createDir(Path: Path): Promise<void>;
+    createDir(path: Path): Promise<void>;
 }

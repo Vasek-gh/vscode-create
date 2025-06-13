@@ -6,43 +6,48 @@ import { readFileSync, readFile } from "fs";
 
 // todo check virual fs
 export class DefaultFileSystemService implements FileSystemService {
+    private readonly fileNotFound = vscode.FileSystemError.FileNotFound("dummy");
+
     public async path(uri: vscode.Uri): Promise<Path> {
         const fileStat = await vscode.workspace.fs.stat(uri);
 
         return new Path(uri, fileStat.type);
     }
 
-    public getRootDirectory(path: Path): Path | undefined {
-        // todo getWorkspaceFolder
-        const ctxWorkspaceFolders = vscode.workspace.workspaceFolders?.filter(
-            wf => path.uri.path.startsWith(wf.uri.path)
-        ) ?? [];
+    public async exists(path: Path): Promise<boolean> {
+        try {
+            const stat = await vscode.workspace.fs.stat(path.uri);
+        }
+        catch (e: any) {
+            if (e instanceof vscode.FileSystemError && (e as vscode.FileSystemError).code === this.fileNotFound.code) {
+                return false;
+            }
 
-        // we are somewhere beyond the observable universe
-        if (ctxWorkspaceFolders.length === 0) {
-            return undefined;
+            throw e;
         }
 
-        // if there are many results, we take the one closest to the current one
-        const maxUri = ctxWorkspaceFolders.reduce((a, b) => (a.uri.path.length > b.uri.path.length ? a : b)).uri;
-
-        return new Path(
-            maxUri,
-            vscode.FileType.Directory
-        );
+        return true;
     }
 
-    public async getFiles(path: Path, includeDirectories: boolean): Promise<Path[]> {
-        const dir = path.getDirectory();
-        const dirItems = await vscode.workspace.fs.readDirectory(dir.uri);
+    public async stat(path: Path): Promise<vscode.FileStat | undefined> {
+        try {
+            return await vscode.workspace.fs.stat(path.uri);
+        }
+        catch (e: any) {
+            if (e instanceof vscode.FileSystemError && (e as vscode.FileSystemError).code === this.fileNotFound.code) {
+                return undefined;
+            }
 
-        return dirItems
-            .filter(i =>
-                i[1] === vscode.FileType.File
-                || i[1] === vscode.FileType.SymbolicLink
-                || (includeDirectories && i[1] === vscode.FileType.Directory)
-            )
-            .map(i => new Path(vscode.Uri.joinPath(dir.uri, i[0]), i[1]));
+            throw e;
+        }
+    }
+
+    public getRootDirectory(path: Path): Path | undefined {
+        const wsFolder = vscode.workspace.getWorkspaceFolder(path.uri);
+
+        return wsFolder === undefined
+            ? undefined
+            : new Path(wsFolder.uri, vscode.FileType.Directory);
     }
 
     // todo убрать поиск циклом, можно создавать паттерн с родительскими папками

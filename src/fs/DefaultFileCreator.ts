@@ -72,7 +72,7 @@ export class DefaultFileCreator implements FileCreator {
 
         const result: FileInfo[] = [];
         const basefilename: string = file.getFileName(true);
-        const items = template.template as TemplateItemConfig[];
+        const items = template.template;
         for (const item of items) {
             if (!item.extension) {
                 continue;

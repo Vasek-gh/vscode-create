@@ -28,6 +28,27 @@ export class RunOnEditorCommand {
             }
             var path = new Path(editor.document.uri, vscode.FileType.File);
 
+            const wsRoot1 = fsService.getRootDirectory(path);
+            const wsRoot2 = fsService.getRootDirectory(path.getParentDirectory());
+            const wsRoot3 = fsService.getRootDirectory(path.getParentDirectory().getParentDirectory().getParentDirectory());
+
+            const ex = await fsService.exists(path.getDirectory().appendFile("qwerty.txt"));
+
+            const wsEdit = new vscode.WorkspaceEdit();
+            wsEdit.createFile(path.getDirectory().appendFile("qwerty.txt").uri, {}, {
+                label: "qqq",
+                needsConfirmation: true,
+            });
+
+            try {
+                await vscode.workspace.applyEdit(wsEdit);
+            }
+            catch (e) {
+                console.log(e);
+            }
+
+            return;
+
             for (const folder of vscode.workspace.workspaceFolders ?? []) {
                 console.log(folder.uri);
             }
