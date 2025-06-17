@@ -1,22 +1,17 @@
 import * as vscode from "vscode";
 import { SearchMode } from "./SearchMode";
-import { Path } from "../utils/Path";
+import { Path } from "@src/utils/Path";
 
 export interface FileSystemService {
     /**
      * Create Path object from vscode.Uri
      */
-    path(uri: vscode.Uri): Promise<Path>;
-
-    /**
-     * todo kill
-     */
-    exists(path: Path): Promise<boolean>;
+    getPath(uri: vscode.Uri): Promise<Path>;
 
     /**
      * Return path status
      */
-    stat(path: Path): Promise<vscode.FileStat | undefined>;
+    getStat(path: Path): Promise<vscode.FileStat | undefined>;
 
     /**
      * Return workspace root directory for given path
@@ -31,7 +26,7 @@ export interface FileSystemService {
     /**
      * todo
      */
-    readTextFile(path: Path): Promise<string>;
+    readTextFile(path: Path): Promise<string | undefined>;
 
     /**
      * todo

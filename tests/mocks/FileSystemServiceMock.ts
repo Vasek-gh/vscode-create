@@ -9,16 +9,12 @@ export class FileSystemServiceMock implements FileSystemService {
     ) {
     }
 
-    public path(uri: Uri): Promise<Path> {
-        return this.fsService.path(uri);
+    public getPath(uri: Uri): Promise<Path> {
+        return this.fsService.getPath(uri);
     }
 
-    public exists(path: Path): Promise<boolean> {
-        return this.fsService.exists(path);
-    }
-
-    public stat(path: Path): Promise<FileStat | undefined> {
-        return this.fsService.stat(path);
+    public getStat(path: Path): Promise<FileStat | undefined> {
+        return this.fsService.getStat(path);
     }
 
     public getRootDirectory(path: Path): Path | undefined {
@@ -29,7 +25,7 @@ export class FileSystemServiceMock implements FileSystemService {
         return this.fsService.findFiles(path, pattern, mode);
     }
 
-    public readTextFile(path: Path): Promise<string> {
+    public readTextFile(path: Path): Promise<string | undefined> {
         return this.fsService.readTextFile(path);
     }
 

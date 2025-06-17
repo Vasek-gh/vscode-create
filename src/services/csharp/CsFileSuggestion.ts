@@ -7,6 +7,7 @@ import { InputInfo } from "../../actions/InputInfo";
 import { CommandAction } from "../../actions/CommandAction";
 import { ActionFactory } from "../../actions/ActionFactory";
 import { CSharpConfig } from "./CSharpConfig";
+import { Path } from "@src/utils/Path";
 
 export class CsFileSuggestion extends BaseAction implements SuggestionAction {
     private readonly logger: Logger;
@@ -25,7 +26,7 @@ export class CsFileSuggestion extends BaseAction implements SuggestionAction {
         this.genericSuggestion = actionFactory.createFileSuggestion();
     }
 
-    public execute(ctx: Context): Promise<void> {
+    public execute(ctx: Context): Promise<Path | undefined> {
         return this.genericSuggestion.execute(ctx);
     }
 

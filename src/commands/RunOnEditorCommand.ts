@@ -28,20 +28,28 @@ export class RunOnEditorCommand {
             }
             var path = new Path(editor.document.uri, vscode.FileType.File);
 
+
+            await vscode.window.showWarningMessage("File exists. Overwrite?", {
+                modal: true,
+                detail: "These files will be overwritten:\n    qqq.txt\n    nnn.txt"
+            }, "Overwrite");
+
             const wsRoot1 = fsService.getRootDirectory(path);
             const wsRoot2 = fsService.getRootDirectory(path.getParentDirectory());
             const wsRoot3 = fsService.getRootDirectory(path.getParentDirectory().getParentDirectory().getParentDirectory());
 
-            const ex = await fsService.exists(path.getDirectory().appendFile("qwerty.txt"));
+            const ex = await fsService.getStat(path.getDirectory().appendFile("qwerty.txt"));
 
             const wsEdit = new vscode.WorkspaceEdit();
-            wsEdit.createFile(path.getDirectory().appendFile("qwerty.txt").uri, {}, {
-                label: "qqq",
-                needsConfirmation: true,
+            wsEdit.createFile(path.getDirectory().appendFile("qwerty.txt").uri, {
+                //ignoreIfExists: true,
+                contents: Buffer.from("ffff")
             });
 
             try {
-                await vscode.workspace.applyEdit(wsEdit);
+                //await vscode.workspace.fs.writeFile(wsEdit);
+                const r = await vscode.workspace.applyEdit(wsEdit, { isRefactoring: false });
+                console.log(`Suc: ${r}`);
             }
             catch (e) {
                 console.log(e);
@@ -57,9 +65,7 @@ export class RunOnEditorCommand {
             const extensionId = extensionCtx.extension.packageJSON.name;
             const extension = vscode.extensions.getExtension("vscode-create");
 
-            await vscode.window.showErrorMessage("eeewewewew", {
-                modal: true
-            });
+
 
             const iii = InputInfo.parse("\\dir/dir\\dir\\");
 

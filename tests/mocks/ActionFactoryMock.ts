@@ -1,6 +1,7 @@
 import { ActionFactory } from "@src/actions/ActionFactory";
 import { CommandAction } from "@src/actions/CommandAction";
 import { SuggestionAction } from "@src/actions/SuggestionAction";
+import { Path } from "@src/utils/Path";
 
 export class ActionFactoryMock implements ActionFactory {
     public constructor(
@@ -21,8 +22,8 @@ export class ActionFactoryMock implements ActionFactory {
         return {
             value: "mock",
             description: "mock",
-            execute: (c): Promise<void> => {
-                return Promise.resolve();
+            execute: (c): Promise<Path | undefined> => {
+                return Promise.resolve(undefined);
             },
             applyInput: (): void => {
             },

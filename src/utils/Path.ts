@@ -22,7 +22,7 @@ export class Path {
     }
 
     public isDirectory(): boolean {
-        return !this.isFile();
+        return this.type === vscode.FileType.Directory;
     }
 
     public isOnDisk(): boolean {

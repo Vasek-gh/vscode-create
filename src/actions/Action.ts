@@ -1,3 +1,4 @@
+import { Path } from "@src/utils/Path";
 import { Context } from "../context/Context";
 
 export interface Action {
@@ -5,5 +6,5 @@ export interface Action {
     description: string;
     detail?: string;
 
-    execute(ctx: Context): Promise<void>;
+    execute(ctx: Context): Promise<Path | undefined>;
 }

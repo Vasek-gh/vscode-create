@@ -40,6 +40,32 @@
                 "template2": {
                     "template": "template2"
                 }
+            },
+            "fct": {
+                "nullTemplate": {
+
+                },
+                "emptyTemplate": {
+                    "template": ""
+                },
+                "proj1Template": {
+                    "template": "proj1.hbs"
+                },
+                "extensionTemplate": {
+                    "template": "go.hbs"
+                },
+                "comlexTemplate": {
+                    "template": [
+                        {
+                            "extension": "fct.zxc",
+                            "template": ">>html"
+                        },
+                        {
+                            "extension": "fct.qwe",
+                            "template": ">>css"
+                        }
+                    ]
+                },
             }
         }
     }

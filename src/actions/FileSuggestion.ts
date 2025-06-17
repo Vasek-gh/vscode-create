@@ -7,6 +7,7 @@ import { InputInfo } from "./InputInfo";
 import { BaseAction } from "./BaseAction";
 import { CommandAction } from "./CommandAction";
 import { SuggestionAction } from "./SuggestionAction";
+import { Path } from "@src/utils/Path";
 
 class FileTemplateInfo {
     public constructor(
@@ -35,18 +36,18 @@ export class FileSuggestion extends BaseAction implements SuggestionAction {
         this.invalidate();
     }
 
-    public execute(ctx: Context): Promise<void> {
+    public execute(ctx: Context): Promise<Path | undefined> {
         return this.executeWithTemplate(ctx, this.getCurrentTemplate());
     }
 
-    private async executeWithTemplate(ctx: Context, template: FileTemplateInfo | undefined): Promise<void> {
+    private async executeWithTemplate(ctx: Context, template: FileTemplateInfo | undefined): Promise<Path | undefined> {
         if (!this.filename) {
             throw new Error("File name not set");
         }
 
         this.logger.trace(`Execute filename: ${this.filename} dir: ${ctx.dir} template: ${template?.id ?? "<unset>"}`);
 
-        await this.fileCreator.create(
+        return await this.fileCreator.create(
             ctx,
             ctx.dir.appendFile(this.filename),
             template?.config
@@ -93,7 +94,7 @@ export class FileSuggestion extends BaseAction implements SuggestionAction {
             result.push({
                 value: this.filename,
                 description: this.createDescription(template),
-                execute(context: Context): Promise<void> {
+                execute(context: Context): Promise<Path | undefined> {
                     return that.executeWithTemplate(context, template);
                 }
             });

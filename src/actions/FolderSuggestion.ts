@@ -6,6 +6,7 @@ import { SuggestionAction } from "./SuggestionAction";
 import { InputInfo } from "./InputInfo";
 import { CommandAction } from "./CommandAction";
 import { FileSystemService } from "../fs/FileSystemService";
+import { Path } from "@src/utils/Path";
 
 export class FolderSuggestion extends BaseAction implements SuggestionAction {
     private folder?: string;
@@ -21,7 +22,7 @@ export class FolderSuggestion extends BaseAction implements SuggestionAction {
         this.logger = logger.create(this);
     }
 
-    public async execute(ctx: Context): Promise<void> {
+    public async execute(ctx: Context): Promise<Path | undefined> {
         if (!this.folder) {
             throw new Error("Folder is not set");
         }
@@ -32,6 +33,8 @@ export class FolderSuggestion extends BaseAction implements SuggestionAction {
 
         await this.fsService.createDir(folderPath);
         await vscode.commands.executeCommand("revealInExplorer", folderPath.uri);
+
+        return undefined;
     }
 
     public applyInput(input: InputInfo): void {

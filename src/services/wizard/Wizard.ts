@@ -12,7 +12,7 @@ import { Utils } from "@src/utils/Utils";
 import { Extension } from "@src/utils/Extension";
 
 interface QuickPickItem extends vscode.QuickPickItem {
-    execute(ctx: Context): Promise<void>;
+    execute(ctx: Context): Promise<Path | undefined>;
 }
 
 export class Wizard implements vscode.Disposable {
@@ -62,7 +62,10 @@ export class Wizard implements vscode.Disposable {
 
         if (this.quickPick.selectedItems.length > 0) {
             const selectedItem = this.quickPick.selectedItems[0] as QuickPickItem;
-            await selectedItem.execute(this.ctx);
+            const newFile = await selectedItem.execute(this.ctx);
+            if (newFile) {
+                await vscode.window.showTextDocument(newFile.uri);
+            }
         }
 
         if (hide) {
@@ -190,6 +193,7 @@ export class Wizard implements vscode.Disposable {
             return [this.ctx.getFolderAction()];
         }
 
+        // todo fix file without extnsion
         if (input.name) {
             if (input.extension) {
                 return [this.ctx.getExtensionSuggestion(input.extension)];
@@ -210,7 +214,7 @@ export class Wizard implements vscode.Disposable {
             alwaysShow: alwaysShow,
             // iconPath: iconPath, // todo
             iconPath: vscode.ThemeIcon.File,
-            execute(ctx): Promise<void> {
+            execute(ctx): Promise<Path | undefined> {
                 return action.execute(ctx);
             },
         };

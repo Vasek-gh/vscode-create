@@ -27,7 +27,7 @@ export class RunOnExplorerCommand {
                 return;
             }
 
-            var path = await fsService.path(file);
+            var path = await fsService.getPath(file);
 
             await wizard.show(path);
         }));

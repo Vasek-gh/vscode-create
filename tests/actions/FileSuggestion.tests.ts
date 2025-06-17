@@ -130,7 +130,7 @@ suite("FileSuggestion", () => {
         action.applyInput(input);
     }
 
-    function execute(directory?: string, name?: string, extension?: string, template?: string): Promise<void> {
+    function execute(directory?: string, name?: string, extension?: string, template?: string): Promise<Path | undefined> {
         apply(directory, name, extension, template);
         return action.execute(contextMock);
     }

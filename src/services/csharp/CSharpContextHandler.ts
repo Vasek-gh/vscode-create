@@ -172,7 +172,7 @@ export class CSharpContextHandler implements ContextHandler {
             description: "Create blank Directory.Build.props",
             detail: "Override default property settings",
             iconPath: undefined,
-            async execute(context: Context): Promise<void> {
+            async execute(context: Context): Promise<Path | undefined> {
                 logger.trace(`Create Directory.Build.props at ${csprojFile.getDirectory()}`);
                 return; // todo
             }

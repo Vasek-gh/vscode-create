@@ -49,7 +49,7 @@ class Host implements Extension, vscode.Disposable {
             const config = new Config(this);
 
             const fsService = this.registerObject<FileSystemService>(
-                new DefaultFileSystemService()
+                new DefaultFileSystemService(this.logger)
             );
             const fileCreator = this.registerObject<FileCreator>(
                 new DefaultFileCreator(this.logger, this, fsService)
