@@ -1,9 +1,9 @@
-import { FileSystemService } from "@src/fs/FileSystemService";
+import { FileSystemService } from "@src/services/fs/FileSystemService";
 import { Logger } from "@src/utils/Logger";
 import { FileSuggestion } from "@src/actions/FileSuggestion";
 import { FolderSuggestion } from "@src/actions/FolderSuggestion";
 import { Config } from "@src/configuration/Config";
-import { FileCreator } from "@src/fs/FileCreator";
+import { FileCreator } from "@src/services/fs/FileCreator";
 
 export class DefaultActionFactory {
     public constructor(

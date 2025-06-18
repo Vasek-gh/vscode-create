@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 import path from "path";
 import { Logger } from "@src/utils/Logger";
-import { FileSystemService } from "@src/fs/FileSystemService";
-import { Wizard } from "@src/services/wizard/Wizard";
+import { FileSystemService } from "@src/services/fs/FileSystemService";
+import { Wizard } from "@src/wizard/Wizard";
 import { Extension } from "@src/utils/Extension";
 
 export class RunOnExplorerCommand {

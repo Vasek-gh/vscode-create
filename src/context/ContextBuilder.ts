@@ -1,6 +1,6 @@
-import { FileSystemService } from "../fs/FileSystemService";
+import { FileSystemService } from "../services/fs/FileSystemService";
 import { Path } from "../utils/Path";
-import { SearchMode } from "../fs/SearchMode";
+import { SearchMode } from "../services/fs/SearchMode";
 import { FilesInfo } from "./FilesInfo";
 import { FileNameInfo } from "./FileNameInfo";
 import { Context } from "./Context";

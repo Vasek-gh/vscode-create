@@ -10,8 +10,8 @@ import { LoggerMock } from "@tests/mocks/LoggerMock";
 import { ActionFactoryMock } from "@tests/mocks/ActionFactoryMock";
 import { FilesInfo } from "@src/context/FilesInfo";
 import { TestsUtils } from "@tests/TestsUtils";
-import { DefaultFileCreator } from "@src/fs/DefaultFileCreator";
-import { FileSystemServiceMock } from "./mocks/FileSystemServiceMock";
+import { DefaultFileCreator } from "@src/services/fs/DefaultFileCreator";
+import { FileSystemServiceMock } from "../mocks/FileSystemServiceMock";
 
 suite("FileCreator", async () => {
     let contextMock: Context;

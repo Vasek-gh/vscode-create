@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { ContextHandler } from "../../context/ContextHandler";
-import { FileSystemService } from "../../fs/FileSystemService";
-import { SearchMode } from "../../fs/SearchMode";
+import { FileSystemService } from "../fs/FileSystemService";
+import { SearchMode } from "../fs/SearchMode";
 import { Logger } from "../../utils/Logger";
 import { Path } from "../../utils/Path";
 import { Context } from "../../context/Context";

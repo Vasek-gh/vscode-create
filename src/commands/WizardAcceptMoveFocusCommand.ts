@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { Wizard } from "@src/services/wizard/Wizard";
+import { Wizard } from "@src/wizard/Wizard";
 import { Extension } from "@src/utils/Extension";
 
 export class WizardAcceptMoveFocusCommand {

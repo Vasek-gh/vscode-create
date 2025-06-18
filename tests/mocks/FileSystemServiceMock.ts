@@ -1,6 +1,6 @@
-import { DefaultFileSystemService } from "@src/fs/DefaultFileSystemService";
-import { FileSystemService } from "@src/fs/FileSystemService";
-import { SearchMode } from "@src/fs/SearchMode";
+import { DefaultFileSystemService } from "@src/services/fs/DefaultFileSystemService";
+import { FileSystemService } from "@src/services/fs/FileSystemService";
+import { SearchMode } from "@src/services/fs/SearchMode";
 import { Path } from "@src/utils/Path";
 import { Uri, FileStat } from "vscode";
 import { LoggerMock } from "./LoggerMock";

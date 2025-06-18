@@ -1,10 +1,10 @@
 import * as vscode from "vscode";
 import Handlebars from "handlebars";
 import { Logger } from "../utils/Logger";
-import { FileSystemService } from "../fs/FileSystemService";
+import { FileSystemService } from "../services/fs/FileSystemService";
 import { Path } from "../utils/Path";
 import { Shell } from "../utils/Shell";
-import { Wizard } from "../services/wizard/Wizard";
+import { Wizard } from "../wizard/Wizard";
 import { Utils } from "../utils/Utils";
 import { Config } from "../configuration/Config";
 import { InputInfo } from "../actions/InputInfo";

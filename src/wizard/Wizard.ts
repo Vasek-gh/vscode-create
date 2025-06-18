@@ -1,13 +1,13 @@
 import * as vscode from "vscode";
-import { Logger } from "../../utils/Logger";
-import { Path } from "../../utils/Path";
-import { Context } from "../../context/Context";
-import { ContextBuilder } from "../../context/ContextBuilder";
-import { Action } from "../../actions/Action";
-import { SuggestionAction } from "../../actions/SuggestionAction";
-import { FileSystemService } from "../../fs/FileSystemService";
-import { InputInfo } from "../../actions/InputInfo";
-import { Config } from "../../configuration/Config";
+import { Logger } from "../utils/Logger";
+import { Path } from "../utils/Path";
+import { Context } from "../context/Context";
+import { ContextBuilder } from "../context/ContextBuilder";
+import { Action } from "../actions/Action";
+import { SuggestionAction } from "../actions/SuggestionAction";
+import { FileSystemService } from "../services/fs/FileSystemService";
+import { InputInfo } from "../actions/InputInfo";
+import { Config } from "../configuration/Config";
 import { Utils } from "@src/utils/Utils";
 import { Extension } from "@src/utils/Extension";
 

@@ -5,7 +5,7 @@ import { BaseAction } from "./BaseAction";
 import { SuggestionAction } from "./SuggestionAction";
 import { InputInfo } from "./InputInfo";
 import { CommandAction } from "./CommandAction";
-import { FileSystemService } from "../fs/FileSystemService";
+import { FileSystemService } from "../services/fs/FileSystemService";
 import { Path } from "@src/utils/Path";
 
 export class FolderSuggestion extends BaseAction implements SuggestionAction {

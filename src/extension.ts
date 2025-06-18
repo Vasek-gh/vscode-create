@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
-import { FileSystemService } from "./fs/FileSystemService";
-import { DefaultFileSystemService } from "./fs/DefaultFileSystemService";
-import { Wizard } from "./services/wizard/Wizard";
+import { FileSystemService } from "./services/fs/FileSystemService";
+import { DefaultFileSystemService } from "./services/fs/DefaultFileSystemService";
+import { Wizard } from "./wizard/Wizard";
 import { RunOnExplorerCommand } from "./commands/RunOnExplorerCommand";
 import { Logger } from "./utils/Logger";
 import { Utils } from "./utils/Utils";
@@ -14,10 +14,10 @@ import { WizardAcceptMoveFocusCommand } from "./commands/WizardAcceptMoveFocusCo
 import { WizardAcceptKeepFocusCommand } from "./commands/WizardAcceptKeepFocusCommand";
 import { Config } from "./configuration/Config";
 import { ActionFactory } from "./actions/ActionFactory";
-import { DefaultFileCreator } from "./fs/DefaultFileCreator";
+import { DefaultFileCreator } from "./services/fs/DefaultFileCreator";
 import { DefaultActionFactory } from "./context/DefaultActionFactory";
 import { Extension } from "./utils/Extension";
-import { FileCreator } from "./fs/FileCreator";
+import { FileCreator } from "./services/fs/FileCreator";
 import { Path } from "./utils/Path";
 
 /**
