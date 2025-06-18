@@ -3,6 +3,7 @@ import { InputInfo } from "../src/actions/InputInfo";
 
 suite("InputInfo", () => {
     const parseTestCases = [
+        { input: "", expected: inputInfo(undefined, undefined, undefined, undefined), filename: "" },
         { input: "dir/", expected: inputInfo("dir", undefined, undefined, undefined), filename: "dir/" },
         { input: "/dir/", expected: inputInfo("dir", undefined, undefined, undefined), filename: "dir/" },
         { input: "/dir/dir/", expected: inputInfo("dir/dir", undefined, undefined, undefined), filename: "dir/dir/" },

@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { Path } from "./Path";
 
 export class Utils {
     public static templateSelector = ":";
@@ -24,5 +25,16 @@ export class Utils {
 
     public static sectionName(name: string, base?: string): string {
         return base ? `${base}.${name}` : name;
+    }
+
+    public static getFileVars(file: Path, baseDir: Path): any {
+        const dir = file.getDirectory();
+
+        return {
+            fullName: file.getFileName(false),
+            baseName: file.getFileName(true),
+            fullDir: dir.getRelative(baseDir),
+            baseDir: dir.getRelative(dir.getParentDirectory())
+        };
     }
 }

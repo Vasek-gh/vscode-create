@@ -1,3 +1,3 @@
 export class CSharpVars {
-    public static csprojFile: string = "CsprojFile";
+    public static csproj: string = "csproj";
 }

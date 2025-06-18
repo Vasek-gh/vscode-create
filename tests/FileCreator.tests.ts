@@ -12,19 +12,11 @@ import { FilesInfo } from "@src/context/FilesInfo";
 import { TestsUtils } from "@tests/TestsUtils";
 import { DefaultFileCreator } from "@src/fs/DefaultFileCreator";
 import { FileSystemServiceMock } from "./mocks/FileSystemServiceMock";
-import { DefaultFileSystemService } from "@src/fs/DefaultFileSystemService";
 
-suite("FileCreator", () => {
-    const contextMock = new Context(
-        LoggerMock.instance,
-        new ActionFactoryMock(undefined, undefined),
-        TestsUtils.getProjPath("Proj1"),
-        new FilesInfo([], [], [])
-    );
+suite("FileCreator", async () => {
+    let contextMock: Context;
 
-    const fsServiceMock = new FileSystemServiceMock(
-        new DefaultFileSystemService(LoggerMock.instance)
-    );
+    const fsServiceMock = new FileSystemServiceMock();
 
     const fileCreator = new DefaultFileCreator(
         LoggerMock.instance,
@@ -37,6 +29,17 @@ suite("FileCreator", () => {
 
     suiteSetup(async () => {
         await vscode.workspace.fs.delete(proj1Dir.uri, { useTrash: false, recursive: true });
+
+        const testPath = TestsUtils.getProjPath("Proj1");
+        const wsRootDir = await TestsUtils.getWsRootDir(testPath);
+
+        contextMock = new Context(
+            LoggerMock.instance,
+            new ActionFactoryMock(undefined, undefined),
+            testPath,
+            new FilesInfo([], [], []),
+            wsRootDir
+        );
     });
 
     test("Null template create empty file", async () => {

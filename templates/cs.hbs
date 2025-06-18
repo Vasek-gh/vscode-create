@@ -1,5 +1,5 @@
 {{#if csproj}}
-namespace {{csproj.namespace}}{{replace (replace file.fullDir csproj.directory "") "/" "."}};
+namespace {{csproj.namespace}}{{replace (replace file.fullDir csproj.fullDir "") "/" "."}};
 {{else}}
 namespace {{replace file.fullDir "/" "."}};
 {{/if}}

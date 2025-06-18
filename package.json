@@ -141,9 +141,6 @@
                                 "hidden": {
                                     "type": "boolean"
                                 },
-                                "snnipet": {
-                                    "type": "string"
-                                },
                                 "vars": {
                                     "type": "object"
                                 },

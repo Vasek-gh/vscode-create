@@ -93,7 +93,11 @@ export class CSharpContextHandler implements ContextHandler {
             return;
         }
 
-        ctx.setVar(CSharpVars.csprojFile, projectFile);
+        ctx.setVar(CSharpVars.csproj, {
+            namespace: await this.getNamespace(projectFile),
+            ...Utils.getFileVars(projectFile, ctx.wsRoorDir)
+        });
+
         this.registerCommands(ctx, projectFile);
         this.registerSuggestions(ctx, projectFile);
     }
@@ -270,5 +274,19 @@ export class CSharpContextHandler implements ContextHandler {
         }
 
         return fni.name.substring(0, dotIndex);
+    }
+
+    private async getNamespace(projectFile: Path): Promise<string> {
+        const content = await this.fsService.readTextFile(projectFile);
+
+        let match: RegExpExecArray | null = null;
+        if (content) {
+            const regExp = new RegExp("<RootNamespace>(.*)<\/RootNamespace>");
+            match = regExp.exec(content);
+        }
+
+        return match !== null
+            ? match[1]
+            : projectFile.getFileName(true);
     }
 }

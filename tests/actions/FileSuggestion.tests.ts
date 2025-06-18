@@ -12,15 +12,10 @@ import { ActionFactoryMock } from "@tests/mocks/ActionFactoryMock";
 import { FilesInfo } from "@src/context/FilesInfo";
 import { TestsUtils } from "@tests/TestsUtils";
 
-suite("FileSuggestion", () => {
-    const fileCreatorMock = new FileCreatorMock();
+suite("FileSuggestion", async () => {
+    let contextMock: Context;
 
-    const contextMock = new Context(
-        LoggerMock.instance,
-        new ActionFactoryMock(undefined, undefined),
-        TestsUtils.getProjPath("Proj1"),
-        new FilesInfo([], [], [])
-    );
+    const fileCreatorMock = new FileCreatorMock();
 
     const action = new FileSuggestion(
         LoggerMock.instance,
@@ -28,8 +23,19 @@ suite("FileSuggestion", () => {
         fileCreatorMock
     );
 
-    setup(() => {
+    suiteSetup(async () => {
         fileCreatorMock.clearInvocations();
+
+        const testPath = TestsUtils.getProjPath("Proj1");
+        const wsRootDir = await TestsUtils.getWsRootDir(testPath);
+
+        contextMock = new Context(
+            LoggerMock.instance,
+            new ActionFactoryMock(undefined, undefined),
+            TestsUtils.getProjPath("Proj1"),
+            new FilesInfo([], [], []),
+            wsRootDir
+        );
     });
 
     test("Fixed template", async () => {

@@ -38,6 +38,7 @@ export class FolderSuggestion extends BaseAction implements SuggestionAction {
     }
 
     public applyInput(input: InputInfo): void {
+        this.invalidate();
         if (!input.directory || input.name) {
             this.logger.warn("Current input is not a folder");
         }
@@ -51,5 +52,12 @@ export class FolderSuggestion extends BaseAction implements SuggestionAction {
 
     public getTemplateCommands(): CommandAction[] {
         return [];
+    }
+
+    private invalidate(): void {
+        this.value = "<invalid>";
+        this.description = "<invalid>";
+        this.folder = undefined;
+        this.template = undefined;
     }
 }

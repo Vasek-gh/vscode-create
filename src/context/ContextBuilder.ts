@@ -21,11 +21,17 @@ export class ContextBuilder {
     }
 
     public async run(path: Path): Promise<Context> {
+        var wsRootDir = this.fsService.getRootDirectory(path);
+        if (!wsRootDir) {
+            throw new Error(`${path} is outside workspace`);
+        }
+
         const result = new Context(
             this.logger,
             this.actionFactory,
             path,
-            await this.getFilesInfo(path)
+            await this.getFilesInfo(path, wsRootDir),
+            wsRootDir
         );
 
         for (const handler of this.handlers) {
@@ -35,17 +41,12 @@ export class ContextBuilder {
         return result;
     }
 
-    private async getFilesInfo(path: Path): Promise<FilesInfo> {
-        var rootDir = this.fsService.getRootDirectory(path);
-        if (!rootDir) {
-            return new FilesInfo([], [], []);
-        }
-
+    private async getFilesInfo(path: Path, wsRootDir: Path): Promise<FilesInfo> {
         const currentDir = path.getDirectory();
         const currentDirBase = currentDir.getFileName();
 
-        const [baseDir, pattern] = currentDir.isSame(rootDir)
-            ? [rootDir, "{*.*,*/*.*}"]
+        const [baseDir, pattern] = currentDir.isSame(wsRootDir)
+            ? [wsRootDir, "{*.*,*/*.*}"]
             : [currentDir.getParentDirectory(), `{*,${currentDirBase}/*,${currentDirBase}/*/*}`];
 
         const allFiles = await this.fsService.findFiles(baseDir, pattern, SearchMode.Simple);

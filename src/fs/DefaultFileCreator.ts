@@ -9,6 +9,7 @@ import { FileSystemService } from "./FileSystemService";
 import { Context } from "../context/Context";
 import { FileCreator } from "./FileCreator";
 import { Extension } from "@src/utils/Extension";
+import { Utils } from "@src/utils/Utils";
 
 interface FileInfo {
     path: Path;
@@ -36,11 +37,6 @@ export class DefaultFileCreator implements FileCreator {
     public async create(ctx: Context, file: Path, template?: TemplateConfig): Promise<Path | undefined> {
         this.logger.trace(`Execute\ndir: ${ctx.path.getDirectory()}\nfile: ${file}\ntemplate: ${template ? "<set>" : "<unset>"}`);
 
-        const rootDir = this.fsService.getRootDirectory(file);
-        if (!rootDir) {
-            throw new Error(`No workspace root directory for ${file}`);
-        }
-
         const filesInfo = await this.getFilesInfo(file, template);
         if (filesInfo.length === 0) {
             throw new Error(`No valid templates for ${file}`);
@@ -62,14 +58,14 @@ export class DefaultFileCreator implements FileCreator {
 
         const vars = this.getVars(
             ctx,
-            rootDir,
+            ctx.wsRoorDir,
             file,
             template
         );
 
         const wsEdit = new vscode.WorkspaceEdit();
         for (const fileInfo of filesInfo) {
-            const fileBody = await this.getFileBody(rootDir, fileInfo, vars);
+            const fileBody = await this.getFileBody(ctx.wsRoorDir, fileInfo, vars);
             wsEdit.createFile(fileInfo.path.uri, {
                 overwrite: true,
                 contents: Buffer.from(fileBody)
@@ -129,7 +125,6 @@ export class DefaultFileCreator implements FileCreator {
         templateConfig?: TemplateConfig,
     ): any {
         const now = new Date();
-        const dir = newFileName.getDirectory();
 
         const stdVars = {
             workspaceDirectory: rootDir.fullPath,
@@ -137,12 +132,7 @@ export class DefaultFileCreator implements FileCreator {
                 utc: now.toISOString(),
                 locale: now.toLocaleString()
             },
-            file: {
-                fullName: newFileName.getFileName(false),
-                baseName: newFileName.getFileName(true),
-                fullDir: dir.getRelative(rootDir),
-                baseDir: dir.getRelative(dir.getParentDirectory())
-            }
+            file: Utils.getFileVars(newFileName, rootDir)
         };
 
         return {

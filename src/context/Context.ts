@@ -20,6 +20,7 @@ export class Context {
         actionFactory: ActionFactory,
         public readonly path: Path,
         public readonly filesInfo: FilesInfo,
+        public readonly wsRoorDir: Path,
     ) {
         this.logger = logger.create(this);
         this.states = new Map<string, unknown>();
