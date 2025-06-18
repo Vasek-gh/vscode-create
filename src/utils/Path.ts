@@ -9,6 +9,14 @@ export class Path {
     ) {
     }
 
+    public static fromDir(uri: vscode.Uri): Path {
+        return new Path(uri, vscode.FileType.Directory);
+    }
+
+    public static fromFile(uri: vscode.Uri): Path {
+        return new Path(uri, vscode.FileType.File);
+    }
+
     public get length(): number {
         return this.uri.path.length;
     }

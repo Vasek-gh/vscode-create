@@ -38,7 +38,7 @@ class Host implements Extension, vscode.Disposable {
         this.id = extensionContext.extension.id;
         this.name = extensionContext.extension.packageJSON.name;
         this.version = extensionContext.extension.packageJSON.version;
-        this.extensionDir = new Path(extensionContext.extension.extensionUri, vscode.FileType.Directory);
+        this.extensionDir = Path.fromDir(extensionContext.extension.extensionUri);
 
         this.logger = this.createLogger();
 

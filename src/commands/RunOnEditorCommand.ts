@@ -26,7 +26,7 @@ export class RunOnEditorCommand {
             if (!editor) {
                 return;
             }
-            var path = new Path(editor.document.uri, vscode.FileType.File);
+            var path = Path.fromFile(editor.document.uri);
 
 
             await vscode.window.showWarningMessage("File exists. Overwrite?", {

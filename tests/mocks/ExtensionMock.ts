@@ -16,6 +16,6 @@ export class ExtensionMock implements Extension {
             throw new Error("Extension object not found");
         }
 
-        this.extensionDir = new Path(extension.extensionUri, vscode.FileType.Directory);
+        this.extensionDir = Path.fromDir(extension.extensionUri);
     }
 }

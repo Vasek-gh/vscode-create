@@ -5,4 +5,4 @@ export interface Extension {
     name: string;
     version: string;
     extensionDir: Path;
-};
+}

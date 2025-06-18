@@ -63,6 +63,6 @@ suite("Path", () => {
             assert.ok(false, `extensionUri is emtpy: ${extensionUri}`);
         }
 
-        return new Path(extensionUri, vscode.FileType.Directory);
+        return Path.fromDir(extensionUri);
     }
 });

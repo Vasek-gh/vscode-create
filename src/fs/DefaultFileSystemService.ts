@@ -3,7 +3,6 @@ import { SearchMode } from "./SearchMode";
 import { FileSystemService } from "./FileSystemService";
 import { Path } from "@src/utils/Path";
 import { Logger } from "@src/utils/Logger";
-import { readFileSync, readFile } from "fs";
 
 // todo check virual fs
 export class DefaultFileSystemService implements FileSystemService {
@@ -34,7 +33,7 @@ export class DefaultFileSystemService implements FileSystemService {
 
         return wsFolder === undefined
             ? undefined
-            : new Path(wsFolder.uri, vscode.FileType.Directory);
+            : Path.fromDir(wsFolder.uri);
     }
 
     // todo убрать поиск циклом, можно создавать паттерн с родительскими папками

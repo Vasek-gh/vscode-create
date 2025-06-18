@@ -1,5 +1,7 @@
 import * as vscode from "vscode";
 import * as assert from "assert";
+import os from "os";
+import fs from "fs";
 import { Path } from "@src/utils/Path";
 import { Config } from "@src/configuration/Config";
 import { ExtensionMock } from "@tests/mocks/ExtensionMock";
@@ -52,9 +54,34 @@ suite("FileCreator", () => {
         assert.strictEqual(content, "proj1");
     });
 
+    test("Template from the workspace found", async () => {
+        const content = await createFile("workspace.fct", "workspaceTemplate");
+        assert.strictEqual(content, "ws");
+    });
+
     test("Template from the extension found", async () => {
         const content = await createFile("extension.fct", "extensionTemplate");
         assert.strictEqual(content, "todo");
+    });
+
+    test("Template from absolute path found", async () => {
+        const file = proj1Dir.appendFile("absolute.fct");
+        const templateFile = Path.fromDir(vscode.Uri.file(os.tmpdir())).appendFile("vscode-create.txt");
+        const testContent = "absolute path";
+
+        fs.writeFileSync(templateFile.uri.fsPath, testContent);
+
+        TestsUtils.assertIfNull(
+            await fileCreator.create(contextMock, file, {
+                template: templateFile.uri.fsPath
+            })
+        );
+
+        const content = TestsUtils.assertIfNull(
+            await fsServiceMock.readTextFile(file)
+        );
+
+        assert.strictEqual(testContent, content);
     });
 
     test("Complex template create files and return first", async () => {
@@ -93,6 +120,17 @@ suite("FileCreator", () => {
         });
     });
 
+    test("Default vars is assigned", async () => {
+        const content = await createFile("vars_test_dir/vars.fct", "varTemplate");
+        const rows = content.split(os.EOL);
+
+        assert.strictEqual(rows.length, 7);
+        assert.strictEqual(rows[3], "vars.fct");
+        assert.strictEqual(rows[4], "vars");
+        assert.strictEqual(rows[5], "Test/vars_test_dir");
+        assert.strictEqual(rows[6], "vars_test_dir");
+    });
+
     async function createFile(name: string, template: string): Promise<string> {
         const newFile = TestsUtils.assertIfNull(
             await fileCreator.create(contextMock, proj1Dir.appendFile(name), fctExtensionConfig[template])
@@ -110,7 +148,6 @@ suite("FileCreator", () => {
 
         try {
             vscode.window.showWarningMessage = (message: string, options: vscode.MessageOptions, ...items: any[]): Promise<any | undefined> => {
-                console.log(`Showmsg: ${overwrite ? items[0] : undefined}`);
                 return Promise.resolve(overwrite ? items[0] : undefined);
             };
 

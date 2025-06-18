@@ -54,6 +54,9 @@
                 "extensionTemplate": {
                     "template": "go.hbs"
                 },
+                "workspaceTemplate": {
+                    "template": "Templates/ws.hbs"
+                },
                 "comlexTemplate": {
                     "template": [
                         {
@@ -66,6 +69,9 @@
                         }
                     ]
                 },
+                "varTemplate": {
+                    "template":  "vars.hbs"
+                }
             }
         }
     }

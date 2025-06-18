@@ -23,6 +23,6 @@ export class TestsUtils {
             throw new Error(`${projDir} not found`);
         }
 
-        return new Path(uri, vscode.FileType.Directory);
+        return Path.fromDir(uri);
     }
 }

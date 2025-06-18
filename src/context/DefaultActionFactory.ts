@@ -28,4 +28,4 @@ export class DefaultActionFactory {
             this.fsService
         );
     }
-};
+}

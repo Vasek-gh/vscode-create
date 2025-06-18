@@ -1,4 +1,6 @@
 import * as vscode from "vscode";
+import fs from "fs";
+import path from "path";
 import Handlebars from "handlebars";
 import { Path } from "../utils/Path";
 import { Logger } from "../utils/Logger";
@@ -39,15 +41,10 @@ export class DefaultFileCreator implements FileCreator {
             throw new Error(`No workspace root directory for ${file}`);
         }
 
-        //console.log("1");
-
         const filesInfo = await this.getFilesInfo(file, template);
         if (filesInfo.length === 0) {
-            console.log("1.1");
             throw new Error(`No valid templates for ${file}`);
         }
-
-        //console.log("2");
 
         const existsList = filesInfo.filter(fi => fi.exists)
             .map(fi => `    ${fi.path.getFileName()}`)
@@ -58,15 +55,10 @@ export class DefaultFileCreator implements FileCreator {
                 detail: "These files will be overwritten:\n" + existsList
             }, "Overwrite");
 
-            console.log("3");
-
             if (overwriteQueryResult !== "Overwrite") {
-                console.log(`overwriteQueryResult: ${overwriteQueryResult}`)
                 return undefined;
             }
         }
-
-        //console.log("4");
 
         const vars = this.getVars(
             ctx,
@@ -84,18 +76,12 @@ export class DefaultFileCreator implements FileCreator {
             });
         }
 
-        //console.log("5");
-
         const result = await vscode.workspace.applyEdit(wsEdit, { isRefactoring: false });
         if (!result) {
             this.logger.error(`Something went wrong and the file(${file}) was not created`);
-            console.log(`create: ${file} fail`)
             return undefined;
         }
 
-        //console.log("6");
-
-        //console.log(`create: ${file} succes ${filesInfo[0].path}`);
         return filesInfo[0].path;
     }
 
@@ -192,16 +178,24 @@ export class DefaultFileCreator implements FileCreator {
             return this.getTemplateBodyAsRawStr(template);
         }
 
-        // todo check absolute path
-
-        const wsTemplatesFile = rootDir?.appendFile(".vscode", "templates", template);
-
-        const contentFromWs = await this.readFile(wsTemplatesFile);
-        if (contentFromWs) {
-            return contentFromWs;
+        if (path.isAbsolute(template)) {
+            return this.getTemplateBodyFromAbsolutePath(template);
         }
 
-        // todo check vscode.workspace.workspaceFile
+        const wsFolderTemplatesFile = rootDir.appendFile(".vscode", "templates", template);
+
+        const contentFromWsFolder = await this.readFile(wsFolderTemplatesFile);
+        if (contentFromWsFolder) {
+            return contentFromWsFolder;
+        }
+
+        if (vscode.workspace.workspaceFile) {
+            const wsTemplateFile = Path.fromFile(vscode.workspace.workspaceFile).getDirectory().appendFile(template);
+            const contentFromWs = await this.readFile(wsTemplateFile);
+            if (contentFromWs) {
+                return contentFromWs;
+            }
+        }
 
         const defaultTemplatesFile = this.extensionDir.appendFile("templates", template);
 
@@ -210,6 +204,22 @@ export class DefaultFileCreator implements FileCreator {
 
     private getTemplateBodyAsRawStr(template: string): string {
         return template.substring(DefaultFileCreator.templateRawStrStart.length);
+    }
+
+    private getTemplateBodyFromAbsolutePath(template: string): string {
+        if (!fs.existsSync(template)) {
+            return "";
+        }
+
+        try {
+            return fs.readFileSync(template, { encoding: "utf8" });
+        }
+        catch (e: any) {
+            console.log(e);
+            this.logger.exception(e);
+
+            return "";
+        }
     }
 
     private async readFile(file: Path): Promise<string | undefined> {
