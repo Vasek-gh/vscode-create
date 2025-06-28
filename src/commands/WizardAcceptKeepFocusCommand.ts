@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { Wizard } from "@src/wizard/Wizard";
-import { Extension } from "@src/utils/Extension";
+import { Extension } from "@src/tools/Extension";
 
 export class WizardAcceptKeepFocusCommand {
     public constructor(

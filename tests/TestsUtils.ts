@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import * as assert from "assert";
-import { Path } from "@src/utils/Path";
+import { Path } from "@src/shared/Path";
 
 export class TestsUtils {
     public static assertIfNull<T>(value: T | undefined | null): T {

@@ -2,26 +2,28 @@ import * as vscode from "vscode";
 import * as assert from "assert";
 import os from "os";
 import fs from "fs";
-import { Path } from "@src/utils/Path";
+import { Path } from "@src/shared/Path";
 import { Config } from "@src/configuration/Config";
 import { ExtensionMock } from "@tests/mocks/ExtensionMock";
 import { Context } from "@src/context/Context";
 import { LoggerMock } from "@tests/mocks/LoggerMock";
 import { ActionFactoryMock } from "@tests/mocks/ActionFactoryMock";
-import { FilesInfo } from "@src/context/FilesInfo";
 import { TestsUtils } from "@tests/TestsUtils";
 import { DefaultFileCreator } from "@src/services/fs/DefaultFileCreator";
-import { FileSystemServiceMock } from "../mocks/FileSystemServiceMock";
+import { DefaultFileSystemService } from "@src/services/fs/DefaultFileSystemService";
+import { ContextFilesImpl } from "@src/context/ContextFilesImpl";
 
 suite("FileCreator", async () => {
     let contextMock: Context;
 
-    const fsServiceMock = new FileSystemServiceMock();
+    const fsService = new DefaultFileSystemService(
+        LoggerMock.instance
+    );
 
     const fileCreator = new DefaultFileCreator(
         LoggerMock.instance,
         ExtensionMock.instance,
-        fsServiceMock
+        fsService
     );
 
     const proj1Dir = TestsUtils.getProjPath("Proj1").appendDir("Test");
@@ -29,16 +31,17 @@ suite("FileCreator", async () => {
 
     suiteSetup(async () => {
         await vscode.workspace.fs.delete(proj1Dir.uri, { useTrash: false, recursive: true });
-
-        const testPath = TestsUtils.getProjPath("Proj1");
-        const wsRootDir = await TestsUtils.getWsRootDir(testPath);
+        const wsRootDir = await TestsUtils.getWsRootDir(proj1Dir);
 
         contextMock = new Context(
-            LoggerMock.instance,
-            new ActionFactoryMock(undefined, undefined),
-            testPath,
-            new FilesInfo([], [], []),
-            wsRootDir
+            wsRootDir,
+            proj1Dir,
+            proj1Dir,
+            new ContextFilesImpl([]),
+            [],
+            [],
+            ActionFactoryMock.instance.createFileSuggestion(),
+            ActionFactoryMock.instance.createFolderSuggestion()
         );
     });
 
@@ -81,7 +84,7 @@ suite("FileCreator", async () => {
         );
 
         const content = TestsUtils.assertIfNull(
-            await fsServiceMock.readTextFile(file)
+            await fsService.readTextFile(file)
         );
 
         assert.strictEqual(testContent, content);
@@ -94,8 +97,8 @@ suite("FileCreator", async () => {
         );
 
         assert.strictEqual(newFile.fullPath, file.fullPath + ".zxc");
-        assert.strictEqual(await fsServiceMock.readTextFile(proj1Dir.appendFile("complext.fct.zxc")), "html");
-        assert.strictEqual(await fsServiceMock.readTextFile(proj1Dir.appendFile("complext.fct.qwe")), "css");
+        assert.strictEqual(await fsService.readTextFile(proj1Dir.appendFile("complext.fct.zxc")), "html");
+        assert.strictEqual(await fsService.readTextFile(proj1Dir.appendFile("complext.fct.qwe")), "css");
     });
 
     test("Duplicate overwrite apply", async () => {
@@ -140,7 +143,7 @@ suite("FileCreator", async () => {
         );
 
         const content = TestsUtils.assertIfNull(
-            await fsServiceMock.readTextFile(newFile)
+            await fsService.readTextFile(newFile)
         );
 
         return content;

@@ -1,46 +1,51 @@
-import { CommandAction } from "../actions/CommandAction";
-import { SuggestionAction } from "../actions/SuggestionAction";
-import { Logger } from "../utils/Logger";
-import { Path } from "../utils/Path";
-import { FilesInfo } from "./FilesInfo";
-import { ActionFactory } from "../actions/ActionFactory";
+import { CommandAction } from "@src/shared/CommandAction";
+import { SuggestionAction } from "@src/shared/SuggestionAction";
+import { Path } from "@src/shared/Path";
+import { TemplateVariables } from "./TemplateVariables";
+import { Context as SharedContext } from "@src/shared/Context";
+import { ContextFiles } from "@src/shared/ContextFiles";
 
-export class Context {
-    private readonly logger: Logger;
-    private readonly states: Map<string, unknown>;
+export class Context implements SharedContext {
     private readonly commands: CommandAction[];
     private readonly suggestions: SuggestionAction[];
+    private readonly fileSuggestion: SuggestionAction;
     private readonly folderSuggestion: SuggestionAction;
-    private readonly genericSuggestion: SuggestionAction;
+    private readonly templateVariables: TemplateVariables;
 
-    public readonly dir: Path;
+    public readonly rootDir: Path;
+    public readonly currentDir: Path;
+    public readonly currentPath: Path;
+    public readonly files: ContextFiles;
 
     public constructor(
-        logger: Logger,
-        actionFactory: ActionFactory,
-        public readonly path: Path,
-        public readonly filesInfo: FilesInfo,
-        public readonly wsRoorDir: Path,
+        rootDir: Path,
+        currentDir: Path,
+        currentPath: Path,
+        contextFiles: ContextFiles,
+        commands: CommandAction[] = [],
+        suggestions: SuggestionAction[] = [],
+        fileSuggestion: SuggestionAction,
+        folderSuggestion: SuggestionAction,
     ) {
-        this.logger = logger.create(this);
-        this.states = new Map<string, unknown>();
-        this.commands = [];
-        this.suggestions = [];
-        this.folderSuggestion = actionFactory.createFolderSuggestion();
-        this.genericSuggestion = actionFactory.createFileSuggestion();
-        this.dir = path.getDirectory();
+        this.rootDir = rootDir;
+        this.currentDir = currentDir;
+        this.currentPath = currentPath;
+        this.files = contextFiles;
+
+        this.commands = commands;
+        this.suggestions = suggestions;
+        this.fileSuggestion = fileSuggestion;
+        this.folderSuggestion = folderSuggestion;
+
+        this.templateVariables = new TemplateVariables();
     }
 
-    public getVar<T>(key: string): T | undefined {
-        return this.states.get(key) as T;
+    public setTemplateVariable(key: string, templateVariable: any): void {
+        this.templateVariables.setVariable(key, templateVariable);
     }
 
-    public setVar(key: string, state: unknown): void {
-        this.states.set(key, state);
-    }
-
-    public getVars(): { [key: string]: any } {
-        return Object.fromEntries(this.states);
+    public getTemplateVariables(): { [key: string]: any } {
+        return this.templateVariables.getVariables();
     }
 
     public getCommands(): CommandAction[] {
@@ -61,14 +66,6 @@ export class Context {
             return fromDefaults;
         }
 
-        return this.genericSuggestion;
-    }
-
-    public appendCommand(action: CommandAction): void {
-        this.commands.push(action);
-    }
-
-    public appendSuggestion(action: SuggestionAction): void {
-        this.suggestions.push(action);
+        return this.fileSuggestion;
     }
 }

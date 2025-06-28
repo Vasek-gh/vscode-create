@@ -1,13 +1,13 @@
-import { Logger } from "@src/utils/Logger";
-import { Context } from "@src/context/Context";
+import { Logger } from "@src/tools/Logger";
+import { Context } from "@src/shared/Context";
 import { Config } from "@src/configuration/Config";
 import { TemplateConfig } from "@src/configuration/TemplateConfig";
 import { FileCreator } from "@src/services/fs/FileCreator";
-import { InputInfo } from "./InputInfo";
+import { InputInfo } from "@src/shared/InputInfo";
 import { BaseAction } from "./BaseAction";
-import { CommandAction } from "./CommandAction";
-import { SuggestionAction } from "./SuggestionAction";
-import { Path } from "@src/utils/Path";
+import { CommandAction } from "@src/shared/CommandAction";
+import { SuggestionAction } from "@src/shared/SuggestionAction";
+import { Path } from "@src/shared/Path";
 
 class FileTemplateInfo {
     public constructor(
@@ -45,11 +45,11 @@ export class FileSuggestion extends BaseAction implements SuggestionAction {
             throw new Error("File name not set");
         }
 
-        this.logger.trace(`Execute filename: ${this.filename} dir: ${ctx.dir} template: ${template?.id ?? "<unset>"}`);
+        this.logger.trace(`Execute filename: ${this.filename} dir: ${ctx.currentDir} template: ${template?.id ?? "<unset>"}`);
 
         return await this.fileCreator.create(
             ctx,
-            ctx.dir.appendFile(this.filename),
+            ctx.currentDir.appendFile(this.filename),
             template?.config
         );
     }

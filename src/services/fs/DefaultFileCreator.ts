@@ -2,14 +2,15 @@ import * as vscode from "vscode";
 import fs from "fs";
 import path from "path";
 import Handlebars from "handlebars";
-import { Path } from "../../utils/Path";
-import { Logger } from "../../utils/Logger";
-import { TemplateConfig } from "../../configuration/TemplateConfig";
+import { Path } from "@src/shared/Path";
+import { Logger } from "@src/tools/Logger";
+import { TemplateConfig } from "@src/configuration/TemplateConfig";
 import { FileSystemService } from "./FileSystemService";
-import { Context } from "../../context/Context";
+import { Context } from "@src/shared/Context";
 import { FileCreator } from "./FileCreator";
-import { Extension } from "@src/utils/Extension";
-import { Utils } from "@src/utils/Utils";
+import { Extension } from "@src/tools/Extension";
+import { Utils } from "@src/tools/Utils";
+import { TemplateVariables } from "@src/context/TemplateVariables";
 
 interface FileInfo {
     path: Path;
@@ -35,7 +36,7 @@ export class DefaultFileCreator implements FileCreator {
     }
 
     public async create(ctx: Context, file: Path, template?: TemplateConfig): Promise<Path | undefined> {
-        this.logger.trace(`Execute\ndir: ${ctx.path.getDirectory()}\nfile: ${file}\ntemplate: ${template ? "<set>" : "<unset>"}`);
+        this.logger.trace(`Execute\ndir: ${ctx.currentDir}\nfile: ${file}\ntemplate: ${template ? "<set>" : "<unset>"}`);
 
         const filesInfo = await this.getFilesInfo(file, template);
         if (filesInfo.length === 0) {
@@ -45,6 +46,7 @@ export class DefaultFileCreator implements FileCreator {
         const existsList = filesInfo.filter(fi => fi.exists)
             .map(fi => `    ${fi.path.getFileName()}`)
             .join("\n");
+
         if (existsList) {
             const overwriteQueryResult = await vscode.window.showWarningMessage("File exists. Overwrite?", {
                 modal: true,
@@ -58,14 +60,14 @@ export class DefaultFileCreator implements FileCreator {
 
         const vars = this.getVars(
             ctx,
-            ctx.wsRoorDir,
+            ctx.rootDir,
             file,
             template
         );
 
         const wsEdit = new vscode.WorkspaceEdit();
         for (const fileInfo of filesInfo) {
-            const fileBody = await this.getFileBody(ctx.wsRoorDir, fileInfo, vars);
+            const fileBody = await this.getFileBody(ctx.rootDir, fileInfo, vars);
             wsEdit.createFile(fileInfo.path.uri, {
                 overwrite: true,
                 contents: Buffer.from(fileBody)
@@ -125,9 +127,9 @@ export class DefaultFileCreator implements FileCreator {
         templateConfig?: TemplateConfig,
     ): any {
         const now = new Date();
+        const contextVars = ctx.getTemplateVariables();
 
         const stdVars = {
-            workspaceDirectory: rootDir.fullPath,
             time: {
                 utc: now.toISOString(),
                 locale: now.toLocaleString()
@@ -137,7 +139,7 @@ export class DefaultFileCreator implements FileCreator {
 
         return {
             ...stdVars,
-            ...ctx.getVars(),
+            ...contextVars,
             ...templateConfig?.vars,
         };
     }
@@ -205,7 +207,6 @@ export class DefaultFileCreator implements FileCreator {
             return fs.readFileSync(template, { encoding: "utf8" });
         }
         catch (e: any) {
-            console.log(e);
             this.logger.exception(e);
 
             return "";

@@ -3,22 +3,21 @@ import { FileSystemService } from "./services/fs/FileSystemService";
 import { DefaultFileSystemService } from "./services/fs/DefaultFileSystemService";
 import { Wizard } from "./wizard/Wizard";
 import { RunOnExplorerCommand } from "./commands/RunOnExplorerCommand";
-import { Logger } from "./utils/Logger";
-import { Utils } from "./utils/Utils";
-import { CSharpContextHandler } from "./services/csharp/CSharpContextHandler";
+import { Logger } from "./tools/Logger";
+import { Utils } from "./tools/Utils";
 import { ContextBuilder } from "./context/ContextBuilder";
 import { RunOnEditorCommand } from "./commands/RunOnEditorCommand";
 import { DotnetService } from "./services/dotnet/DotnetService";
-import { ContextHandler } from "./context/ContextHandler";
 import { WizardAcceptMoveFocusCommand } from "./commands/WizardAcceptMoveFocusCommand";
 import { WizardAcceptKeepFocusCommand } from "./commands/WizardAcceptKeepFocusCommand";
 import { Config } from "./configuration/Config";
 import { ActionFactory } from "./actions/ActionFactory";
 import { DefaultFileCreator } from "./services/fs/DefaultFileCreator";
-import { DefaultActionFactory } from "./context/DefaultActionFactory";
-import { Extension } from "./utils/Extension";
+import { DefaultActionFactory } from "./actions/DefaultActionFactory";
+import { Extension } from "./tools/Extension";
 import { FileCreator } from "./services/fs/FileCreator";
-import { Path } from "./utils/Path";
+import { Path } from "./shared/Path";
+import { CSharpActionProviderFactory } from "./services/csharp/CSharpActionProviderFactory";
 
 /**
  * Entry point of this extension
@@ -61,22 +60,18 @@ class Host implements Extension, vscode.Disposable {
                 new DefaultActionFactory(this.logger, config, fsService, fileCreator)
             );
 
-            const csharpContextHandler = this.registerObject<ContextHandler>(
-                new CSharpContextHandler(
-                    this.logger,
-                    config,
-                    fsService,
-                    actionFactory
-                )
-            );
-
             const contextBuilder = this.registerObject<ContextBuilder>(
                 new ContextBuilder(
                     this.logger,
                     fsService,
                     actionFactory,
                     [
-                        csharpContextHandler
+                        new CSharpActionProviderFactory(
+                            this.logger,
+                            config,
+                            fsService,
+                            actionFactory
+                        )
                     ]
                 )
             );

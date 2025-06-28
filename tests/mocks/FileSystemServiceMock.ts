@@ -1,15 +1,16 @@
 import { DefaultFileSystemService } from "@src/services/fs/DefaultFileSystemService";
 import { FileSystemService } from "@src/services/fs/FileSystemService";
-import { SearchMode } from "@src/services/fs/SearchMode";
-import { Path } from "@src/utils/Path";
+import { Path } from "@src/shared/Path";
 import { Uri, FileStat } from "vscode";
 import { LoggerMock } from "./LoggerMock";
 
 export class FileSystemServiceMock implements FileSystemService {
+    public static readonly instance = new FileSystemServiceMock();
+
     private readonly defaultFsService: FileSystemService;
 
     public constructor() {
-        this.defaultFsService = new DefaultFileSystemService(LoggerMock.instance)
+        this.defaultFsService = new DefaultFileSystemService(LoggerMock.instance);
     }
 
     public getPath(uri: Uri): Promise<Path> {
@@ -22,10 +23,6 @@ export class FileSystemServiceMock implements FileSystemService {
 
     public getRootDirectory(path: Path): Path | undefined {
         return this.defaultFsService.getRootDirectory(path);
-    }
-
-    public findFiles(path: Path, pattern: string, mode: SearchMode): Promise<Path[]> {
-        return this.defaultFsService.findFiles(path, pattern, mode);
     }
 
     public readTextFile(path: Path): Promise<string | undefined> {

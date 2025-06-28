@@ -1,5 +1,5 @@
-import { Path } from "@src/utils/Path";
-import { Context } from "../context/Context";
+import { Path } from "@src/shared/Path";
+import { Context } from "@src/shared/Context";
 
 export interface Action {
     value: string;

@@ -1,6 +1,6 @@
-import { Path } from "@src/utils/Path";
+import { Path } from "@src/shared/Path";
 import { TemplateConfig } from "@src/configuration/TemplateConfig";
-import { Context } from "@src/context/Context";
+import { Context } from "@src/shared/Context";
 import { FileCreator } from "@src/services/fs/FileCreator";
 
 interface CreateQuery {

@@ -1,12 +1,14 @@
+import * as vscode from "vscode";
 import { FileSystemService } from "../services/fs/FileSystemService";
-import { Path } from "../utils/Path";
-import { SearchMode } from "../services/fs/SearchMode";
-import { FilesInfo } from "./FilesInfo";
-import { FileNameInfo } from "./FileNameInfo";
+import { Path } from "../shared/Path";
 import { Context } from "./Context";
-import { Logger } from "../utils/Logger";
-import { ContextHandler } from "./ContextHandler";
+import { Logger } from "../tools/Logger";
 import { ActionFactory } from "../actions/ActionFactory";
+import { ActionProviderFactory } from "@src/shared/ActionProviderFactory";
+import { ContextFilesImpl } from "./ContextFilesImpl";
+import { ActionProvider } from "@src/shared/ActionProvider";
+import { CommandAction } from "@src/shared/CommandAction";
+import { SuggestionAction } from "@src/shared/SuggestionAction";
 
 export class ContextBuilder {
     private readonly logger: Logger;
@@ -15,60 +17,80 @@ export class ContextBuilder {
         logger: Logger,
         private readonly fsService: FileSystemService,
         private readonly actionFactory: ActionFactory,
-        private readonly handlers: ContextHandler[],
+        private readonly actionProviderFactories: ActionProviderFactory[],
     ) {
         this.logger = logger.create(this);
     }
 
     public async run(path: Path): Promise<Context> {
-        var wsRootDir = this.fsService.getRootDirectory(path);
-        if (!wsRootDir) {
+        var workspaceDir = this.fsService.getRootDirectory(path);
+        if (!workspaceDir) {
             throw new Error(`${path} is outside workspace`);
         }
 
-        const result = new Context(
-            this.logger,
-            this.actionFactory,
+        const fileSuggestion = this.actionFactory.createFileSuggestion();
+        const folderSuggestion = this.actionFactory.createFolderSuggestion();
+        const contextFiles = await ContextFilesImpl.create(path, workspaceDir);
+
+        const tmpContext = new Context(
+            workspaceDir,
+            path.getDirectory(),
             path,
-            await this.getFilesInfo(path, wsRootDir),
-            wsRootDir
+            contextFiles,
+            [],
+            [],
+            fileSuggestion,
+            folderSuggestion
         );
 
-        for (const handler of this.handlers) {
-            await handler.handle(result);
+        const commands: CommandAction[] = [];
+        const suggestions: SuggestionAction[] = [];
+
+        const actionProviders = await this.getProviders(tmpContext);
+        for (const actionProvider of actionProviders) {
+            commands.push(...await actionProvider.getCommands(tmpContext));
+            suggestions.push(...await actionProvider.getSuggestions(tmpContext));
         }
 
-        return result;
-    }
-
-    private async getFilesInfo(path: Path, wsRootDir: Path): Promise<FilesInfo> {
-        const currentDir = path.getDirectory();
-        const currentDirBase = currentDir.getFileName();
-
-        const [baseDir, pattern] = currentDir.isSame(wsRootDir)
-            ? [wsRootDir, "{*.*,*/*.*}"]
-            : [currentDir.getParentDirectory(), `{*,${currentDirBase}/*,${currentDirBase}/*/*}`];
-
-        const allFiles = await this.fsService.findFiles(baseDir, pattern, SearchMode.Simple);
-        const currentFiles = allFiles.filter(p => p.getDirectory().isSame(currentDir));
-        const relatedFiles = allFiles.filter(p => !p.getDirectory().isSame(currentDir));
-
-        return new FilesInfo(
-            this.getFileNameInfos(currentFiles),
-            this.getFileNameInfos(relatedFiles),
-            []
+        return new Context(
+            tmpContext.rootDir,
+            tmpContext.currentDir,
+            tmpContext.currentPath,
+            tmpContext.files,
+            commands,
+            suggestions,
+            fileSuggestion,
+            folderSuggestion
         );
     }
 
-    private getFileNameInfos(files: Path[]): FileNameInfo[] {
-        return files.map(f => {
-            var ext = f.getExtension(true);
-            var name = f.getFileName(true);
+    private async getProviders(context: Context): Promise<ActionProvider[]> {
+        let result: ActionProvider[] = [];
+        let maxLevel = Number.MAX_VALUE;
+        const alwaysWorkingProviders: ActionProvider[] = [];
 
-            return {
-                name: name,
-                extension: ext
-            };
-        });
+        for (const actionProviderFactory of this.actionProviderFactories) {
+            const actionProvider = await actionProviderFactory.create(context);
+            if (!actionProvider) {
+                continue;
+            }
+
+            const level = actionProvider?.getLevel();
+            if (!level) {
+                alwaysWorkingProviders.push(actionProvider);
+                continue;
+            }
+
+            if (level < maxLevel) {
+                result = [];
+                maxLevel = level;
+            }
+
+            if (level === maxLevel) {
+                result.push(actionProvider);
+            }
+        }
+
+        return result.concat(alwaysWorkingProviders);
     }
 }

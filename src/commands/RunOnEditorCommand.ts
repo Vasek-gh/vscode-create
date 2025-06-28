@@ -1,15 +1,54 @@
 import * as vscode from "vscode";
+import process from "process";
 import Handlebars from "handlebars";
-import { Logger } from "../utils/Logger";
+import { Logger } from "../tools/Logger";
 import { FileSystemService } from "../services/fs/FileSystemService";
-import { Path } from "../utils/Path";
-import { Shell } from "../utils/Shell";
+import { Path } from "../shared/Path";
+import { Shell } from "../tools/Shell";
 import { Wizard } from "../wizard/Wizard";
-import { Utils } from "../utils/Utils";
+import { Utils } from "../tools/Utils";
 import { Config } from "../configuration/Config";
-import { InputInfo } from "../actions/InputInfo";
-import { Extension } from "../utils/Extension";
+import { InputInfo } from "@src/shared/InputInfo";
+import { Extension } from "../tools/Extension";
+/*
+2025-06-25 20:07:02.347 [info] [RunOnEditorCommand] 0: d:\Src\SampleProject\Test.cs
+2025-06-25 20:07:02.347 [info] [RunOnEditorCommand] 0: d:\Src\SampleProject\SampleProject.sln
+2025-06-25 20:07:02.347 [info] [RunOnEditorCommand] 0: d:\Src\SampleProject\  test.txt
+2025-06-25 20:07:02.347 [info] [RunOnEditorCommand] 1: d:\Src\SampleProject\SampleProject\SampleProject.csproj
+2025-06-25 20:07:02.347 [info] [RunOnEditorCommand] 1: d:\Src\SampleProject\SampleProject\Program1.cs
+2025-06-25 20:07:02.347 [info] [RunOnEditorCommand] 1: d:\Src\SampleProject\SampleProject\SomeFolder\Test.cs
+2025-06-25 20:07:02.347 [info] [RunOnEditorCommand] 1: d:\Src\SampleProject\SampleProject\SomeFolder\test.bat
+2025-06-25 20:07:02.347 [info] [RunOnEditorCommand] 1: d:\Src\SampleProject\SampleProject\SomeFolder\SomeClass.cs
+2025-06-25 20:07:02.347 [info] [RunOnEditorCommand] 1: d:\Src\SampleProject\SampleProject\SomeFolder\QwertyEnum.cs
+2025-06-25 20:07:02.347 [info] [RunOnEditorCommand] 1: d:\Src\SampleProject\SampleProject\SomeFolder\Q.cs
+2025-06-25 20:07:02.347 [info] [RunOnEditorCommand] 1: d:\Src\SampleProject\SampleProject\SomeFolder\IQwerty.cs
+2025-06-25 20:07:02.347 [info] [RunOnEditorCommand] 1: d:\Src\SampleProject\SampleProject\SomeFolder\Ftre.cs
+2025-06-25 20:07:02.347 [info] [RunOnEditorCommand] 1: d:\Src\SampleProject\SampleProject\SomeFolder\Cvbn.cs
+2025-06-25 20:07:02.347 [info] [RunOnEditorCommand] 1: d:\Src\SampleProject\SampleProject\SomeFolder\Class5.cs
+2025-06-25 20:07:02.348 [info] [RunOnEditorCommand] 1: d:\Src\SampleProject\SampleProject\SomeFolder\Class1.cs
 
+
+SampleProject
+SampleProject/SampleProject
+SampleProject/SampleProject/SomeFolder
+*/
+
+
+
+function getLevelPath(path: string): number {
+    if (path === "") {
+        return 0;
+    }
+
+    let result = 0;
+    for (const char of path) {
+        if (char === "/") {
+            result++;
+        }
+    }
+
+    return result + 1;
+}
 
 export class RunOnEditorCommand {
     public constructor(
@@ -27,33 +66,73 @@ export class RunOnEditorCommand {
                 return;
             }
             var path = Path.fromFile(editor.document.uri);
+            const p = process.pid;
 
-
-            await vscode.window.showWarningMessage("File exists. Overwrite?", {
-                modal: true,
-                detail: "These files will be overwritten:\n    qqq.txt\n    nnn.txt"
-            }, "Overwrite");
-
-            const wsRoot1 = fsService.getRootDirectory(path);
-            const wsRoot2 = fsService.getRootDirectory(path.getParentDirectory());
-            const wsRoot3 = fsService.getRootDirectory(path.getParentDirectory().getParentDirectory().getParentDirectory());
-
-            const ex = await fsService.getStat(path.getDirectory().appendFile("qwerty.txt"));
-
-            const wsEdit = new vscode.WorkspaceEdit();
-            wsEdit.createFile(path.getDirectory().appendFile("qwerty.txt").uri, {
-                //ignoreIfExists: true,
-                contents: Buffer.from("ffff")
-            });
-
-            try {
-                //await vscode.workspace.fs.writeFile(wsEdit);
-                const r = await vscode.workspace.applyEdit(wsEdit, { isRefactoring: false });
-                console.log(`Suc: ${r}`);
+            console.log(editor.document.uri.path);
+            for (const folder of vscode.workspace.workspaceFolders ?? []) {
+                console.log(folder.uri.path);
             }
-            catch (e) {
-                console.log(e);
+
+
+            logger.info("S3");
+            {
+                const wsRoot = await fsService.getRootDirectory(path);
+                if (!wsRoot) {
+                    throw new Error("qqq");
+                }
+
+                let levels = 2;
+                let currentDir = path.getDirectory();
+                const patterns = ["*", `${currentDir.getRelative(wsRoot)}/*/*`];
+                while (!wsRoot?.isSame(currentDir)) {
+                    patterns.push(`${currentDir.getRelative(wsRoot)}/*`);
+                    currentDir = currentDir.getParentDirectory();
+                    levels++;
+                }
+
+                let files = (await vscode.workspace.findFiles(
+                    new vscode.RelativePattern(wsRoot.uri, `{${patterns.join(",")}}`)
+                )).map(f => Path.fromFile(f));
+
+                logger.info("S3.1");
+
+                const levelArr: Array<Array<Path>> = new Array<Array<Path>>(levels);
+                for (let index = 0; index < levelArr.length; index++) {
+                    levelArr[index] = [];
+                }
+
+                /*files = files.sort((a, b) => {
+                    const aDir = a.getDirectory();
+                    const bDir = b.getDirectory();
+                    if (aDir.isSame(bDir)) {
+                        return a > b ? -1 : 1;
+                    }
+
+                    return b.length - a.length;
+                });*/
+
+                for (const file of files) {
+                    const relative = file.getDirectory().getRelative(wsRoot);
+                    const pathLevel = getLevelPath(relative);
+                    //logger.info(`${pathLevel}: ${relative}`);
+                    levelArr[pathLevel].push(file);
+                }
+
+                let index = 0;
+                for (const level of levelArr) {
+                    for (const path of level) {
+                        logger.info(`${index}: ${path}`);
+                    }
+                    index++;
+                }
+
+                if (files.length > 0) {
+                    logger.info(files[0].toString());
+                }
             }
+
+            logger.info("E3");
+
 
             return;
 

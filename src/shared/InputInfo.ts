@@ -1,11 +1,11 @@
-import { Utils } from "../utils/Utils";
+import { Utils } from "@src/tools/Utils";
 
 export class InputInfo {
     public constructor(
-        public directory?: string,
-        public name?: string,
-        public extension?: string,
-        public template?: string
+        public readonly directory?: string,
+        public readonly name?: string,
+        public readonly extension?: string,
+        public readonly template?: string
     ) {
         if (directory === "") {
             directory = undefined;

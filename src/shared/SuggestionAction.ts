@@ -1,7 +1,6 @@
-import * as vscode from "vscode";
-import { Action } from "./Action";
-import { InputInfo } from "./InputInfo";
-import { CommandAction } from "./CommandAction";
+import { Action } from "@src/shared/Action";
+import { InputInfo } from "@src/shared/InputInfo";
+import { CommandAction } from "@src/shared/CommandAction";
 
 export interface SuggestionAction extends Action {
     extension?: string;

@@ -4,5 +4,5 @@ module.exports = async ({
   _toCamelCase,
   Case
 }) => `export interface ${componentName_toPascalCase} {
-};
+}
 `;

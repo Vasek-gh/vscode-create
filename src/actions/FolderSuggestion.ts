@@ -1,12 +1,12 @@
 import * as vscode from "vscode";
-import { Context } from "../context/Context";
-import { Logger } from "../utils/Logger";
+import { Context } from "@src/shared/Context";
+import { Logger } from "@src/tools/Logger";
 import { BaseAction } from "./BaseAction";
-import { SuggestionAction } from "./SuggestionAction";
-import { InputInfo } from "./InputInfo";
-import { CommandAction } from "./CommandAction";
-import { FileSystemService } from "../services/fs/FileSystemService";
-import { Path } from "@src/utils/Path";
+import { SuggestionAction } from "@src/shared/SuggestionAction";
+import { InputInfo } from "@src/shared/InputInfo";
+import { CommandAction } from "@src/shared/CommandAction";
+import { FileSystemService } from "@src/services/fs/FileSystemService";
+import { Path } from "@src/shared/Path";
 
 export class FolderSuggestion extends BaseAction implements SuggestionAction {
     private folder?: string;
@@ -27,9 +27,9 @@ export class FolderSuggestion extends BaseAction implements SuggestionAction {
             throw new Error("Folder is not set");
         }
 
-        this.logger.trace(`Execute folder: ${this.folder} dir: ${ctx.dir}`);
+        this.logger.trace(`Execute folder: ${this.folder} dir: ${ctx.currentDir}`);
 
-        const folderPath = ctx.dir.appendDir(this.folder);
+        const folderPath = ctx.currentDir.appendDir(this.folder);
 
         await this.fsService.createDir(folderPath);
         await vscode.commands.executeCommand("revealInExplorer", folderPath.uri);

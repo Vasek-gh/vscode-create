@@ -1,16 +1,16 @@
 import * as vscode from "vscode";
 import * as assert from "assert";
-import { Path } from "@src/utils/Path";
+import { Path } from "@src/shared/Path";
 import { Config } from "@src/configuration/Config";
 import { FileCreatorMock } from "@tests/mocks/FileCreatorMock";
 import { FileSuggestion } from "@src/actions/FileSuggestion";
 import { ExtensionMock } from "@tests/mocks/ExtensionMock";
-import { InputInfo } from "@src/actions/InputInfo";
-import { Context } from "@src/context/Context";
+import { InputInfo } from "@src/shared/InputInfo";
+import { Context } from "@src/shared/Context";
 import { LoggerMock } from "@tests/mocks/LoggerMock";
-import { ActionFactoryMock } from "@tests/mocks/ActionFactoryMock";
-import { FilesInfo } from "@src/context/FilesInfo";
 import { TestsUtils } from "@tests/TestsUtils";
+import { ContextFilesImpl } from "@src/context/ContextFilesImpl";
+import { SharedContextMock } from "@tests/mocks/SharedContextMock";
 
 suite("FileSuggestion", async () => {
     let contextMock: Context;
@@ -29,12 +29,11 @@ suite("FileSuggestion", async () => {
         const testPath = TestsUtils.getProjPath("Proj1");
         const wsRootDir = await TestsUtils.getWsRootDir(testPath);
 
-        contextMock = new Context(
-            LoggerMock.instance,
-            new ActionFactoryMock(undefined, undefined),
+        contextMock = new SharedContextMock(
+            wsRootDir,
             TestsUtils.getProjPath("Proj1"),
-            new FilesInfo([], [], []),
-            wsRootDir
+            TestsUtils.getProjPath("Proj1"),
+            new ContextFilesImpl([])
         );
     });
 
@@ -119,7 +118,7 @@ suite("FileSuggestion", async () => {
         assert.ok(fileCreatorMock.createQueries.find(cq => cq.template?.template === "template4"));
         assert.strictEqual(
             fileCreatorMock.createQueries.filter(cq =>
-                cq.file.getRelative(contextMock.path.getDirectory()) === "dir/dir/test.fstu"
+                cq.file.getRelative(contextMock.currentDir) === "dir/dir/test.fstu"
             ).length,
             4
         );
@@ -145,7 +144,7 @@ suite("FileSuggestion", async () => {
         assert.strictEqual(fileCreatorMock.createQueries.length, 1);
 
         const createQuery = fileCreatorMock.createQueries[0];
-        const relativePath = createQuery.file.getRelative(contextMock.path.getDirectory());
+        const relativePath = createQuery.file.getRelative(contextMock.currentDir);
         const configTemplateBody = createQuery.template?.template;
 
         assert.strictEqual(file, relativePath);

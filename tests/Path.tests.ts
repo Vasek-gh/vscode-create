@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import * as assert from "assert";
-import { Path } from "../src/utils/Path";
+import path from "path";
+import { Path } from "@src/shared/Path";
 import { ExtensionMock } from "./mocks/ExtensionMock";
 
 suite("Path", () => {
@@ -51,6 +52,76 @@ suite("Path", () => {
         assert.doesNotThrow(() => path.appendDir("qwerty"), Error);
         assert.doesNotThrow(() => path.appendFile("qwerty.txt"), Error);
     });
+
+    test("Driver case", () => {
+        const uriUpper = vscode.Uri.file("C:\\somedir\\qwerty.txt");
+        const pathUpper = Path.fromFile(uriUpper);
+        const uriLower = vscode.Uri.file("c:\\somedir\\qwerty.txt");
+        const pathLower = Path.fromFile(uriLower);
+
+        assert.notStrictEqual(uriLower.path, uriUpper.path);
+
+        assert.ok(pathLower.isSame(pathUpper), "isSame");
+    });
+
+    test("Query and fragment unsupported", () => {
+        assert.throws(
+            () =>
+                Path.fromDir(vscode.Uri.from({
+                    scheme: "scheme",
+                    path: "/path",
+                    authority: "authority",
+                    query: "query"
+                })),
+            Error
+        );
+
+        assert.throws(
+            () =>
+                Path.fromDir(vscode.Uri.from({
+                    scheme: "scheme",
+                    path: "/path",
+                    authority: "authority",
+                    fragment: "fragment"
+                })),
+            Error
+        );
+    });
+
+    const isSameTestCases = [
+        {
+            a: { scheme: "scheme1", path: "/path", authority: "authority" },
+            b: { scheme: "scheme1", path: "/path", authority: "authority" },
+            expected: true
+        },
+        {
+            a: { scheme: "scheme1", path: "/path", authority: "authority" },
+            b: { scheme: "scheme2", path: "/path", authority: "authority" },
+            expected: false
+        },
+        {
+            a: { scheme: "scheme1", path: "/path", authority: "authority1" },
+            b: { scheme: "scheme1", path: "/path", authority: "authority2" },
+            expected: false
+        },
+        {
+            a: { scheme: "scheme1", path: "/path1", authority: "authority1" },
+            b: { scheme: "scheme1", path: "/path2", authority: "authority1" },
+            expected: false
+        },
+    ];
+
+    for (const isSameTestCase of isSameTestCases) {
+        const aPath = Path.fromFile(vscode.Uri.from(isSameTestCase.a));
+        const bPath = Path.fromFile(vscode.Uri.from(isSameTestCase.b));
+
+        const caseOp = isSameTestCase.expected ? "==" : "!=";
+        const caseCaption = `${aPath} ${caseOp} ${bPath}`;
+
+        test(`IsSame: ${caseCaption}`, () => {
+            assert.ok(aPath.isSame(bPath) === isSameTestCase.expected);
+        });
+    }
 
     function getExtensionDir(): Path {
         const extension = vscode.extensions.getExtension(new ExtensionMock().id); // todo get from mock

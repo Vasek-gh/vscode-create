@@ -1,4 +1,4 @@
-import { Logger } from "../../utils/Logger";
+import { Logger } from "../../tools/Logger";
 
 export class DotnetService {
     private readonly logger: Logger;

@@ -1,9 +1,11 @@
 import { ActionFactory } from "@src/actions/ActionFactory";
-import { CommandAction } from "@src/actions/CommandAction";
-import { SuggestionAction } from "@src/actions/SuggestionAction";
-import { Path } from "@src/utils/Path";
+import { CommandAction } from "@src/shared/CommandAction";
+import { SuggestionAction } from "@src/shared/SuggestionAction";
+import { Path } from "@src/shared/Path";
 
 export class ActionFactoryMock implements ActionFactory {
+    public static readonly instance = new ActionFactoryMock(undefined, undefined);
+
     public constructor(
         private readonly fileSuggestion: SuggestionAction | undefined,
         private readonly folderSuggestion: SuggestionAction | undefined,

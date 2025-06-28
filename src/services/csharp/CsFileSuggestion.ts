@@ -1,17 +1,17 @@
 import * as vscode from "vscode";
-import { BaseAction } from "../../actions/BaseAction";
-import { SuggestionAction } from "../../actions/SuggestionAction";
-import { Context } from "../../context/Context";
-import { Logger } from "../../utils/Logger";
-import { InputInfo } from "../../actions/InputInfo";
-import { CommandAction } from "../../actions/CommandAction";
-import { ActionFactory } from "../../actions/ActionFactory";
+import { BaseAction } from "@src/actions/BaseAction";
+import { SuggestionAction } from "@src/shared/SuggestionAction";
+import { Logger } from "@src/tools/Logger";
+import { InputInfo } from "@src/shared/InputInfo";
+import { CommandAction } from "@src/shared/CommandAction";
+import { ActionFactory } from "@src/actions/ActionFactory";
 import { CSharpConfig } from "./CSharpConfig";
-import { Path } from "@src/utils/Path";
+import { Path } from "@src/shared/Path";
+import { Context } from "@src/shared/Context";
 
 export class CsFileSuggestion extends BaseAction implements SuggestionAction {
     private readonly logger: Logger;
-    private readonly genericSuggestion: SuggestionAction;
+    private readonly fileSuggestion: SuggestionAction;
 
     public readonly extension: string = "cs";
 
@@ -23,11 +23,11 @@ export class CsFileSuggestion extends BaseAction implements SuggestionAction {
         super("", "", undefined);
 
         this.logger = logger.create(this);
-        this.genericSuggestion = actionFactory.createFileSuggestion();
+        this.fileSuggestion = actionFactory.createFileSuggestion();
     }
 
     public execute(ctx: Context): Promise<Path | undefined> {
-        return this.genericSuggestion.execute(ctx);
+        return this.fileSuggestion.execute(ctx);
     }
 
     public applyInput(input: InputInfo): void {
@@ -41,28 +41,28 @@ export class CsFileSuggestion extends BaseAction implements SuggestionAction {
 
         const isInterface = this.isInterface(input.name ?? "");
 
-        this.genericSuggestion.applyInput(new InputInfo(
+        this.fileSuggestion.applyInput(new InputInfo(
             input.directory,
             input.name,
             input.extension ?? "cs",
             input.template ?? (isInterface ? "interface" : "class")
         ));
 
-        this.value = this.genericSuggestion.value;
+        this.value = this.fileSuggestion.value;
 
         if (input.template === undefined) {
             this.description = `Create C# ${isInterface ? "interface" : "class"}`;
         }
         else {
-            this.description = this.genericSuggestion.description;
+            this.description = this.fileSuggestion.description;
         }
     }
 
     public getTemplateCommands(): CommandAction[] {
-        return this.genericSuggestion.getTemplateCommands();
+        return this.fileSuggestion.getTemplateCommands();
     }
 
     private isInterface(filename: string): boolean {
-        return filename.length > 1 && filename[0] === "I" && filename[0] === filename[0].toUpperCase();
+        return filename.length > 1 && filename[0] === "I" && filename[0] === filename[0].toUpperCase(); // todo check
     }
 }

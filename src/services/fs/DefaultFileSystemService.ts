@@ -1,8 +1,7 @@
 import * as vscode from "vscode";
-import { SearchMode } from "./SearchMode";
-import { FileSystemService } from "./FileSystemService";
-import { Path } from "@src/utils/Path";
-import { Logger } from "@src/utils/Logger";
+import { FileSystemService } from "@src/services/fs/FileSystemService";
+import { Path } from "@src/shared/Path";
+import { Logger } from "@src/tools/Logger";
 
 // todo check virual fs
 export class DefaultFileSystemService implements FileSystemService {
@@ -34,47 +33,6 @@ export class DefaultFileSystemService implements FileSystemService {
         return wsFolder === undefined
             ? undefined
             : Path.fromDir(wsFolder.uri);
-    }
-
-    // todo убрать поиск циклом, можно создавать паттерн с родительскими папками
-    public async findFiles(path: Path, pattern: string, mode: SearchMode): Promise<Path[]> {
-        const rootDir = this.getRootDirectory(path);
-        if (!rootDir) {
-            return [];
-        }
-
-        var cnt = 0;
-        var result: Path[] = [];
-        var currentDir = path.getDirectory();
-
-        while (currentDir.length >= rootDir.length) {
-            const files = await vscode.workspace.findFiles(
-                new vscode.RelativePattern(currentDir.uri, pattern)
-            );
-
-            for (const file of files) {
-                result.push(await this.getPath(file));
-            }
-
-            // this is in case something goes wrong
-            if (cnt++ > 100) {
-                break;
-            }
-
-            // in simple mode we just search by pattern and exit immediately
-            if (mode === SearchMode.Simple) {
-                break;
-            }
-
-            // when searching for the first match in parents, if we find something we immediately exit
-            if (mode === SearchMode.IncludeParentsUntilMatch && result.length > 0) {
-                break;
-            }
-
-            currentDir = currentDir.getParentDirectory();
-        }
-
-        return result;
     }
 
     public async readTextFile(path: Path): Promise<string | undefined> {

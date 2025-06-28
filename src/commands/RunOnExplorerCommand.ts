@@ -1,9 +1,10 @@
 import * as vscode from "vscode";
 import path from "path";
-import { Logger } from "@src/utils/Logger";
+import { Logger } from "@src/tools/Logger";
 import { FileSystemService } from "@src/services/fs/FileSystemService";
 import { Wizard } from "@src/wizard/Wizard";
-import { Extension } from "@src/utils/Extension";
+import { Extension } from "@src/tools/Extension";
+import { Path } from "@src/shared/Path";
 
 export class RunOnExplorerCommand {
     public constructor(
@@ -19,11 +20,20 @@ export class RunOnExplorerCommand {
             logger.trace("Execute");
 
             if (!file) {
+                logger.trace("Argument 'file' is not assigned. Trying to get it through workaround...");
                 file = await RunOnExplorerCommand.getSelectionFile();
                 selectedFiles = file ? [file] : [];
             }
 
             if (!file || selectedFiles.length > 1) {
+                logger.trace("Unable to determine where to create the file");
+                return;
+            }
+
+            logger.trace(`Command will be executed for ${file}`);
+            const pathError = Path.validate(file);
+            if (pathError) {
+                logger.error(pathError);
                 return;
             }
 

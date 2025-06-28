@@ -1,15 +1,15 @@
 import * as vscode from "vscode";
-import { Logger } from "../utils/Logger";
-import { Path } from "../utils/Path";
+import { Logger } from "../tools/Logger";
+import { Path } from "../shared/Path";
 import { Context } from "../context/Context";
 import { ContextBuilder } from "../context/ContextBuilder";
-import { Action } from "../actions/Action";
-import { SuggestionAction } from "../actions/SuggestionAction";
+import { Action } from "@src/shared/Action";
+import { SuggestionAction } from "@src/shared/SuggestionAction";
 import { FileSystemService } from "../services/fs/FileSystemService";
-import { InputInfo } from "../actions/InputInfo";
+import { InputInfo } from "@src/shared/InputInfo";
 import { Config } from "../configuration/Config";
-import { Utils } from "@src/utils/Utils";
-import { Extension } from "@src/utils/Extension";
+import { Utils } from "@src/tools/Utils";
+import { Extension } from "@src/tools/Extension";
 
 interface QuickPickItem extends vscode.QuickPickItem {
     execute(ctx: Context): Promise<Path | undefined>;
@@ -72,7 +72,7 @@ export class Wizard implements vscode.Disposable {
             this.hide();
         }
         else {
-            await this.showQuickPick(this.ctx.path);
+            await this.showQuickPick(this.ctx.currentPath);
         }
     }
 
@@ -137,7 +137,7 @@ export class Wizard implements vscode.Disposable {
         if (this.ctx && this.quickPick) {
             const inputInfo = InputInfo.parse(input);
             this.quickPick.items = this.createItems(inputInfo);
-            this.quickPick.title = this.ctx.path.toString();
+            this.quickPick.title = this.ctx.currentPath.toString();
         }
     }
 

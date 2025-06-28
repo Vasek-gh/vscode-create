@@ -1,5 +1,5 @@
 import { FileSystemService } from "@src/services/fs/FileSystemService";
-import { Logger } from "@src/utils/Logger";
+import { Logger } from "@src/tools/Logger";
 import { FileSuggestion } from "@src/actions/FileSuggestion";
 import { FolderSuggestion } from "@src/actions/FolderSuggestion";
 import { Config } from "@src/configuration/Config";

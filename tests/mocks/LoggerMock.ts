@@ -1,4 +1,4 @@
-import { Logger } from "@src/utils/Logger";
+import { Logger } from "@src/tools/Logger";
 
 export class LoggerMock extends Logger {
     public static readonly instance = new LoggerMock();

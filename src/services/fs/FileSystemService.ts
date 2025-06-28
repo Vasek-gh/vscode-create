@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
-import { SearchMode } from "./SearchMode";
-import { Path } from "@src/utils/Path";
+import { Path } from "@src/shared/Path";
 
 export interface FileSystemService {
     /**
@@ -17,11 +16,6 @@ export interface FileSystemService {
      * Return workspace root directory for given path
      */
     getRootDirectory(path: Path): Path | undefined;
-
-    /**
-     * todo
-     */
-    findFiles(path: Path, pattern: string, mode: SearchMode): Promise<Path[]>;
 
     /**
      * todo
