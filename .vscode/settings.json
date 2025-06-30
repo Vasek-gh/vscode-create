@@ -7,7 +7,7 @@
     "search.exclude": {
         "**/out": true,
         "**/dist": true,
-        "**/coverage": true,
+        //"**/coverage": true,
         "**/.vscode-test": true,
         "**/node_modules/**": true
     },
