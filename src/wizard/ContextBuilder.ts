@@ -31,7 +31,7 @@ export class ContextBuilder {
 
         const fileSuggestion = this.actionFactory.createFileSuggestion();
         const folderSuggestion = this.actionFactory.createFolderSuggestion();
-        const contextFiles = await ContextFilesImpl.create(path, workspaceDir);
+        const contextFiles = await ContextFilesImpl.createFromPath(workspaceDir, path);
 
         const tmpContext = new Context(
             workspaceDir,

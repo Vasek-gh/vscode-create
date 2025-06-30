@@ -9,8 +9,7 @@ import { InputInfo } from "@src/actions/InputInfo";
 import { Context } from "@src/context/Context";
 import { LoggerMock } from "@tests/mocks/LoggerMock";
 import { TestsUtils } from "@tests/TestsUtils";
-import { ContextFilesImpl } from "@src/wizard/ContextFilesImpl";
-import { SharedContextMock } from "@tests/mocks/SharedContextMock";
+import { ContextMock } from "@tests/mocks/ContextMock";
 
 suite("FileSuggestion", async () => {
     let contextMock: Context;
@@ -29,11 +28,10 @@ suite("FileSuggestion", async () => {
         const testPath = TestsUtils.getProjPath("Proj1");
         const wsRootDir = await TestsUtils.getWsRootDir(testPath);
 
-        contextMock = new SharedContextMock(
+        contextMock = new ContextMock(
             wsRootDir,
             TestsUtils.getProjPath("Proj1"),
-            TestsUtils.getProjPath("Proj1"),
-            new ContextFilesImpl([])
+            TestsUtils.getProjPath("Proj1")
         );
     });
 

@@ -6,9 +6,6 @@ const filename = fileURLToPath(import.meta.url);
 const currentDir = dirname(filename);
 const fixedCwd = currentDir[0].toLowerCase() + currentDir.substring(1);
 
-console.log("##########################");
-console.log(fixedCwd);
-
 export default defineConfig({
     tests: [{
         files: "./out/tests/**/*.tests.js",
@@ -21,6 +18,7 @@ export default defineConfig({
             `${fixedCwd}/out/src/**/*.js`,
         ],
         exclude: [
+            // todo fix hardcoding
             `${fixedCwd}/out/src/api/*.*`,
             `${fixedCwd}/out/src/context/*.*`,
             `${fixedCwd}/out/src/extension.js`,

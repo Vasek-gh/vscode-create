@@ -5,13 +5,13 @@ import fs from "fs";
 import { Path } from "@src/tools/Path";
 import { Config } from "@src/configuration/Config";
 import { ExtensionMock } from "@tests/mocks/ExtensionMock";
-import { Context } from "@src/wizard/Context"; // todo mock simple context
+import { Context } from "@src/context/Context";
 import { LoggerMock } from "@tests/mocks/LoggerMock";
-import { ActionFactoryMock } from "@tests/mocks/ActionFactoryMock";
 import { TestsUtils } from "@tests/TestsUtils";
 import { DefaultFileCreator } from "@src/services/fs/DefaultFileCreator";
 import { DefaultFileSystemService } from "@src/services/fs/DefaultFileSystemService";
 import { ContextFilesImpl } from "@src/wizard/ContextFilesImpl";
+import { ContextMock } from "@tests/mocks/ContextMock";
 
 suite("FileCreator", async () => {
     let contextMock: Context;
@@ -33,16 +33,10 @@ suite("FileCreator", async () => {
         await vscode.workspace.fs.delete(proj1Dir.uri, { useTrash: false, recursive: true });
         const wsRootDir = await TestsUtils.getWsRootDir(proj1Dir);
 
-        contextMock = new Context(
+        contextMock = new ContextMock(
             wsRootDir,
             proj1Dir,
             proj1Dir,
-            new ContextFilesImpl([]),
-            [],
-            [],
-            ActionFactoryMock.instance.createFileSuggestion(),
-            ActionFactoryMock.instance.createFolderSuggestion(),
-            {}
         );
     });
 

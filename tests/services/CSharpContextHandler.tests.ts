@@ -13,6 +13,8 @@ import { Utils } from "@src/tools/Utils";
 import { ContextFilesImpl } from "@src/wizard/ContextFilesImpl";
 import { Context } from "@src/context/Context";
 import { CSharpConfig } from "@src/services/csharp/CSharpConfig";
+import { SuggestionAction } from "@src/actions/SuggestionAction";
+import { ContextFilesMock } from "@tests/mocks/ContextFilesMock";
 
 suite("CSharpContextHandler", () => {
     let wsRoorDir: Path;
@@ -64,7 +66,7 @@ suite("CSharpContextHandler", () => {
             rootDir: wsRoorDir,
             currentDir: at.getDirectory(),
             currentPath: at,
-            files: new ContextFilesImpl(files ?? []),
+            files: new ContextFilesMock(),
             getTemplateVariables(): { [key: string]: any } {
                 return {};
             }
@@ -81,4 +83,19 @@ suite("CSharpContextHandler", () => {
             ActionFactoryMock.instance,
         );
     }
+
+    /*function getSuggestions(
+        workspaceDir: Path,
+        csprojFile: Path,
+        contextPath: Path,
+        files?: Path[]
+    ): Promise<SuggestionAction[]> {
+        ContextFilesImpl.createFromFiles(
+            workspaceDir, files,
+        )
+        const context = createContext(contextPath, files);
+        const provider = createActionProvider(csprojFile);
+
+        return provider.getSuggestions(context);
+    }*/
 });

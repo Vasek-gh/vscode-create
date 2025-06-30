@@ -200,7 +200,7 @@ export class CSharpActionProvider implements ActionProvider {
         return [...map.values()];
     }
 
-    public getCsharpSuggestions(extensionInfos: ExtensionInfo[]): SuggestionAction[] {
+    private getCsharpSuggestions(extensionInfos: ExtensionInfo[]): SuggestionAction[] {
         const result: SuggestionAction[] = [];
 
         if (extensionInfos.some(ei => ei.value = CS_EXT)) {

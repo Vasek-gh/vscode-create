@@ -48,7 +48,7 @@ export class CSharpActionProviderFactory implements ActionProviderFactory {
     private findCsproj(contextFiles: ContextFiles): undefined | [number, Path] {
         let currentLevel: number = FileLevel.Current;
         do {
-            const files = contextFiles.getFiles(currentLevel, "(.+).csproj");
+            const files = contextFiles.getByRegExp(currentLevel, "(.+)\\.csproj$");
             if (files === undefined) {
                 break;
             }

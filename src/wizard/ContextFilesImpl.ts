@@ -4,57 +4,89 @@ import { Path } from "@src/tools/Path";
 import { FileLevel } from "@src/context/FileLevel";
 
 export class ContextFilesImpl implements ContextFiles {
-    public constructor(
-        private readonly items: Path[][]
+    private constructor(
+        private readonly items: Path[][],
+        private readonly currentLevelIndex: number
     ) {
+        const minIndex = items.length > 0 ? 0 : -1;
+        if (currentLevelIndex < minIndex && currentLevelIndex >= items.length) {
+            throw new Error("Current level is outside of bounds");
+        }
     }
 
-    public getFiles(level: number | FileLevel, pattern?: string): undefined | Path[] {
+    public getFiles(level: number | FileLevel): undefined | Path[] {
         const index = this.levelToIndex(level);
-        if (!index) {
-            return undefined;
-        }
 
-        const files = this.items[index];
-        if (!pattern) {
+        return index === undefined
+            ? undefined
+            : this.items[index];
+    }
+
+    public getByRegExp(level: number | FileLevel, pattern: string): undefined | Path[] {
+        const files = this.getFiles(level);
+        if (!files || pattern.length === 0) {
             return files;
         }
 
         const regExp = new RegExp(pattern);
-        return files.filter(f => regExp.exec(f.getFileName()) !== undefined);
+        return files.filter(f => regExp.test(f.getFileName()));
     }
 
     private levelToIndex(level: number | FileLevel): number | undefined {
+        if (this.currentLevelIndex < 0) {
+            return undefined;
+        }
+
         if (level === FileLevel.Root) {
             return 0;
         }
 
-        const index = level + this.items.length - 2;
+        const index = this.currentLevelIndex + level;
 
         return index >= 0 && index < this.items.length
             ? index
             : undefined;
     }
 
-    public static async create(path: Path, workspaceDir: Path): Promise<ContextFiles> {
+    public static async createFromPath(workspaceDir: Path, path: Path): Promise<ContextFiles> {
         const patterns = this.buildSearchPatterns(path, workspaceDir);
 
         const files = (await vscode.workspace.findFiles(
             new vscode.RelativePattern(workspaceDir.uri, `{${patterns.join(",")}}`)
         )).map(f => Path.fromFile(f));
 
-        const levelArr: Array<Array<Path>> = new Array<Array<Path>>(patterns.length);
-        for (let index = 0; index < levelArr.length; index++) {
-            levelArr[index] = [];
-        }
+        return this.createFromFiles(workspaceDir, files, patterns.length - 2);
+    }
+
+    private static createFromFiles(workspaceDir: Path, files: Path[], currentLevel: number): ContextFiles {
+        let maxLevel = -1;
+        const levelMap = new Map<number, Path[]>();
 
         for (const file of files) {
             const relative = file.getDirectory().getRelative(workspaceDir);
             const pathLevel = this.getPathLevel(relative);
-            levelArr[pathLevel].push(file);
+            if (maxLevel < pathLevel) {
+                maxLevel = pathLevel;
+            }
+
+            let level = levelMap.get(pathLevel);
+            if (!level) {
+                level = [];
+                levelMap.set(pathLevel, level);
+            }
+
+            level.push(file);
         }
 
-        return new ContextFilesImpl(levelArr);
+        const levelArray: Path[][] = [];
+        for (let index = 0; index <= maxLevel; index++) {
+            levelArray.push(levelMap.get(index) ?? []);
+        }
+
+        return new ContextFilesImpl(
+            levelArray,
+            currentLevel
+        );
     }
 
     private static buildSearchPatterns(path: Path, workspaceDir: Path): string[] {
