@@ -1,12 +1,12 @@
 import * as vscode from "vscode";
 import { Logger } from "../tools/Logger";
-import { Path } from "../shared/Path";
-import { Context } from "../context/Context";
-import { ContextBuilder } from "../context/ContextBuilder";
-import { Action } from "@src/shared/Action";
-import { SuggestionAction } from "@src/shared/SuggestionAction";
+import { Path } from "../tools/Path";
+import { Context } from "./Context";
+import { ContextBuilder } from "./ContextBuilder";
+import { Action } from "@src/actions/Action";
+import { SuggestionAction } from "@src/actions/SuggestionAction";
 import { FileSystemService } from "../services/fs/FileSystemService";
-import { InputInfo } from "@src/shared/InputInfo";
+import { InputInfo } from "@src/actions/InputInfo";
 import { Config } from "../configuration/Config";
 import { Utils } from "@src/tools/Utils";
 import { Extension } from "@src/tools/Extension";
@@ -14,6 +14,26 @@ import { Extension } from "@src/tools/Extension";
 interface QuickPickItem extends vscode.QuickPickItem {
     execute(ctx: Context): Promise<Path | undefined>;
 }
+
+// todo
+function debounce<TParams extends any[]>(
+    func: (...args: TParams) => any,
+    timeout: number,
+): (...args: TParams) => void {
+    let timer: NodeJS.Timeout;
+    return (...args: TParams) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            func(...args);
+        }, timeout);
+    };
+}
+
+function test(logger: Logger, message: string): void {
+    logger.info(message);
+}
+
+const debouncedTest = debounce(test, 300);
 
 export class Wizard implements vscode.Disposable {
     private readonly logger: Logger;
@@ -135,6 +155,8 @@ export class Wizard implements vscode.Disposable {
 
     private applyValue(input: string): void {
         if (this.ctx && this.quickPick) {
+            debouncedTest(this.logger, "ddd");
+            this.logger.info(`applyValue`); // todo kill
             const inputInfo = InputInfo.parse(input);
             this.quickPick.items = this.createItems(inputInfo);
             this.quickPick.title = this.ctx.currentPath.toString();

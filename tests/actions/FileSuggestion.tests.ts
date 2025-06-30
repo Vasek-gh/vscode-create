@@ -1,15 +1,15 @@
 import * as vscode from "vscode";
 import * as assert from "assert";
-import { Path } from "@src/shared/Path";
+import { Path } from "@src/tools/Path";
 import { Config } from "@src/configuration/Config";
 import { FileCreatorMock } from "@tests/mocks/FileCreatorMock";
-import { FileSuggestion } from "@src/actions/FileSuggestion";
+import { FileSuggestion } from "@src/actions/factory/FileSuggestion";
 import { ExtensionMock } from "@tests/mocks/ExtensionMock";
-import { InputInfo } from "@src/shared/InputInfo";
-import { Context } from "@src/shared/Context";
+import { InputInfo } from "@src/actions/InputInfo";
+import { Context } from "@src/context/Context";
 import { LoggerMock } from "@tests/mocks/LoggerMock";
 import { TestsUtils } from "@tests/TestsUtils";
-import { ContextFilesImpl } from "@src/context/ContextFilesImpl";
+import { ContextFilesImpl } from "@src/wizard/ContextFilesImpl";
 import { SharedContextMock } from "@tests/mocks/SharedContextMock";
 
 suite("FileSuggestion", async () => {

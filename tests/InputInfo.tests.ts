@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import { InputInfo } from "@src/shared/InputInfo";
+import { InputInfo } from "@src/actions/InputInfo";
 
 suite("InputInfo", () => {
     const parseTestCases = [

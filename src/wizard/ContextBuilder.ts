@@ -1,14 +1,14 @@
 import * as vscode from "vscode";
 import { FileSystemService } from "../services/fs/FileSystemService";
-import { Path } from "../shared/Path";
+import { Path } from "../tools/Path";
 import { Context } from "./Context";
 import { Logger } from "../tools/Logger";
 import { ActionFactory } from "../actions/ActionFactory";
-import { ActionProviderFactory } from "@src/shared/ActionProviderFactory";
+import { ActionProviderFactory } from "@src/actions/ActionProviderFactory";
 import { ContextFilesImpl } from "./ContextFilesImpl";
-import { ActionProvider } from "@src/shared/ActionProvider";
-import { CommandAction } from "@src/shared/CommandAction";
-import { SuggestionAction } from "@src/shared/SuggestionAction";
+import { ActionProvider } from "@src/actions/ActionProvider";
+import { CommandAction } from "@src/actions/CommandAction";
+import { SuggestionAction } from "@src/actions/SuggestionAction";
 
 export class ContextBuilder {
     private readonly logger: Logger;
@@ -23,6 +23,7 @@ export class ContextBuilder {
     }
 
     public async run(path: Path): Promise<Context> {
+        this.logger.trace("Begin build context");
         var workspaceDir = this.fsService.getRootDirectory(path);
         if (!workspaceDir) {
             throw new Error(`${path} is outside workspace`);
@@ -40,17 +41,26 @@ export class ContextBuilder {
             [],
             [],
             fileSuggestion,
-            folderSuggestion
+            folderSuggestion,
+            {}
         );
 
         const commands: CommandAction[] = [];
         const suggestions: SuggestionAction[] = [];
+        const templateVariables: { [key: string]: any } = {};
 
         const actionProviders = await this.getProviders(tmpContext);
         for (const actionProvider of actionProviders) {
             commands.push(...await actionProvider.getCommands(tmpContext));
             suggestions.push(...await actionProvider.getSuggestions(tmpContext));
+
+            const variabels = await actionProvider.getTemplateVariables(tmpContext);
+            for (const variableKey of Object.keys(variabels)) {
+                templateVariables[variableKey] = variabels[variableKey];
+            }
         }
+
+        this.logger.trace("Context ready");
 
         return new Context(
             tmpContext.rootDir,
@@ -60,7 +70,8 @@ export class ContextBuilder {
             commands,
             suggestions,
             fileSuggestion,
-            folderSuggestion
+            folderSuggestion,
+            templateVariables
         );
     }
 

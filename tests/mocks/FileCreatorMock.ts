@@ -1,6 +1,6 @@
-import { Path } from "@src/shared/Path";
+import { Path } from "@src/tools/Path";
 import { TemplateConfig } from "@src/configuration/TemplateConfig";
-import { Context } from "@src/shared/Context";
+import { Context } from "@src/context/Context";
 import { FileCreator } from "@src/services/fs/FileCreator";
 
 interface CreateQuery {
@@ -23,4 +23,4 @@ export class FileCreatorMock implements FileCreator {
     public clearInvocations(): void {
         this.createQueries = [];
     }
-};
+}

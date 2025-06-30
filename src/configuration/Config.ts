@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { ExtensionConfig } from "./ExtensionConfig";
-import { Path } from "@src/shared/Path";
+import { Path } from "@src/tools/Path";
 import { Extension } from "@src/tools/Extension";
 
 type ExtensionsConfig = {

@@ -1,4 +1,4 @@
-import { Context } from "./Context";
+import { Context } from "@src/context/Context";
 import { ActionProvider } from "./ActionProvider";
 
 export interface ActionProviderFactory {

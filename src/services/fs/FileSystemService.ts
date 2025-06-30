@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { Path } from "@src/shared/Path";
+import { Path } from "@src/tools/Path";
 
 export interface FileSystemService {
     /**

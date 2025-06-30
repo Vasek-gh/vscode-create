@@ -1,7 +1,7 @@
 import { ActionFactory } from "@src/actions/ActionFactory";
-import { CommandAction } from "@src/shared/CommandAction";
-import { SuggestionAction } from "@src/shared/SuggestionAction";
-import { Path } from "@src/shared/Path";
+import { CommandAction } from "@src/actions/CommandAction";
+import { SuggestionAction } from "@src/actions/SuggestionAction";
+import { Path } from "@src/tools/Path";
 
 export class ActionFactoryMock implements ActionFactory {
     public static readonly instance = new ActionFactoryMock(undefined, undefined);
@@ -34,4 +34,4 @@ export class ActionFactoryMock implements ActionFactory {
             }
         };
     }
-};
+}

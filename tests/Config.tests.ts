@@ -3,7 +3,7 @@ import * as assert from "assert";
 import { TestsUtils } from "./TestsUtils";
 import { Config } from "@src/configuration/Config";
 import { ExtensionMock } from "./mocks/ExtensionMock";
-import { Path } from "@src/shared/Path";
+import { Path } from "@src/tools/Path";
 
 suite("Config", () => {
     const extension = new ExtensionMock();

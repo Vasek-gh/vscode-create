@@ -1,6 +1,6 @@
-import { Context } from "@src/shared/Context";
-import { ContextFiles } from "@src/shared/ContextFiles";
-import { Path } from "@src/shared/Path";
+import { Context } from "@src/context/Context";
+import { ContextFiles } from "@src/context/ContextFiles";
+import { Path } from "@src/tools/Path";
 
 export class SharedContextMock implements Context {
     public constructor(
@@ -9,10 +9,6 @@ export class SharedContextMock implements Context {
         public readonly currentPath: Path,
         public readonly files: ContextFiles,
     ) {
-    }
-
-    public setTemplateVariable(key: string, templateVariable: any): void {
-        // nop
     }
 
     public getTemplateVariables(): { [key: string]: any } {

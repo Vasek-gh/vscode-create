@@ -1,15 +1,15 @@
 import { Logger } from "@src/tools/Logger";
 import { Config } from "@src/configuration/Config";
-import { ActionProvider } from "@src/shared/ActionProvider";
-import { ActionProviderFactory } from "@src/shared/ActionProviderFactory";
-import { ContextFiles } from "@src/shared/ContextFiles";
-import { FileLevel } from "@src/shared/FileLevel";
+import { ActionProvider } from "@src/actions/ActionProvider";
+import { ActionProviderFactory } from "@src/actions/ActionProviderFactory";
+import { ContextFiles } from "@src/context/ContextFiles";
+import { FileLevel } from "@src/context/FileLevel";
 import { FileSystemService } from "@src/services/fs/FileSystemService";
 import { ActionFactory } from "@src/actions/ActionFactory";
 import { CSharpActionProvider } from "./CSharpActionProvider";
 import { CSharpConfig } from "./CSharpConfig";
-import { Path } from "@src/shared/Path";
-import { Context } from "@src/shared/Context";
+import { Path } from "@src/tools/Path";
+import { Context } from "@src/context/Context";
 
 export class CSharpActionProviderFactory implements ActionProviderFactory {
     private readonly logger: Logger;

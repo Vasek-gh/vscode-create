@@ -2,15 +2,14 @@ import * as vscode from "vscode";
 import fs from "fs";
 import path from "path";
 import Handlebars from "handlebars";
-import { Path } from "@src/shared/Path";
+import { Path } from "@src/tools/Path";
 import { Logger } from "@src/tools/Logger";
 import { TemplateConfig } from "@src/configuration/TemplateConfig";
 import { FileSystemService } from "./FileSystemService";
-import { Context } from "@src/shared/Context";
+import { Context } from "@src/context/Context";
 import { FileCreator } from "./FileCreator";
 import { Extension } from "@src/tools/Extension";
 import { Utils } from "@src/tools/Utils";
-import { TemplateVariables } from "@src/context/TemplateVariables";
 
 interface FileInfo {
     path: Path;

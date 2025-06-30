@@ -1,17 +1,17 @@
 import * as vscode from "vscode";
 import { FileSystemService } from "@src/services/fs/FileSystemService";
 import { Logger } from "@src/tools/Logger";
-import { Path } from "@src/shared/Path";
+import { Path } from "@src/tools/Path";
 import { Utils } from "@src/tools/Utils";
 import { CsFileSuggestion } from "./CsFileSuggestion";
-import { CommandAction } from "@src/shared/CommandAction";
-import { SuggestionAction } from "@src/shared/SuggestionAction";
+import { CommandAction } from "@src/actions/CommandAction";
+import { SuggestionAction } from "@src/actions/SuggestionAction";
 import { CSharpVars } from "./CSharpVars";
 import { CSharpConfig } from "./CSharpConfig";
 import { ActionFactory } from "@src/actions/ActionFactory";
-import { ActionProvider } from "@src/shared/ActionProvider";
-import { Context } from "@src/shared/Context";
-import { FileLevel } from "@src/shared/FileLevel";
+import { ActionProvider } from "@src/actions/ActionProvider";
+import { Context } from "@src/context/Context";
+import { FileLevel } from "@src/context/FileLevel";
 import { Dictionary } from "@src/tools/Dictionary";
 
 const CS_EXT: string = ".cs";
@@ -57,6 +57,10 @@ export class CSharpActionProvider implements ActionProvider {
     }
 
     public getCommands(context: Context): Promise<CommandAction[]> {
+        if (!this.config.enableAll.get()) {
+            return Promise.resolve([]);
+        }
+
         if (!this.csprojFile.getDirectory().isSame(context.currentDir)) {
             return Promise.resolve([]);
         }
@@ -72,16 +76,25 @@ export class CSharpActionProvider implements ActionProvider {
             return [];
         }
 
-        context.setTemplateVariable(CSharpVars.csproj, {
-            namespace: await this.getNamespace(),
-            ...Utils.getFileVars(this.csprojFile, context.rootDir)
-        });
-
         const extensionInfos = this.getExtensionInfo(context);
 
         return extensionInfos.filter(ei => !ei.csharp).length === 0
             ? this.getCsharpSuggestions(extensionInfos)
             : this.getAssetSuggestions(extensionInfos);
+    }
+
+    public async getTemplateVariables(context: Context): Promise<{ [key: string]: any }> {
+        const result: { [key: string]: any } = {};
+        if (!this.config.enableAll.get()) {
+            return result;
+        }
+
+        result[CSharpVars.csproj] = {
+            namespace: await this.getNamespace(),
+            ...Utils.getFileVars(this.csprojFile, context.rootDir)
+        };
+
+        return result;
     }
 
     private getExtensionInfo(context: Context): ExtensionInfo[] {

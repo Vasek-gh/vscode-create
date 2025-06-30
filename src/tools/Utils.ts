@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { Path } from "../shared/Path";
+import { Path } from "./Path";
 
 export class Utils {
     public static templateSelector = ":";

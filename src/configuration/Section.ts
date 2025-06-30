@@ -1,5 +1,6 @@
 import { Config } from "./Config";
 
+// todo kill
 export class Section<T> {
     private readonly config: Config;
     private readonly defaultValue: T;

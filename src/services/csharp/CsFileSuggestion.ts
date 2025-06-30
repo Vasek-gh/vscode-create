@@ -1,18 +1,20 @@
 import * as vscode from "vscode";
-import { BaseAction } from "@src/actions/BaseAction";
-import { SuggestionAction } from "@src/shared/SuggestionAction";
+import { SuggestionAction } from "@src/actions/SuggestionAction";
 import { Logger } from "@src/tools/Logger";
-import { InputInfo } from "@src/shared/InputInfo";
-import { CommandAction } from "@src/shared/CommandAction";
+import { InputInfo } from "@src/actions/InputInfo";
+import { CommandAction } from "@src/actions/CommandAction";
 import { ActionFactory } from "@src/actions/ActionFactory";
 import { CSharpConfig } from "./CSharpConfig";
-import { Path } from "@src/shared/Path";
-import { Context } from "@src/shared/Context";
+import { Path } from "@src/tools/Path";
+import { Context } from "@src/context/Context";
 
-export class CsFileSuggestion extends BaseAction implements SuggestionAction {
+export class CsFileSuggestion implements SuggestionAction {
     private readonly logger: Logger;
     private readonly fileSuggestion: SuggestionAction;
 
+    public value: string = "";
+    public description: string = "";
+    public detail?: string;
     public readonly extension: string = "cs";
 
     public constructor(
@@ -20,8 +22,6 @@ export class CsFileSuggestion extends BaseAction implements SuggestionAction {
         actionFactory: ActionFactory,
         private readonly config: CSharpConfig,
     ) {
-        super("", "", undefined);
-
         this.logger = logger.create(this);
         this.fileSuggestion = actionFactory.createFileSuggestion();
     }

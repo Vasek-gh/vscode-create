@@ -8,7 +8,8 @@
         "**/out": true,
         "**/dist": true,
         "**/coverage": true,
-        "**/.vscode-test": true
+        "**/.vscode-test": true,
+        "**/node_modules/**": true
     },
     "files.readonlyInclude" : {
         "**/node_modules/**": true

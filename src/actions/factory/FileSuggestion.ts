@@ -1,13 +1,13 @@
 import { Logger } from "@src/tools/Logger";
-import { Context } from "@src/shared/Context";
+import { Context } from "@src/context/Context";
 import { Config } from "@src/configuration/Config";
 import { TemplateConfig } from "@src/configuration/TemplateConfig";
 import { FileCreator } from "@src/services/fs/FileCreator";
-import { InputInfo } from "@src/shared/InputInfo";
+import { InputInfo } from "@src/actions/InputInfo";
 import { BaseAction } from "./BaseAction";
-import { CommandAction } from "@src/shared/CommandAction";
-import { SuggestionAction } from "@src/shared/SuggestionAction";
-import { Path } from "@src/shared/Path";
+import { CommandAction } from "@src/actions/CommandAction";
+import { SuggestionAction } from "@src/actions/SuggestionAction";
+import { Path } from "@src/tools/Path";
 
 class FileTemplateInfo {
     public constructor(

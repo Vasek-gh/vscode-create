@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as assert from "assert";
 import path from "path";
-import { Path } from "@src/shared/Path";
+import { Path } from "@src/tools/Path";
 import { ExtensionMock } from "./mocks/ExtensionMock";
 
 suite("Path", () => {

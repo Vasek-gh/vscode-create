@@ -4,7 +4,7 @@ import { Logger } from "@src/tools/Logger";
 import { FileSystemService } from "@src/services/fs/FileSystemService";
 import { Wizard } from "@src/wizard/Wizard";
 import { Extension } from "@src/tools/Extension";
-import { Path } from "@src/shared/Path";
+import { Path } from "@src/tools/Path";
 
 export class RunOnExplorerCommand {
     public constructor(

@@ -1,4 +1,4 @@
-import { SuggestionAction } from "@src/shared/SuggestionAction";
+import { SuggestionAction } from "./SuggestionAction";
 
 export interface ActionFactory {
     createFileSuggestion(): SuggestionAction;

@@ -1,6 +1,6 @@
 import { DefaultFileSystemService } from "@src/services/fs/DefaultFileSystemService";
 import { FileSystemService } from "@src/services/fs/FileSystemService";
-import { Path } from "@src/shared/Path";
+import { Path } from "@src/tools/Path";
 import { Uri, FileStat } from "vscode";
 import { LoggerMock } from "./LoggerMock";
 
@@ -32,4 +32,4 @@ export class FileSystemServiceMock implements FileSystemService {
     public createDir(path: Path): Promise<void> {
         return this.defaultFsService.createDir(path);
     }
-};
+}

@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { FileSystemService } from "@src/services/fs/FileSystemService";
-import { Path } from "@src/shared/Path";
+import { Path } from "@src/tools/Path";
 import { Logger } from "@src/tools/Logger";
 
 // todo check virual fs

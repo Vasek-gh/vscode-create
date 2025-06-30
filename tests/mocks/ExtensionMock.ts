@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { Extension } from "@src/tools/Extension";
-import { Path } from "@src/shared/Path";
+import { Path } from "@src/tools/Path";
 
 export class ExtensionMock implements Extension {
     public readonly id: string = "vs-marketplace-vasek.vscode-create";

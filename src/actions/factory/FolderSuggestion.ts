@@ -1,12 +1,12 @@
 import * as vscode from "vscode";
-import { Context } from "@src/shared/Context";
+import { Context } from "@src/context/Context";
 import { Logger } from "@src/tools/Logger";
 import { BaseAction } from "./BaseAction";
-import { SuggestionAction } from "@src/shared/SuggestionAction";
-import { InputInfo } from "@src/shared/InputInfo";
-import { CommandAction } from "@src/shared/CommandAction";
+import { SuggestionAction } from "@src/actions/SuggestionAction";
+import { InputInfo } from "@src/actions/InputInfo";
+import { CommandAction } from "@src/actions/CommandAction";
 import { FileSystemService } from "@src/services/fs/FileSystemService";
-import { Path } from "@src/shared/Path";
+import { Path } from "@src/tools/Path";
 
 export class FolderSuggestion extends BaseAction implements SuggestionAction {
     private folder?: string;

@@ -5,7 +5,7 @@ import { Wizard } from "./wizard/Wizard";
 import { RunOnExplorerCommand } from "./commands/RunOnExplorerCommand";
 import { Logger } from "./tools/Logger";
 import { Utils } from "./tools/Utils";
-import { ContextBuilder } from "./context/ContextBuilder";
+import { ContextBuilder } from "./wizard/ContextBuilder";
 import { RunOnEditorCommand } from "./commands/RunOnEditorCommand";
 import { DotnetService } from "./services/dotnet/DotnetService";
 import { WizardAcceptMoveFocusCommand } from "./commands/WizardAcceptMoveFocusCommand";
@@ -13,11 +13,12 @@ import { WizardAcceptKeepFocusCommand } from "./commands/WizardAcceptKeepFocusCo
 import { Config } from "./configuration/Config";
 import { ActionFactory } from "./actions/ActionFactory";
 import { DefaultFileCreator } from "./services/fs/DefaultFileCreator";
-import { DefaultActionFactory } from "./actions/DefaultActionFactory";
+import { ActionFactoryImpl } from "@src/actions/factory/ActionFactoryImpl";
 import { Extension } from "./tools/Extension";
 import { FileCreator } from "./services/fs/FileCreator";
-import { Path } from "./shared/Path";
+import { Path } from "./tools/Path";
 import { CSharpActionProviderFactory } from "./services/csharp/CSharpActionProviderFactory";
+import { TestCommand } from "./commands/TestCommand";
 
 /**
  * Entry point of this extension
@@ -57,7 +58,7 @@ class Host implements Extension, vscode.Disposable {
                 new DotnetService(this.logger)
             );
             const actionFactory = this.registerObject<ActionFactory>(
-                new DefaultActionFactory(this.logger, config, fsService, fileCreator)
+                new ActionFactoryImpl(this.logger, config, fsService, fileCreator)
             );
 
             const contextBuilder = this.registerObject<ContextBuilder>(
@@ -90,6 +91,8 @@ class Host implements Extension, vscode.Disposable {
             new RunOnExplorerCommand(this.logger, this, extensionContext, fsService, wizard);
             new WizardAcceptMoveFocusCommand(this, extensionContext, wizard);
             new WizardAcceptKeepFocusCommand(this, extensionContext, wizard);
+
+            new TestCommand(this.logger, this, extensionContext);
 
             this.logger.info("Initialization complete");
         }

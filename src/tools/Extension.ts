@@ -1,4 +1,4 @@
-import { Path } from "../shared/Path";
+import { Path } from "./Path";
 
 export interface Extension {
     id: string;

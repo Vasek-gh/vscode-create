@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
-import { ContextFiles } from "@src/shared/ContextFiles";
-import { Path } from "@src/shared/Path";
-import { FileLevel } from "@src/shared/FileLevel";
+import { ContextFiles } from "@src/context/ContextFiles";
+import { Path } from "@src/tools/Path";
+import { FileLevel } from "@src/context/FileLevel";
 
 export class ContextFilesImpl implements ContextFiles {
     public constructor(

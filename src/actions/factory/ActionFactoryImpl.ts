@@ -1,11 +1,12 @@
 import { FileSystemService } from "@src/services/fs/FileSystemService";
 import { Logger } from "@src/tools/Logger";
-import { FileSuggestion } from "@src/actions/FileSuggestion";
-import { FolderSuggestion } from "@src/actions/FolderSuggestion";
+import { FileSuggestion } from "@src/actions/factory/FileSuggestion";
+import { FolderSuggestion } from "@src/actions/factory/FolderSuggestion";
 import { Config } from "@src/configuration/Config";
 import { FileCreator } from "@src/services/fs/FileCreator";
+import { SuggestionAction } from "@src/actions/SuggestionAction";
 
-export class DefaultActionFactory {
+export class ActionFactoryImpl {
     public constructor(
         private readonly logger: Logger,
         private readonly config: Config,
@@ -14,7 +15,7 @@ export class DefaultActionFactory {
     ) {
     }
 
-    public createFileSuggestion(): FileSuggestion {
+    public createFileSuggestion(): SuggestionAction {
         return new FileSuggestion(
             this.logger,
             this.config,
@@ -22,7 +23,7 @@ export class DefaultActionFactory {
         );
     }
 
-    public createFolderSuggestion(): FolderSuggestion {
+    public createFolderSuggestion(): SuggestionAction {
         return new FolderSuggestion(
             this.logger,
             this.fsService

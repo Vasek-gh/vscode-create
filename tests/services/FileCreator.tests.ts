@@ -2,16 +2,16 @@ import * as vscode from "vscode";
 import * as assert from "assert";
 import os from "os";
 import fs from "fs";
-import { Path } from "@src/shared/Path";
+import { Path } from "@src/tools/Path";
 import { Config } from "@src/configuration/Config";
 import { ExtensionMock } from "@tests/mocks/ExtensionMock";
-import { Context } from "@src/context/Context";
+import { Context } from "@src/wizard/Context"; // todo mock simple context
 import { LoggerMock } from "@tests/mocks/LoggerMock";
 import { ActionFactoryMock } from "@tests/mocks/ActionFactoryMock";
 import { TestsUtils } from "@tests/TestsUtils";
 import { DefaultFileCreator } from "@src/services/fs/DefaultFileCreator";
 import { DefaultFileSystemService } from "@src/services/fs/DefaultFileSystemService";
-import { ContextFilesImpl } from "@src/context/ContextFilesImpl";
+import { ContextFilesImpl } from "@src/wizard/ContextFilesImpl";
 
 suite("FileCreator", async () => {
     let contextMock: Context;
@@ -41,7 +41,8 @@ suite("FileCreator", async () => {
             [],
             [],
             ActionFactoryMock.instance.createFileSuggestion(),
-            ActionFactoryMock.instance.createFolderSuggestion()
+            ActionFactoryMock.instance.createFolderSuggestion(),
+            {}
         );
     });
 
