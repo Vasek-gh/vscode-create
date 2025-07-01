@@ -57,18 +57,7 @@ export class CSharpActionProvider implements ActionProvider {
     }
 
     public getCommands(context: Context): Promise<CommandAction[]> {
-        if (!this.config.enableAll.get()) {
-            return Promise.resolve([]);
-        }
-
-        if (!this.csprojFile.getDirectory().isSame(context.currentDir)) {
-            return Promise.resolve([]);
-        }
-
-        return Promise.resolve([
-            this.createDirectoryPropsAction(),
-            this.createDirectoryPropsAction()
-        ]);
+        return Promise.resolve([]);
     }
 
     public async getSuggestions(context: Context): Promise<SuggestionAction[]> {
@@ -80,7 +69,7 @@ export class CSharpActionProvider implements ActionProvider {
 
         return extensionInfos.filter(ei => !ei.csharp).length === 0
             ? this.getCsharpSuggestions(extensionInfos)
-            : this.getAssetSuggestions(extensionInfos);
+            : [];
     }
 
     public async getTemplateVariables(context: Context): Promise<{ [key: string]: any }> {
@@ -148,19 +137,17 @@ export class CSharpActionProvider implements ActionProvider {
         const extensionInfos = this.getLevelExtensionInfo(context, FileLevel.Parent);
         const primaryExtensionInfos = extensionInfos.filter(ei => ei.csharp);
 
-        if (parentDir.isSame(csprojDir)) {
-            return primaryExtensionInfos.length > 0
-                ? primaryExtensionInfos
-                : [{
-                    value: ".cs",
-                    count: 1,
-                    csharp: true
-                }];
+        if (!parentDir.isSame(csprojDir) && primaryExtensionInfos.length === 0 && extensionInfos.length > 0) {
+            return extensionInfos;
         }
 
         return primaryExtensionInfos.length > 0
             ? primaryExtensionInfos
-            : extensionInfos;
+            : [{
+                value: ".cs",
+                count: 1,
+                csharp: true
+            }];
     }
 
     private getLevelExtensionInfo(context: Context, level: FileLevel): ExtensionInfo[] {
@@ -220,14 +207,6 @@ export class CSharpActionProvider implements ActionProvider {
         return result;
     }
 
-    private getAssetSuggestions(extensionInfos: ExtensionInfo[]): SuggestionAction[] {
-        const result: SuggestionAction[] = [];
-
-        // todo
-
-        return result;
-    }
-
     private isWpfProject(): boolean {
         return false;
     }
@@ -240,6 +219,7 @@ export class CSharpActionProvider implements ActionProvider {
         return new CsFileSuggestion(this.logger, this.actionFactory, this.config);
     }
 
+    /* move to dotnet
     private createDirectoryPropsAction(): CommandAction {
         const logger = this.logger;
         const csprojFile = this.csprojFile;
@@ -255,6 +235,7 @@ export class CSharpActionProvider implements ActionProvider {
             }
         };
     }
+    */
 
     private async getNamespace(): Promise<string> {
         const content = await this.fsService.readTextFile(this.csprojFile);
