@@ -22,19 +22,6 @@ export class Utils {
             : Path.fromDir(workspaceFolder.uri);
     }
 
-    public static groupBy<T, TKey>(items: T[], predicate: (item: T) => TKey): Map<TKey, T[]> {
-        return items.reduce<Map<TKey, T[]>>((map, item, index, array): Map<TKey, T[]> => {
-            const key = predicate(item);
-            map.set(key, map.get(key) || []);
-            map.get(key)?.push(item);
-            return map;
-        }, new Map<TKey, T[]>());
-    }
-
-    public static sectionName(name: string, base?: string): string {
-        return base ? `${base}.${name}` : name;
-    }
-
     public static getFileVars(file: Path, baseDir: Path): any {
         const dir = file.getDirectory();
 
@@ -45,4 +32,15 @@ export class Utils {
             baseDir: dir.getRelative(dir.getParentDirectory())
         };
     }
+
+    /* todo kill
+    public static groupBy<T, TKey>(items: T[], predicate: (item: T) => TKey): Map<TKey, T[]> {
+        return items.reduce<Map<TKey, T[]>>((map, item, index, array): Map<TKey, T[]> => {
+            const key = predicate(item);
+            map.set(key, map.get(key) || []);
+            map.get(key)?.push(item);
+            return map;
+        }, new Map<TKey, T[]>());
+    }
+    */
 }

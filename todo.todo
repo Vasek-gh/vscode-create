@@ -1,22 +1,8 @@
-Папке могут быть readonly  FileSystem.isWritableFileSystem FilePermission.Readonly
-Как создавать файлы без расширения??? Напрмер dockerfile внктри проекта
-
-
-
-Можно продумать автодополнение для папок. Но для этого потребуется обработка tab-
-
-Вызвать шелл команду
-Вызвать vscode команду. Аргументы не поддерживаются. В теории можно дергать другие расширения. Но ни кто не умеет определять где он был вызыван. В лучше случаем это будет аетивный редактор.
-Создать файл по шаблону
-Создать файл и преминить сниппет.
-Создать файл из контента.
-
-
-
-
-
-
-
+fs: check virual fs
+fs: readonly stat not work https://github.com/microsoft/vscode-discussions/discussions/673
+C#: move all in separate extension
+Wizard: How create files without extensions???? for example dockerfile
+Wizard: Split the extension into core and UI to support web browser
 
 
 `noop

@@ -1,4 +1,3 @@
-import * as vscode from "vscode";
 import * as assert from "assert";
 import { Path } from "@src/tools/Path";
 import { Config } from "@src/configuration/Config";
@@ -6,7 +5,6 @@ import { FileCreatorMock } from "@tests/mocks/FileCreatorMock";
 import { FileSuggestion } from "@src/actions/factory/FileSuggestion";
 import { ExtensionMock } from "@tests/mocks/ExtensionMock";
 import { InputInfo } from "@src/actions/InputInfo";
-import { Context } from "@src/context/Context";
 import { LoggerMock } from "@tests/mocks/LoggerMock";
 import { TestsUtils } from "@tests/TestsUtils";
 import { ContextMock } from "@tests/mocks/ContextMock";
@@ -38,11 +36,11 @@ suite("FileSuggestion", async () => {
         validate("dir/dir/test.fstu", "template2");
     });
 
-    test("Invalid input throws errors", () => {
-        assert.rejects(() => execute(undefined, undefined, undefined, undefined), Error);
-        assert.rejects(() => execute(undefined, undefined, "fstu", undefined), Error);
-        assert.rejects(() => execute(undefined, undefined, undefined, "template1"), Error);
-        assert.rejects(() => execute("dir/dir", undefined, undefined, undefined), Error);
+    test("Invalid input throws errors", async () => {
+        await assert.rejects(() => execute(undefined, undefined, undefined, undefined), Error);
+        await assert.rejects(() => execute(undefined, undefined, "fstu", undefined), Error);
+        await assert.rejects(() => execute(undefined, undefined, undefined, "template1"), Error);
+        await assert.rejects(() => execute("dir/dir", undefined, undefined, undefined), Error);
 
         assert.strictEqual(fileCreatorMock.createQueries.length, 0);
     });

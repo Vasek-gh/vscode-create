@@ -1,3 +1,4 @@
+import { Logger } from "@src/tools/Logger";
 import { ActionFactory } from "@src/actions/ActionFactory";
 import { CommandAction } from "@src/actions/CommandAction";
 import { SuggestionAction } from "@src/actions/SuggestionAction";
@@ -12,11 +13,11 @@ export class ActionFactoryMock implements ActionFactory {
     ) {
     }
 
-    public createFileSuggestion(): SuggestionAction {
+    public createFileSuggestion(parentLogger?: Logger): SuggestionAction {
         return this.fileSuggestion ?? this.createActionMock();
     }
 
-    public createFolderSuggestion(): SuggestionAction {
+    public createFolderSuggestion(parentLogger?: Logger): SuggestionAction {
         return this.folderSuggestion ?? this.createActionMock();
     }
 

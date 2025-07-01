@@ -4,7 +4,6 @@ import { SuggestionAction } from "./SuggestionAction";
 import { Context } from "@src/context/Context";
 
 export interface ActionProvider {
-    getId(): string;
     getLevel(): number | undefined;
     getCommands(context: Context): Promise<CommandAction[]>;
     getSuggestions(context: Context): Promise<SuggestionAction[]>;

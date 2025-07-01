@@ -9,6 +9,7 @@ import { ActionProvider } from "@src/actions/ActionProvider";
 import { CommandAction } from "@src/actions/CommandAction";
 import { SuggestionAction } from "@src/actions/SuggestionAction";
 import { Utils } from "@src/tools/Utils";
+import { GenericActionProvider } from "@src/actions/factory/GenericActionProvider";
 
 export class ContextBuilder {
     private readonly logger: Logger;
@@ -16,6 +17,7 @@ export class ContextBuilder {
     public constructor(
         logger: Logger,
         private readonly actionFactory: ActionFactory,
+        private readonly genericActionProvider: GenericActionProvider,
         private readonly actionProviderFactories: ActionProviderFactory[],
     ) {
         this.logger = logger.create(this);
@@ -44,9 +46,9 @@ export class ContextBuilder {
             {}
         );
 
-        const commands: CommandAction[] = [];
-        const suggestions: SuggestionAction[] = [];
-        const templateVariables: { [key: string]: any } = {};
+        let commands: CommandAction[] = [];
+        let suggestions: SuggestionAction[] = [];
+        let templateVariables: { [key: string]: any } = {};
 
         const actionProviders = await this.getProviders(tmpContext);
         for (const actionProvider of actionProviders) {
@@ -57,6 +59,10 @@ export class ContextBuilder {
             for (const variableKey of Object.keys(variabels)) {
                 templateVariables[variableKey] = variabels[variableKey];
             }
+        }
+
+        if (suggestions.length === 0) {
+            suggestions = this.genericActionProvider.getSuggestions(tmpContext);
         }
 
         this.logger.trace("Context ready");

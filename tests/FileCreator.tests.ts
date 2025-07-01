@@ -14,8 +14,6 @@ import { ContextFilesImpl } from "@src/wizard/ContextFilesImpl";
 import { ContextMock } from "@tests/mocks/ContextMock";
 
 suite("FileCreator", async () => {
-
-
     const fsService = new FileSystemServiceImpl(
         LoggerMock.instance
     );

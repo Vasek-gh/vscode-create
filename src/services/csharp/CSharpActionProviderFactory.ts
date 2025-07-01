@@ -56,6 +56,8 @@ export class CSharpActionProviderFactory implements ActionProviderFactory {
             if (files.length > 0) {
                 return [currentLevel, files[0]];
             }
+
+            currentLevel--;
         }
         while (currentLevel > -1000);
 

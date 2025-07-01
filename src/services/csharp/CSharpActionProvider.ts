@@ -42,7 +42,7 @@ export class CSharpActionProvider implements ActionProvider {
         private readonly config: CSharpConfig,
         private readonly level: number,
         private readonly csprojFile: Path,
-        private readonly fsService: FileSystemService,
+        private readonly fsService: FileSystemService, // todo kill это только для чтения файла
         private readonly actionFactory: ActionFactory,
     ) {
         this.logger = logger.create(this);

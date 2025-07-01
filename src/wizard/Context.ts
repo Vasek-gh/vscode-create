@@ -53,7 +53,9 @@ export class Context implements ContextInterface {
     }
 
     public getDefaultSuggestions(): SuggestionAction[] {
-        return this.suggestions;
+        return this.suggestions.length === 0
+            ? [this.fileSuggestion]
+            : this.suggestions;
     }
 
     public getExtensionSuggestion(extension: string): SuggestionAction {

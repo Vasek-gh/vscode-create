@@ -45,37 +45,37 @@ suite("ContextFilesImpl", () => {
 
     test("Basic", async () => {
         const dir1 = wsRoorDir;
-        const files11 = wsRoorDir.appendFile("file11.txt");
-        const files12 = wsRoorDir.appendFile("file12.txt");
+        const file11 = wsRoorDir.appendFile("file11.txt");
+        const file12 = wsRoorDir.appendFile("file12.txt");
 
         const dir2 = dir1.appendDir("dir2");
 
         const dir3 = dir2.appendDir("dir3");
-        const files31 = dir3.appendFile("file31.txt");
-        const files32 = dir3.appendFile("file32.txt");
-        const files33 = dir3.appendFile("file33.txt");
+        const file31 = dir3.appendFile("file31.txt");
+        const file32 = dir3.appendFile("file32.txt");
+        const file33 = dir3.appendFile("file33.txt");
 
         const dir4 = dir3.appendDir("dir4");
-        const files41 = dir4.appendFile("file41.txt");
-        const files42 = dir4.appendFile("file42.txt");
+        const file41 = dir4.appendFile("file41.txt");
+        const file42 = dir4.appendFile("file42.txt");
 
         const dir5 = dir3.appendDir("dir5");
-        const files51 = dir5.appendFile("file51.txt");
-        const files52 = dir5.appendFile("file52.txt");
+        const file51 = dir5.appendFile("file51.txt");
+        const file52 = dir5.appendFile("file52.txt");
 
         const files = await new FilesCase(
-            files11,
-            files12,
-            files31,
-            files32,
-            files33,
-            files41,
-            files42,
-            files51,
-            files52
+            file11,
+            file12,
+            file31,
+            file32,
+            file33,
+            file41,
+            file42,
+            file51,
+            file52
         ).run(
             wsRoorDir,
-            files32
+            file32
         );
 
         const rootFiles = TestsUtils.assertIfNull(files.getFiles(FileLevel.Root));
@@ -88,25 +88,44 @@ suite("ContextFilesImpl", () => {
         assert.strictEqual(currentFiles.length, 3);
         assert.strictEqual(siblingsFiles.length, 4);
 
-        TestsUtils.assertIfNull(rootFiles.find(f => f.isSame(files11)));
-        TestsUtils.assertIfNull(rootFiles.find(f => f.isSame(files12)));
+        TestsUtils.assertIfNull(rootFiles.find(f => f.isSame(file11)));
+        TestsUtils.assertIfNull(rootFiles.find(f => f.isSame(file12)));
 
-        TestsUtils.assertIfNull(currentFiles.find(f => f.isSame(files31)));
-        TestsUtils.assertIfNull(currentFiles.find(f => f.isSame(files32)));
-        TestsUtils.assertIfNull(currentFiles.find(f => f.isSame(files33)));
+        TestsUtils.assertIfNull(currentFiles.find(f => f.isSame(file31)));
+        TestsUtils.assertIfNull(currentFiles.find(f => f.isSame(file32)));
+        TestsUtils.assertIfNull(currentFiles.find(f => f.isSame(file33)));
 
-        TestsUtils.assertIfNull(siblingsFiles.find(f => f.isSame(files41)));
-        TestsUtils.assertIfNull(siblingsFiles.find(f => f.isSame(files42)));
-        TestsUtils.assertIfNull(siblingsFiles.find(f => f.isSame(files51)));
-        TestsUtils.assertIfNull(siblingsFiles.find(f => f.isSame(files52)));
+        TestsUtils.assertIfNull(siblingsFiles.find(f => f.isSame(file41)));
+        TestsUtils.assertIfNull(siblingsFiles.find(f => f.isSame(file42)));
+        TestsUtils.assertIfNull(siblingsFiles.find(f => f.isSame(file51)));
+        TestsUtils.assertIfNull(siblingsFiles.find(f => f.isSame(file52)));
     });
 
-
-    test("Outside level not throw", async () => {
-        const files1 = wsRoorDir.appendFile("file1.txt");
+    test("Create empty levels", async () => {
+        const file = wsRoorDir.appendFile("file1.txt");
 
         const files = await new FilesCase(
-            files1
+            file
+        ).run(
+            wsRoorDir,
+            wsRoorDir.appendDir("dir1", "dir2")
+        );
+
+        assert.strictEqual(files.getFiles(1)?.length, 0);
+        assert.strictEqual(files.getFiles(0)?.length, 0);
+        assert.strictEqual(files.getFiles(-1)?.length, 0);
+        assert.strictEqual(files.getFiles(-2)?.length, 1);
+
+        const testFile = TestsUtils.assertIfNull(files.getFiles(-2))[0];
+
+        assert.ok(testFile.isSame(file));
+    });
+
+    test("Outside level not throw", async () => {
+        const file = wsRoorDir.appendFile("file.txt");
+
+        const files = await new FilesCase(
+            file
         ).run(
             wsRoorDir,
             wsRoorDir

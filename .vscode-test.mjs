@@ -31,6 +31,9 @@ export default defineConfig({
             `${fixedCwd}/out/src/configuration/ExtensionConfig.js`,
             `${fixedCwd}/out/src/configuration/TemplateConfig.js`,
             `${fixedCwd}/out/src/configuration/TemplateItemConfig.js`,
+            `${fixedCwd}/out/src/services/FileCreator.js`,
+            `${fixedCwd}/out/src/services/FileSystemService.js`,
+            `${fixedCwd}/out/src/tools/Extension.js`,
         ]
     }
 });

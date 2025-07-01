@@ -19,6 +19,7 @@ import { FileCreator } from "./services/FileCreator";
 import { Path } from "./tools/Path";
 import { CSharpActionProviderFactory } from "./services/csharp/CSharpActionProviderFactory";
 import { TestCommand } from "./commands/TestCommand";
+import { GenericActionProvider } from "./actions/factory/GenericActionProvider";
 
 /**
  * Entry point of this extension
@@ -65,6 +66,10 @@ class Host implements Extension, vscode.Disposable {
                 new ContextBuilder(
                     this.logger,
                     actionFactory,
+                    new GenericActionProvider(
+                        this.logger,
+                        actionFactory
+                    ),
                     [
                         new CSharpActionProviderFactory(
                             this.logger,

@@ -5,8 +5,9 @@ import { FolderSuggestion } from "@src/actions/factory/FolderSuggestion";
 import { Config } from "@src/configuration/Config";
 import { FileCreator } from "@src/services/FileCreator";
 import { SuggestionAction } from "@src/actions/SuggestionAction";
+import { ActionFactory } from "../ActionFactory";
 
-export class ActionFactoryImpl {
+export class ActionFactoryImpl implements ActionFactory {
     public constructor(
         private readonly logger: Logger,
         private readonly config: Config,
@@ -15,17 +16,17 @@ export class ActionFactoryImpl {
     ) {
     }
 
-    public createFileSuggestion(): SuggestionAction {
+    public createFileSuggestion(parentLogger?: Logger): SuggestionAction {
         return new FileSuggestion(
-            this.logger,
+            parentLogger ?? this.logger,
             this.config,
             this.fileCreator
         );
     }
 
-    public createFolderSuggestion(): SuggestionAction {
+    public createFolderSuggestion(parentLogger?: Logger): SuggestionAction {
         return new FolderSuggestion(
-            this.logger,
+            parentLogger ?? this.logger,
             this.fsService
         );
     }

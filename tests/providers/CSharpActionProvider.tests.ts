@@ -13,52 +13,10 @@ import { Utils } from "@src/tools/Utils";
 import { Context } from "@src/context/Context";
 import { CSharpConfig } from "@src/services/csharp/CSharpConfig";
 import { SuggestionAction } from "@src/actions/SuggestionAction";
-import { ContextFiles } from "@src/context/ContextFiles";
-import { FileLevel } from "@src/context/FileLevel";
 import { CommandAction } from "@src/actions/CommandAction";
+import { ContextFilesMock } from "@tests/mocks/ContextFilesMock";
 
-class ContextFilesMock implements ContextFiles {
-    private readonly items: Path[][];
-    private readonly currentLevelIndex: number;
-
-    public constructor(
-        items?: Path[][],
-        currentLevelIndex?: number
-    ) {
-        this.items = items ?? [];
-        this.currentLevelIndex ??= currentLevelIndex ?? (items?.length ?? 0) - 2;
-    }
-
-    public getFiles(level: number | FileLevel): undefined | Path[] {
-        const index = this.levelToIndex(level);
-
-        return index === undefined
-            ? undefined
-            : this.items[index];
-    }
-
-    private levelToIndex(level: number | FileLevel): number | undefined {
-        if (this.currentLevelIndex < 0) {
-            return undefined;
-        }
-
-        if (level === FileLevel.Root) {
-            return 0;
-        }
-
-        const index = this.currentLevelIndex + level;
-
-        return index >= 0 && index < this.items.length
-            ? index
-            : undefined;
-    }
-
-    public getByRegExp(level: number | FileLevel, pattern: string): undefined | Path[] {
-        return undefined;
-    }
-}
-
-suite("CSharpContextHandler", () => {
+suite("CSharpActionProvider", () => {
     const csRootDir = TestsUtils.getProjPath("CSharpProj");
     const wsRoorDir = TestsUtils.getWsRootDir(csRootDir);
     const cliProjFile = csRootDir.appendFile("Src", "Proj1.Cli", "Proj1.Cli.csproj");

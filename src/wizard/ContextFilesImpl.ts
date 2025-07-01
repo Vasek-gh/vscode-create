@@ -55,19 +55,15 @@ export class ContextFilesImpl implements ContextFiles {
             new vscode.RelativePattern(workspaceDir.uri, `{${patterns.join(",")}}`)
         )).map(f => Path.fromFile(f));
 
-        return this.createFromFiles(workspaceDir, files, patterns.length - 2);
+        return this.createFromFiles(workspaceDir, files, patterns.length, patterns.length - 2);
     }
 
-    private static createFromFiles(workspaceDir: Path, files: Path[], currentLevel: number): ContextFiles {
-        let maxLevel = -1;
+    private static createFromFiles(workspaceDir: Path, files: Path[], levelCount: number, currentLevel: number): ContextFiles {
         const levelMap = new Map<number, Path[]>();
 
         for (const file of files) {
             const relative = file.getDirectory().getRelative(workspaceDir);
             const pathLevel = this.getPathLevel(relative);
-            if (maxLevel < pathLevel) {
-                maxLevel = pathLevel;
-            }
 
             let level = levelMap.get(pathLevel);
             if (!level) {
@@ -79,7 +75,7 @@ export class ContextFilesImpl implements ContextFiles {
         }
 
         const levelArray: Path[][] = [];
-        for (let index = 0; index <= maxLevel; index++) {
+        for (let index = 0; index < levelCount; index++) {
             levelArray.push(levelMap.get(index) ?? []);
         }
 
