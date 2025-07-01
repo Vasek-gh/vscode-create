@@ -14,6 +14,14 @@ export class Utils {
         return typeof obj;
     }
 
+    public static getRootDirectory(path: Path): Path | undefined {
+        const workspaceFolder = vscode.workspace.getWorkspaceFolder(path.uri);
+
+        return workspaceFolder === undefined
+            ? undefined
+            : Path.fromDir(workspaceFolder.uri);
+    }
+
     public static groupBy<T, TKey>(items: T[], predicate: (item: T) => TKey): Map<TKey, T[]> {
         return items.reduce<Map<TKey, T[]>>((map, item, index, array): Map<TKey, T[]> => {
             const key = predicate(item);

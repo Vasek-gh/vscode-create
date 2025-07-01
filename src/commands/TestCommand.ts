@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import process from "process";
 import { Logger } from "../tools/Logger";
-import { FileSystemService } from "../services/fs/FileSystemService";
+import { FileSystemService } from "../services/FileSystemService";
 import { Path } from "../tools/Path";
 import { Wizard } from "../wizard/Wizard";
 import { InputInfo } from "@src/actions/InputInfo";

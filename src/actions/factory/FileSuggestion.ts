@@ -2,7 +2,7 @@ import { Logger } from "@src/tools/Logger";
 import { Context } from "@src/context/Context";
 import { Config } from "@src/configuration/Config";
 import { TemplateConfig } from "@src/configuration/TemplateConfig";
-import { FileCreator } from "@src/services/fs/FileCreator";
+import { FileCreator } from "@src/services/FileCreator";
 import { InputInfo } from "@src/actions/InputInfo";
 import { BaseAction } from "./BaseAction";
 import { CommandAction } from "@src/actions/CommandAction";

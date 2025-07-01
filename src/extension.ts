@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import { FileSystemService } from "./services/fs/FileSystemService";
-import { DefaultFileSystemService } from "./services/fs/DefaultFileSystemService";
+import { FileSystemService } from "./services/FileSystemService";
+import { FileSystemServiceImpl } from "./services/fs/FileSystemServiceImpl";
 import { Wizard } from "./wizard/Wizard";
 import { RunOnExplorerCommand } from "./commands/RunOnExplorerCommand";
 import { Logger } from "./tools/Logger";
@@ -12,10 +12,10 @@ import { WizardAcceptMoveFocusCommand } from "./commands/WizardAcceptMoveFocusCo
 import { WizardAcceptKeepFocusCommand } from "./commands/WizardAcceptKeepFocusCommand";
 import { Config } from "./configuration/Config";
 import { ActionFactory } from "./actions/ActionFactory";
-import { DefaultFileCreator } from "./services/fs/DefaultFileCreator";
+import { FileCreatorImpl } from "./services/fs/FileCreatorImpl";
 import { ActionFactoryImpl } from "@src/actions/factory/ActionFactoryImpl";
 import { Extension } from "./tools/Extension";
-import { FileCreator } from "./services/fs/FileCreator";
+import { FileCreator } from "./services/FileCreator";
 import { Path } from "./tools/Path";
 import { CSharpActionProviderFactory } from "./services/csharp/CSharpActionProviderFactory";
 import { TestCommand } from "./commands/TestCommand";
@@ -49,10 +49,10 @@ class Host implements Extension, vscode.Disposable {
             const config = new Config(this);
 
             const fsService = this.registerObject<FileSystemService>(
-                new DefaultFileSystemService(this.logger)
+                new FileSystemServiceImpl(this.logger)
             );
             const fileCreator = this.registerObject<FileCreator>(
-                new DefaultFileCreator(this.logger, this, fsService)
+                new FileCreatorImpl(this.logger, this, fsService)
             );
             const dotnetService = this.registerObject<DotnetService>(
                 new DotnetService(this.logger)
@@ -64,7 +64,6 @@ class Host implements Extension, vscode.Disposable {
             const contextBuilder = this.registerObject<ContextBuilder>(
                 new ContextBuilder(
                     this.logger,
-                    fsService,
                     actionFactory,
                     [
                         new CSharpActionProviderFactory(
@@ -82,8 +81,7 @@ class Host implements Extension, vscode.Disposable {
                     this.logger,
                     this,
                     config,
-                    contextBuilder,
-                    fsService
+                    contextBuilder
                 )
             );
 

@@ -5,9 +5,9 @@ import Handlebars from "handlebars";
 import { Path } from "@src/tools/Path";
 import { Logger } from "@src/tools/Logger";
 import { TemplateConfig } from "@src/configuration/TemplateConfig";
-import { FileSystemService } from "./FileSystemService";
+import { FileSystemService } from "../FileSystemService";
 import { Context } from "@src/context/Context";
-import { FileCreator } from "./FileCreator";
+import { FileCreator } from "../FileCreator";
 import { Extension } from "@src/tools/Extension";
 import { Utils } from "@src/tools/Utils";
 
@@ -17,7 +17,7 @@ interface FileInfo {
     template: string;
 }
 
-export class DefaultFileCreator implements FileCreator {
+export class FileCreatorImpl implements FileCreator {
     public static readonly templateRawStrStart: string = ">>";
 
     private readonly logger: Logger;
@@ -165,7 +165,7 @@ export class DefaultFileCreator implements FileCreator {
             return "";
         }
 
-        if (template.startsWith(DefaultFileCreator.templateRawStrStart)) {
+        if (template.startsWith(FileCreatorImpl.templateRawStrStart)) {
             return this.getTemplateBodyAsRawStr(template);
         }
 
@@ -194,7 +194,7 @@ export class DefaultFileCreator implements FileCreator {
     }
 
     private getTemplateBodyAsRawStr(template: string): string {
-        return template.substring(DefaultFileCreator.templateRawStrStart.length);
+        return template.substring(FileCreatorImpl.templateRawStrStart.length);
     }
 
     private getTemplateBodyFromAbsolutePath(template: string): string {

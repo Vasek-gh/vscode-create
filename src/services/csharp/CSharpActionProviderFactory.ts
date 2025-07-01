@@ -4,7 +4,7 @@ import { ActionProvider } from "@src/actions/ActionProvider";
 import { ActionProviderFactory } from "@src/actions/ActionProviderFactory";
 import { ContextFiles } from "@src/context/ContextFiles";
 import { FileLevel } from "@src/context/FileLevel";
-import { FileSystemService } from "@src/services/fs/FileSystemService";
+import { FileSystemService } from "@src/services/FileSystemService";
 import { ActionFactory } from "@src/actions/ActionFactory";
 import { CSharpActionProvider } from "./CSharpActionProvider";
 import { CSharpConfig } from "./CSharpConfig";

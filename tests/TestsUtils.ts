@@ -26,8 +26,8 @@ export class TestsUtils {
         return Path.fromDir(uri);
     }
 
-    public static async getWsRootDir(path: Path): Promise<Path> {
-        const wsFolder = await vscode.workspace.getWorkspaceFolder(path.uri);
+    public static getWsRootDir(path: Path): Path {
+        const wsFolder = vscode.workspace.getWorkspaceFolder(path.uri);
         if (!wsFolder) {
             throw new Error("Root is empty");
         }

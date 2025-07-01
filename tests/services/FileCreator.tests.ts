@@ -8,19 +8,19 @@ import { ExtensionMock } from "@tests/mocks/ExtensionMock";
 import { Context } from "@src/context/Context";
 import { LoggerMock } from "@tests/mocks/LoggerMock";
 import { TestsUtils } from "@tests/TestsUtils";
-import { DefaultFileCreator } from "@src/services/fs/DefaultFileCreator";
-import { DefaultFileSystemService } from "@src/services/fs/DefaultFileSystemService";
+import { FileCreatorImpl } from "@src/services/fs/FileCreatorImpl";
+import { FileSystemServiceImpl } from "@src/services/fs/FileSystemServiceImpl";
 import { ContextFilesImpl } from "@src/wizard/ContextFilesImpl";
 import { ContextMock } from "@tests/mocks/ContextMock";
 
 suite("FileCreator", async () => {
-    let contextMock: Context;
 
-    const fsService = new DefaultFileSystemService(
+
+    const fsService = new FileSystemServiceImpl(
         LoggerMock.instance
     );
 
-    const fileCreator = new DefaultFileCreator(
+    const fileCreator = new FileCreatorImpl(
         LoggerMock.instance,
         ExtensionMock.instance,
         fsService
@@ -29,15 +29,14 @@ suite("FileCreator", async () => {
     const proj1Dir = TestsUtils.getProjPath("Proj1").appendDir("Test");
     const fctExtensionConfig = new Config(ExtensionMock.instance).getExtension("fct");
 
+    const contextMock = new ContextMock(
+        TestsUtils.getWsRootDir(proj1Dir),
+        proj1Dir,
+        proj1Dir,
+    );
+
     suiteSetup(async () => {
         await vscode.workspace.fs.delete(proj1Dir.uri, { useTrash: false, recursive: true });
-        const wsRootDir = await TestsUtils.getWsRootDir(proj1Dir);
-
-        contextMock = new ContextMock(
-            wsRootDir,
-            proj1Dir,
-            proj1Dir,
-        );
     });
 
     test("Null template create empty file", async () => {

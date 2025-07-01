@@ -7,7 +7,7 @@ import { LoggerMock } from "@tests/mocks/LoggerMock";
 import { ActionFactoryMock } from "@tests/mocks/ActionFactoryMock";
 import { TestsUtils } from "@tests/TestsUtils";
 import { CSharpActionProvider } from "@src/services/csharp/CSharpActionProvider";
-import { DefaultFileSystemService } from "@src/services/fs/DefaultFileSystemService";
+import { FileSystemServiceImpl } from "@src/services/fs/FileSystemServiceImpl";
 import { CSharpVars } from "@src/services/csharp/CSharpVars";
 import { Utils } from "@src/tools/Utils";
 import { Context } from "@src/context/Context";
@@ -59,18 +59,14 @@ class ContextFilesMock implements ContextFiles {
 }
 
 suite("CSharpContextHandler", () => {
-    let wsRoorDir: Path;
-    const csRootDir: Path = TestsUtils.getProjPath("CSharpProj");
-    const cliProjFile: Path = csRootDir.appendFile("Src", "Proj1.Cli", "Proj1.Cli.csproj");
-    const libProjFile: Path = csRootDir.appendFile("Src", "Proj1.Lib", "Proj1.Lib.csproj");
+    const csRootDir = TestsUtils.getProjPath("CSharpProj");
+    const wsRoorDir = TestsUtils.getWsRootDir(csRootDir);
+    const cliProjFile = csRootDir.appendFile("Src", "Proj1.Cli", "Proj1.Cli.csproj");
+    const libProjFile = csRootDir.appendFile("Src", "Proj1.Lib", "Proj1.Lib.csproj");
 
-    const fsService = new DefaultFileSystemService(
+    const fsService = new FileSystemServiceImpl(
         LoggerMock.instance,
     );
-
-    suiteSetup(async () => {
-        wsRoorDir = await TestsUtils.getWsRootDir(csRootDir);
-    });
 
     test("Csproj vars", async () => {
         const context = createContext(libProjFile);

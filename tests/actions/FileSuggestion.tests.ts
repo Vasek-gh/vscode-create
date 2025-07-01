@@ -12,7 +12,11 @@ import { TestsUtils } from "@tests/TestsUtils";
 import { ContextMock } from "@tests/mocks/ContextMock";
 
 suite("FileSuggestion", async () => {
-    let contextMock: Context;
+    let contextMock = new ContextMock(
+        TestsUtils.getWsRootDir(TestsUtils.getProjPath("Proj1")),
+        TestsUtils.getProjPath("Proj1"),
+        TestsUtils.getProjPath("Proj1")
+    );
 
     const fileCreatorMock = new FileCreatorMock();
 
@@ -24,15 +28,6 @@ suite("FileSuggestion", async () => {
 
     suiteSetup(async () => {
         fileCreatorMock.clearInvocations();
-
-        const testPath = TestsUtils.getProjPath("Proj1");
-        const wsRootDir = await TestsUtils.getWsRootDir(testPath);
-
-        contextMock = new ContextMock(
-            wsRootDir,
-            TestsUtils.getProjPath("Proj1"),
-            TestsUtils.getProjPath("Proj1")
-        );
     });
 
     test("Fixed template", async () => {

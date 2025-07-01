@@ -5,7 +5,6 @@ import { Context } from "./Context";
 import { ContextBuilder } from "./ContextBuilder";
 import { Action } from "@src/actions/Action";
 import { SuggestionAction } from "@src/actions/SuggestionAction";
-import { FileSystemService } from "../services/fs/FileSystemService";
 import { InputInfo } from "@src/actions/InputInfo";
 import { Config } from "../configuration/Config";
 import { Utils } from "@src/tools/Utils";
@@ -46,7 +45,6 @@ export class Wizard implements vscode.Disposable {
         private readonly extension: Extension,
         private readonly config: Config,
         private readonly contextBuilder: ContextBuilder,
-        private readonly fsService: FileSystemService
     ) {
         this.logger = logger.create(this);
     }
@@ -114,7 +112,7 @@ export class Wizard implements vscode.Disposable {
             this.hide();
         }
 
-        const rootDir = this.fsService.getRootDirectory(path);
+        const rootDir = Utils.getRootDirectory(path);
         if (!rootDir) {
             this.logger.error(`Current path is outside workspace: ${path}`); // todo show error
             return;

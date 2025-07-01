@@ -13,11 +13,6 @@ export interface FileSystemService {
     getStat(path: Path): Promise<vscode.FileStat | undefined>;
 
     /**
-     * Return workspace root directory for given path
-     */
-    getRootDirectory(path: Path): Path | undefined;
-
-    /**
      * todo
      */
     readTextFile(path: Path): Promise<string | undefined>;

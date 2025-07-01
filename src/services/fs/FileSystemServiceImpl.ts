@@ -1,10 +1,11 @@
 import * as vscode from "vscode";
-import { FileSystemService } from "@src/services/fs/FileSystemService";
+import { FileSystemService } from "@src/services/FileSystemService";
 import { Path } from "@src/tools/Path";
 import { Logger } from "@src/tools/Logger";
 
 // todo check virual fs
-export class DefaultFileSystemService implements FileSystemService {
+// todo readonly stat not work https://github.com/microsoft/vscode-discussions/discussions/673
+export class FileSystemServiceImpl implements FileSystemService {
     private readonly fileNotFound = vscode.FileSystemError.FileNotFound("dummy");
     private readonly logger: Logger;
 
@@ -25,14 +26,6 @@ export class DefaultFileSystemService implements FileSystemService {
 
     public getStat(path: Path): Promise<vscode.FileStat | undefined> {
         return this.internalStat(path.uri);
-    }
-
-    public getRootDirectory(path: Path): Path | undefined {
-        const wsFolder = vscode.workspace.getWorkspaceFolder(path.uri);
-
-        return wsFolder === undefined
-            ? undefined
-            : Path.fromDir(wsFolder.uri);
     }
 
     public async readTextFile(path: Path): Promise<string | undefined> {

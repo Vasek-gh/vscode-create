@@ -1,9 +1,9 @@
-import { FileSystemService } from "@src/services/fs/FileSystemService";
+import { FileSystemService } from "@src/services/FileSystemService";
 import { Logger } from "@src/tools/Logger";
 import { FileSuggestion } from "@src/actions/factory/FileSuggestion";
 import { FolderSuggestion } from "@src/actions/factory/FolderSuggestion";
 import { Config } from "@src/configuration/Config";
-import { FileCreator } from "@src/services/fs/FileCreator";
+import { FileCreator } from "@src/services/FileCreator";
 import { SuggestionAction } from "@src/actions/SuggestionAction";
 
 export class ActionFactoryImpl {

@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import process from "process";
 import Handlebars from "handlebars";
 import { Logger } from "../tools/Logger";
-import { FileSystemService } from "../services/fs/FileSystemService";
+import { FileSystemService } from "../services/FileSystemService";
 import { Path } from "../tools/Path";
 import { Shell } from "../tools/Shell";
 import { Wizard } from "../wizard/Wizard";
@@ -27,6 +27,9 @@ export class RunOnEditorCommand {
                 return;
             }
             var path = Path.fromFile(editor.document.uri);
+
+            const stat1 = await fsService.getStat(path);
+            const stat2 = await fsService.getStat(path.getDirectory());
             const p = process.pid;
 
             console.log(editor.document.uri.path);
@@ -58,22 +61,6 @@ export class RunOnEditorCommand {
             const version = extensionCtx.extension.packageJSON.version;
             const extensionId = extensionCtx.extension.packageJSON.name;
             const extension = vscode.extensions.getExtension("vscode-create");
-
-
-
-            const iii = InputInfo.parse("\\dir/dir\\dir\\");
-
-            const wsRootDir = fsService.getRootDirectory(path) ?? path;
-
-            const vars2 = new Map<string, unknown>();
-            const csproj = wsRootDir.appendFile("SampleProject", "SampleProject.csproj");
-            vars2.set("csproj", {
-                filename: csproj.fullPath.substring(wsRootDir.fullPath.length + 1),
-                filenameFull: csproj.fullPath,
-                directory: csproj.getDirectory().fullPath.substring(wsRootDir.fullPath.length + 1),
-                directoryFull: csproj.getDirectory().fullPath,
-                namespace: "Qwerty.Cli"
-            });
         }));
     }
 }

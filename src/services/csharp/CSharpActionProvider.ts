@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { FileSystemService } from "@src/services/fs/FileSystemService";
+import { FileSystemService } from "@src/services/FileSystemService";
 import { Logger } from "@src/tools/Logger";
 import { Path } from "@src/tools/Path";
 import { Utils } from "@src/tools/Utils";

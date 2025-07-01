@@ -3,7 +3,7 @@ import * as assert from "assert";
 import { Path } from "@src/tools/Path";
 import { LoggerMock } from "@tests/mocks/LoggerMock";
 import { TestsUtils } from "@tests/TestsUtils";
-import { DefaultFileSystemService } from "@src/services/fs/DefaultFileSystemService";
+import { FileSystemServiceImpl } from "@src/services/fs/FileSystemServiceImpl";
 import { ContextFilesImpl } from "@src/wizard/ContextFilesImpl";
 import { ContextFiles } from "@src/context/ContextFiles";
 import { FileLevel } from "@src/context/FileLevel";
@@ -41,11 +41,7 @@ class FilesCase {
 }
 
 suite("ContextFilesImpl", () => {
-    let wsRoorDir: Path;
-
-    suiteSetup(async () => {
-        wsRoorDir = await TestsUtils.getWsRootDir(TestsUtils.getProjPath("Proj1"));
-    });
+    const wsRoorDir = TestsUtils.getWsRootDir(TestsUtils.getProjPath("Proj1"));
 
     test("Basic", async () => {
         const dir1 = wsRoorDir;

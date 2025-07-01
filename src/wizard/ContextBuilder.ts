@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-import { FileSystemService } from "../services/fs/FileSystemService";
 import { Path } from "../tools/Path";
 import { Context } from "./Context";
 import { Logger } from "../tools/Logger";
@@ -9,13 +8,13 @@ import { ContextFilesImpl } from "./ContextFilesImpl";
 import { ActionProvider } from "@src/actions/ActionProvider";
 import { CommandAction } from "@src/actions/CommandAction";
 import { SuggestionAction } from "@src/actions/SuggestionAction";
+import { Utils } from "@src/tools/Utils";
 
 export class ContextBuilder {
     private readonly logger: Logger;
 
     public constructor(
         logger: Logger,
-        private readonly fsService: FileSystemService,
         private readonly actionFactory: ActionFactory,
         private readonly actionProviderFactories: ActionProviderFactory[],
     ) {
@@ -24,7 +23,7 @@ export class ContextBuilder {
 
     public async run(path: Path): Promise<Context> {
         this.logger.trace("Begin build context");
-        var workspaceDir = this.fsService.getRootDirectory(path);
+        var workspaceDir = Utils.getRootDirectory(path);
         if (!workspaceDir) {
             throw new Error(`${path} is outside workspace`);
         }
