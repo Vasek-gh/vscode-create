@@ -24,6 +24,10 @@ export class InputInfo {
         }
     }
 
+    public isDirectory(): boolean {
+        return (this.directory ?? "").length > 0 && !this.name && !this.extension;
+    }
+
     public getFilename(): string {
         const dir = this.directory && this.directory.length > 0
             ? this.directory + "/"

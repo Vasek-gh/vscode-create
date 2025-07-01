@@ -17,7 +17,7 @@ export class FolderSuggestion extends BaseAction implements SuggestionAction {
         logger: Logger,
         private readonly fsService: FileSystemService
     ) {
-        super("", "", undefined);
+        super("", undefined);
 
         this.logger = logger.create(this);
     }
@@ -39,7 +39,7 @@ export class FolderSuggestion extends BaseAction implements SuggestionAction {
 
     public applyInput(input: InputInfo): void {
         this.invalidate();
-        if (!input.directory || input.name || input.extension) {
+        if (!input.isDirectory()) {
             this.logger.warn("Current input is not a folder");
             return;
         }
@@ -47,7 +47,6 @@ export class FolderSuggestion extends BaseAction implements SuggestionAction {
         this.folder = input.directory;
         this.template = input.template;
 
-        this.value = this.folder ?? "";
         this.description = `Create folder ${this.folder}`;
     }
 
@@ -56,7 +55,6 @@ export class FolderSuggestion extends BaseAction implements SuggestionAction {
     }
 
     private invalidate(): void {
-        this.value = "<invalid>";
         this.description = "<invalid>";
         this.folder = undefined;
         this.template = undefined;

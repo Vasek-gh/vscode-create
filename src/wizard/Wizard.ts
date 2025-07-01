@@ -9,6 +9,7 @@ import { InputInfo } from "@src/actions/InputInfo";
 import { Config } from "../configuration/Config";
 import { Utils } from "@src/tools/Utils";
 import { Extension } from "@src/tools/Extension";
+import { CommandAction } from "@src/actions/CommandAction";
 
 interface QuickPickItem extends vscode.QuickPickItem {
     execute(ctx: Context): Promise<Path | undefined>;
@@ -178,7 +179,7 @@ export class Wizard implements vscode.Disposable {
                 label: "Commands",
                 kind: vscode.QuickPickItemKind.Separator
             },
-            ...this.ctx.getCommands().map(cmd => this.createItem(cmd, false, cmd.iconPath))
+            ...this.ctx.getCommands().map(cmd => this.createCommandItem(cmd, false, cmd.iconPath))
         ];
     }
 
@@ -191,12 +192,12 @@ export class Wizard implements vscode.Disposable {
 
             const commands = suggestion.getTemplateCommands();
             if (input.template === undefined || commands.length === 0) {
-                result.push(this.createItem(suggestion, true, undefined));
+                result.push(this.createSuggestionItem(input, suggestion));
             }
             else {
                 const commands = suggestion.getTemplateCommands();
                 for (const command of commands) {
-                    result.push(this.createItem(command, true, undefined));
+                    result.push(this.createCommandItem(command, true, undefined));
                 }
             }
         }
@@ -209,13 +210,12 @@ export class Wizard implements vscode.Disposable {
             return [];
         }
 
-        if (input.directory && !input.name && !input.extension) {
+        if (input.isDirectory()) {
             return [this.ctx.getFolderAction()];
         }
 
-        // todo fix file without extnsion
         if (input.name) {
-            if (input.extension) {
+            if (input.extension !== undefined || input.extension === "") {
                 return [this.ctx.getExtensionSuggestion(input.extension)];
             }
             else {
@@ -226,14 +226,31 @@ export class Wizard implements vscode.Disposable {
         return [];
     }
 
-    private createItem(action: Action, alwaysShow: boolean, iconPath?: vscode.IconPath): QuickPickItem {
+    private createCommandItem(action: CommandAction, alwaysShow: boolean, iconPath?: vscode.IconPath): QuickPickItem {
         return {
-            label: action.value,
+            label: action.label,
             description: action.description,
             detail: action.detail,
             alwaysShow: alwaysShow,
-            // iconPath: iconPath, // todo
-            iconPath: vscode.ThemeIcon.File,
+            iconPath: iconPath ?? vscode.ThemeIcon.File,
+            execute(ctx): Promise<Path | undefined> {
+                return action.execute(ctx);
+            },
+        };
+    }
+
+    private createSuggestionItem(inputInfo: InputInfo, action: SuggestionAction): QuickPickItem {
+        let label = inputInfo.getFilename();
+        if (!inputInfo.extension && action.extension) {
+            label += "." + action.extension;
+        }
+
+        return {
+            label: label,
+            description: action.description,
+            detail: action.detail ?? "fsdfsdfsdfdsfds",
+            alwaysShow: true,
+            iconPath: inputInfo.isDirectory() ? vscode.ThemeIcon.Folder : vscode.ThemeIcon.File,
             execute(ctx): Promise<Path | undefined> {
                 return action.execute(ctx);
             },

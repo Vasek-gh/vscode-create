@@ -23,7 +23,6 @@ export class ActionFactoryMock implements ActionFactory {
 
     private createActionMock(): SuggestionAction {
         return {
-            value: "mock",
             description: "mock",
             execute: (c): Promise<Path | undefined> => {
                 return Promise.resolve(undefined);

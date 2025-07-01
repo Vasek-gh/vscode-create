@@ -11,7 +11,6 @@ export class GenericExtensionSuggestion implements SuggestionAction {
     private readonly logger: Logger;
     private readonly fileSuggestion: SuggestionAction;
 
-    public value: string = "";
     public description: string = "";
     public detail?: string;
     public readonly extension: string;
@@ -46,7 +45,6 @@ export class GenericExtensionSuggestion implements SuggestionAction {
             input.template
         ));
 
-        this.value = this.fileSuggestion.value;
         this.description = this.fileSuggestion.description;
     }
 

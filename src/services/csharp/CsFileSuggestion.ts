@@ -12,7 +12,6 @@ export class CsFileSuggestion implements SuggestionAction {
     private readonly logger: Logger;
     private readonly fileSuggestion: SuggestionAction;
 
-    public value: string = "";
     public description: string = "";
     public detail?: string;
     public readonly extension: string = "cs";
@@ -47,8 +46,6 @@ export class CsFileSuggestion implements SuggestionAction {
             input.extension ?? "cs",
             input.template ?? (isInterface ? "interface" : "class")
         ));
-
-        this.value = this.fileSuggestion.value;
 
         if (input.template === undefined) {
             this.description = `Create C# ${isInterface ? "interface" : "class"}`;

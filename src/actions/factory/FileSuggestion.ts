@@ -28,7 +28,7 @@ export class FileSuggestion extends BaseAction implements SuggestionAction {
         private readonly config: Config,
         private readonly fileCreator: FileCreator
     ) {
-        super("", "", undefined);
+        super("", undefined);
 
         this.logger = logger.create(this);
         this.templates = [];
@@ -67,7 +67,6 @@ export class FileSuggestion extends BaseAction implements SuggestionAction {
 
         const currentTemplate = this.getCurrentTemplate();
 
-        this.value = this.filename;
         this.description = this.createDescription(currentTemplate);
     }
 
@@ -92,7 +91,7 @@ export class FileSuggestion extends BaseAction implements SuggestionAction {
             }
 
             result.push({
-                value: this.filename,
+                label: this.filename,
                 description: this.createDescription(template),
                 execute(context: Context): Promise<Path | undefined> {
                     return that.executeWithTemplate(context, template);
@@ -104,7 +103,6 @@ export class FileSuggestion extends BaseAction implements SuggestionAction {
     }
 
     private invalidate(): void {
-        this.value = "<invalid>";
         this.description = "<invalid>";
         this.filename = undefined;
         this.template = undefined;
