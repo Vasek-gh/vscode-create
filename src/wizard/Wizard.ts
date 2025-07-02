@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { Logger } from "../tools/Logger";
 import { Path } from "../tools/Path";
-import { Context } from "./Context";
+import { WizardContext } from "./WizardContext";
 import { ContextBuilder } from "./ContextBuilder";
 import { Action } from "@src/actions/Action";
 import { SuggestionAction } from "@src/actions/SuggestionAction";
@@ -12,7 +12,7 @@ import { Extension } from "@src/tools/Extension";
 import { CommandAction } from "@src/actions/CommandAction";
 
 interface QuickPickItem extends vscode.QuickPickItem {
-    execute(ctx: Context): Promise<Path | undefined>;
+    execute(ctx: WizardContext): Promise<Path | undefined>;
 }
 
 // todo
@@ -38,7 +38,7 @@ const debouncedTest = debounce(test, 300);
 export class Wizard implements vscode.Disposable {
     private readonly logger: Logger;
 
-    private ctx?: Context;
+    private ctx?: WizardContext;
     private quickPick?: vscode.QuickPick<vscode.QuickPickItem>;
 
     public constructor(

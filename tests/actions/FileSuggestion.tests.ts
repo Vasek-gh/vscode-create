@@ -2,7 +2,7 @@ import * as assert from "assert";
 import { Path } from "@src/tools/Path";
 import { Config } from "@src/configuration/Config";
 import { FileCreatorMock } from "@tests/mocks/FileCreatorMock";
-import { FileSuggestion } from "@src/actions/factory/FileSuggestion";
+import { FileSuggestion } from "@src/actions/common/FileSuggestion";
 import { ExtensionMock } from "@tests/mocks/ExtensionMock";
 import { InputInfo } from "@src/actions/InputInfo";
 import { LoggerMock } from "@tests/mocks/LoggerMock";

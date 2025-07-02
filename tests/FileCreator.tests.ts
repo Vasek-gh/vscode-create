@@ -5,15 +5,13 @@ import fs from "fs";
 import { Path } from "@src/tools/Path";
 import { Config } from "@src/configuration/Config";
 import { ExtensionMock } from "@tests/mocks/ExtensionMock";
-import { Context } from "@src/context/Context";
 import { LoggerMock } from "@tests/mocks/LoggerMock";
 import { TestsUtils } from "@tests/TestsUtils";
 import { FileCreatorImpl } from "@src/services/fs/FileCreatorImpl";
 import { FileSystemServiceImpl } from "@src/services/fs/FileSystemServiceImpl";
-import { ContextFilesImpl } from "@src/wizard/ContextFilesImpl";
 import { ContextMock } from "@tests/mocks/ContextMock";
 
-suite("FileCreator", async () => {
+suite("FileCreator", () => {
     const fsService = new FileSystemServiceImpl(
         LoggerMock.instance
     );

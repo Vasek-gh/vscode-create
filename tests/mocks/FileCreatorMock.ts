@@ -11,6 +11,10 @@ interface CreateQuery {
 export class FileCreatorMock implements FileCreator {
     public createQueries: CreateQuery[] = [];
 
+    public createByContent(file: Path, content: string): Promise<Path | undefined> {
+        return Promise.resolve(undefined);
+    }
+
     public create(ctx: Context, file: Path, template?: TemplateConfig): Promise<Path | undefined> {
         this.createQueries.push({
             file,

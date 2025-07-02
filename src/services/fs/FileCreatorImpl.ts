@@ -34,6 +34,18 @@ export class FileCreatorImpl implements FileCreator {
         this.init();
     }
 
+    public async createByContent(file: Path, content: string): Promise<Path | undefined> {
+        const workspaceEdit = new vscode.WorkspaceEdit();
+        workspaceEdit.createFile(file.uri, {
+            overwrite: true,
+            contents: Buffer.from(content)
+        });
+
+        const result = await this.createFiles(file, workspaceEdit);
+
+        return result ? file : undefined;
+    }
+
     public async create(ctx: Context, file: Path, template?: TemplateConfig): Promise<Path | undefined> {
         this.logger.trace(`Execute\ndir: ${ctx.currentDir}\nfile: ${file}\ntemplate: ${template ? "<set>" : "<unset>"}`);
 
@@ -47,12 +59,8 @@ export class FileCreatorImpl implements FileCreator {
             .join("\n");
 
         if (existsList) {
-            const overwriteQueryResult = await vscode.window.showWarningMessage("File exists. Overwrite?", {
-                modal: true,
-                detail: "These files will be overwritten:\n" + existsList
-            }, "Overwrite");
-
-            if (overwriteQueryResult !== "Overwrite") {
+            const queryResult = await this.showOverwriteQuery("These files will be overwritten:\n" + existsList);
+            if (!queryResult) {
                 return undefined;
             }
         }
@@ -64,22 +72,36 @@ export class FileCreatorImpl implements FileCreator {
             template
         );
 
-        const wsEdit = new vscode.WorkspaceEdit();
+        const workspaceEdit = new vscode.WorkspaceEdit();
         for (const fileInfo of filesInfo) {
             const fileBody = await this.getFileBody(ctx.rootDir, fileInfo, vars);
-            wsEdit.createFile(fileInfo.path.uri, {
+            workspaceEdit.createFile(fileInfo.path.uri, {
                 overwrite: true,
                 contents: Buffer.from(fileBody)
             });
         }
 
-        const result = await vscode.workspace.applyEdit(wsEdit, { isRefactoring: false });
+        const result = await this.createFiles(file, workspaceEdit);
+
+        return result ? filesInfo[0].path : undefined;
+    }
+
+    private async createFiles(file: Path, workspaceEdit: vscode.WorkspaceEdit): Promise<boolean> {
+        const result = await vscode.workspace.applyEdit(workspaceEdit, { isRefactoring: false });
         if (!result) {
             this.logger.error(`Something went wrong and the file(${file}) was not created`);
-            return undefined;
         }
 
-        return filesInfo[0].path;
+        return result;
+    }
+
+    private async showOverwriteQuery(detail: string): Promise<boolean> {
+        const overwriteQueryResult = await vscode.window.showWarningMessage("File exists. Overwrite?", {
+            modal: true,
+            detail: detail
+        }, "Overwrite");
+
+        return overwriteQueryResult === "Overwrite";
     }
 
     private async getFilesInfo(file: Path, templateConfig?: TemplateConfig): Promise<FileInfo[]> {

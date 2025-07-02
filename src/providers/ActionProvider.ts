@@ -1,7 +1,6 @@
-import * as vscode from "vscode";
-import { CommandAction } from "./CommandAction";
-import { SuggestionAction } from "./SuggestionAction";
 import { Context } from "@src/context/Context";
+import { CommandAction } from "../actions/CommandAction";
+import { SuggestionAction } from "../actions/SuggestionAction";
 
 export interface ActionProvider {
     getLevel(): number | undefined;

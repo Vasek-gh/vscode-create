@@ -4,7 +4,7 @@ import { Path } from "@src/tools/Path";
 import { Context as ContextInterface } from "@src/context/Context";
 import { ContextFiles } from "@src/context/ContextFiles";
 
-export class Context implements ContextInterface {
+export class WizardContext implements ContextInterface {
     private readonly commands: CommandAction[];
     private readonly suggestions: SuggestionAction[];
     private readonly fileSuggestion: SuggestionAction;

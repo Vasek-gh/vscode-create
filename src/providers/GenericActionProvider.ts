@@ -1,10 +1,10 @@
 import { Context } from "@src/context/Context";
-import { SuggestionAction } from "../SuggestionAction";
+import { SuggestionAction } from "../actions/SuggestionAction";
 import { FileLevel } from "@src/context/FileLevel";
 import { Path } from "@src/tools/Path";
 import { Logger } from "@src/tools/Logger";
-import { GenericExtensionSuggestion } from "./GenericExtensionSuggestion";
-import { ActionFactory } from "../ActionFactory";
+import { GenericExtensionSuggestion } from "../actions/common/GenericExtensionSuggestion";
+import { ActionFactory } from "../actions/ActionFactory";
 
 export class GenericActionProvider {
     private static readonly limit = 3;

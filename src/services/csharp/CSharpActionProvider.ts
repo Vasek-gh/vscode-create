@@ -9,7 +9,7 @@ import { SuggestionAction } from "@src/actions/SuggestionAction";
 import { CSharpVars } from "./CSharpVars";
 import { CSharpConfig } from "./CSharpConfig";
 import { ActionFactory } from "@src/actions/ActionFactory";
-import { ActionProvider } from "@src/actions/ActionProvider";
+import { ActionProvider } from "@src/providers/ActionProvider";
 import { Context } from "@src/context/Context";
 import { FileLevel } from "@src/context/FileLevel";
 import { Dictionary } from "@src/tools/Dictionary";
@@ -131,7 +131,6 @@ export class CSharpActionProvider implements ActionProvider {
             : extensionInfos;
     }
 
-    // todo refactoring with getCurrentExtensionInfo
     private getParentExtensionInfo(context: Context, csprojDir: Path): ExtensionInfo[] {
         const parentDir = context.currentDir.getParentDirectory();
         const extensionInfos = this.getLevelExtensionInfo(context, FileLevel.Parent);

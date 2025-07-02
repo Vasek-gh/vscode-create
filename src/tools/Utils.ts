@@ -33,6 +33,24 @@ export class Utils {
         };
     }
 
+    public static formatLitteral(value: string): string {
+        if (value === "") {
+            return value;
+        }
+
+        const rows = value.split("\n");
+        if (rows.length === 0) {
+            return value;
+        }
+
+        const startIndex = rows[0].trim() === "" ? 1 : 0;
+        const endIndex = rows.length - (rows[rows.length - 1].trim() === "" ? 2 : 1);
+        const whiteSpaceCount = rows[startIndex].length - rows[startIndex].trimStart().length;
+
+        return rows.slice(startIndex, endIndex + 1).map(r => r.substring(whiteSpaceCount).trimEnd())
+            .join("\n");
+    }
+
     /* todo kill
     public static groupBy<T, TKey>(items: T[], predicate: (item: T) => TKey): Map<TKey, T[]> {
         return items.reduce<Map<TKey, T[]>>((map, item, index, array): Map<TKey, T[]> => {

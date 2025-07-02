@@ -39,6 +39,12 @@ export class RunOnEditorCommand {
 
             const a = vscode.extensions.all;
 
+            const str = Utils.formatLitteral(`
+                rwerewre
+                 rerew
+                qqqqq
+                `);
+
             const allCommands = await vscode.commands.getCommands();
             const selfCommands = allCommands.filter(c => c.startsWith("vscode-create"));
 

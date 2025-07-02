@@ -13,13 +13,14 @@ import { WizardAcceptKeepFocusCommand } from "./commands/WizardAcceptKeepFocusCo
 import { Config } from "./configuration/Config";
 import { ActionFactory } from "./actions/ActionFactory";
 import { FileCreatorImpl } from "./services/fs/FileCreatorImpl";
-import { ActionFactoryImpl } from "@src/actions/factory/ActionFactoryImpl";
+import { ActionFactoryImpl } from "@src/actions/common/ActionFactoryImpl";
 import { Extension } from "./tools/Extension";
 import { FileCreator } from "./services/FileCreator";
 import { Path } from "./tools/Path";
 import { CSharpActionProviderFactory } from "./services/csharp/CSharpActionProviderFactory";
 import { TestCommand } from "./commands/TestCommand";
-import { GenericActionProvider } from "./actions/factory/GenericActionProvider";
+import { GenericActionProvider } from "./providers/GenericActionProvider";
+import { CommonActionProvider } from "./providers/CommonActionProvider";
 
 /**
  * Entry point of this extension
@@ -71,6 +72,10 @@ class Host implements Extension, vscode.Disposable {
                         actionFactory
                     ),
                     [
+                        new CommonActionProvider(
+                            this.logger,
+                            fileCreator
+                        ),
                         new CSharpActionProviderFactory(
                             this.logger,
                             config,

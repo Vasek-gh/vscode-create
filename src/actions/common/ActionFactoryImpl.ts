@@ -1,7 +1,7 @@
 import { FileSystemService } from "@src/services/FileSystemService";
 import { Logger } from "@src/tools/Logger";
-import { FileSuggestion } from "@src/actions/factory/FileSuggestion";
-import { FolderSuggestion } from "@src/actions/factory/FolderSuggestion";
+import { FileSuggestion } from "@src/actions/common/FileSuggestion";
+import { FolderSuggestion } from "@src/actions/common/FolderSuggestion";
 import { Config } from "@src/configuration/Config";
 import { FileCreator } from "@src/services/FileCreator";
 import { SuggestionAction } from "@src/actions/SuggestionAction";

@@ -5,7 +5,7 @@ import { ActionFactoryMock } from "@tests/mocks/ActionFactoryMock";
 import { TestsUtils } from "@tests/TestsUtils";
 import { Context } from "@src/context/Context";
 import { SuggestionAction } from "@src/actions/SuggestionAction";
-import { GenericActionProvider } from "@src/actions/factory/GenericActionProvider";
+import { GenericActionProvider } from "@src/providers/GenericActionProvider";
 import { ContextFilesMock } from "@tests/mocks/ContextFilesMock";
 
 suite("GenericActionProvider", () => {

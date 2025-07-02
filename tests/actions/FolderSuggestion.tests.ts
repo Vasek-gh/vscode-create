@@ -5,7 +5,7 @@ import { InputInfo } from "@src/actions/InputInfo";
 import { LoggerMock } from "@tests/mocks/LoggerMock";
 import { TestsUtils } from "@tests/TestsUtils";
 import { ContextMock } from "@tests/mocks/ContextMock";
-import { FolderSuggestion } from "@src/actions/factory/FolderSuggestion";
+import { FolderSuggestion } from "@src/actions/common/FolderSuggestion";
 import { FileSystemServiceImpl } from "@src/services/fs/FileSystemServiceImpl";
 
 suite("FolderSuggestion", async () => {

@@ -1,15 +1,15 @@
 import * as vscode from "vscode";
 import { Path } from "../tools/Path";
-import { Context } from "./Context";
+import { WizardContext } from "./WizardContext";
 import { Logger } from "../tools/Logger";
 import { ActionFactory } from "../actions/ActionFactory";
-import { ActionProviderFactory } from "@src/actions/ActionProviderFactory";
+import { ProvidersFactory } from "@src/providers/ProvidersFactory";
 import { ContextFilesImpl } from "./ContextFilesImpl";
-import { ActionProvider } from "@src/actions/ActionProvider";
+import { ActionProvider } from "@src/providers/ActionProvider";
 import { CommandAction } from "@src/actions/CommandAction";
 import { SuggestionAction } from "@src/actions/SuggestionAction";
 import { Utils } from "@src/tools/Utils";
-import { GenericActionProvider } from "@src/actions/factory/GenericActionProvider";
+import { GenericActionProvider } from "@src/providers/GenericActionProvider";
 
 export class ContextBuilder {
     private readonly logger: Logger;
@@ -18,12 +18,12 @@ export class ContextBuilder {
         logger: Logger,
         private readonly actionFactory: ActionFactory,
         private readonly genericActionProvider: GenericActionProvider,
-        private readonly actionProviderFactories: ActionProviderFactory[],
+        private readonly actionProviderFactories: ProvidersFactory[],
     ) {
         this.logger = logger.create(this);
     }
 
-    public async run(path: Path): Promise<Context> {
+    public async run(path: Path): Promise<WizardContext> {
         this.logger.trace("Begin build context");
         var workspaceDir = Utils.getRootDirectory(path);
         if (!workspaceDir) {
@@ -34,7 +34,7 @@ export class ContextBuilder {
         const folderSuggestion = this.actionFactory.createFolderSuggestion();
         const contextFiles = await ContextFilesImpl.createFromPath(workspaceDir, path);
 
-        const tmpContext = new Context(
+        const tmpContext = new WizardContext(
             workspaceDir,
             path.getDirectory(),
             path,
@@ -67,7 +67,7 @@ export class ContextBuilder {
 
         this.logger.trace("Context ready");
 
-        return new Context(
+        return new WizardContext(
             tmpContext.rootDir,
             tmpContext.currentDir,
             tmpContext.currentPath,
@@ -80,7 +80,7 @@ export class ContextBuilder {
         );
     }
 
-    private async getProviders(context: Context): Promise<ActionProvider[]> {
+    private async getProviders(context: WizardContext): Promise<ActionProvider[]> {
         let result: ActionProvider[] = [];
         let maxLevel = Number.MAX_VALUE;
         const alwaysWorkingProviders: ActionProvider[] = [];
