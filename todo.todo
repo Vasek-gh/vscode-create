@@ -1,7 +1,14 @@
+Test context builder
+Test commands
+Test wizard ???
+Test FileSystemServiceImpl
+Remove readTextFile from FileSystemService
+ActionProvider from configure
+TemplateVariablesProvider from configure
+Filename templates
 fs: check virual fs
 fs: readonly stat not work https://github.com/microsoft/vscode-discussions/discussions/673
 C#: move all in separate extension
-Wizard: How create files without extensions???? for example dockerfile
 Wizard: Split the extension into core and UI to support web browser
 
 
