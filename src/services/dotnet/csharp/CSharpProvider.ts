@@ -6,27 +6,15 @@ import { Utils } from "@src/tools/Utils";
 import { CsFileSuggestion } from "./CsFileSuggestion";
 import { CommandAction } from "@src/actions/CommandAction";
 import { SuggestionAction } from "@src/actions/SuggestionAction";
-import { CSharpVars } from "./CSharpVars";
+import { VarsNames } from "./VarsNames";
 import { CSharpConfig } from "./CSharpConfig";
 import { ActionFactory } from "@src/actions/ActionFactory";
 import { ActionProvider } from "@src/providers/ActionProvider";
 import { Context } from "@src/context/Context";
 import { FileLevel } from "@src/context/FileLevel";
 import { Dictionary } from "@src/tools/Dictionary";
-
-const CS_EXT: string = ".cs";
-const XAML_EXT: string = ".xaml";
-const XAML_CS_EXT: string = ".xaml.cs";
-const AXAML_EXT: string = ".axaml";
-const AXAML_CS_EXT: string = ".axaml.cs";
-
-const CS_EXTENSIONS: string[] = [
-    CS_EXT,
-    XAML_EXT,
-    XAML_CS_EXT,
-    AXAML_EXT,
-    AXAML_CS_EXT,
-];
+import { FileExtensions } from "../FileExtensions";
+import { TemplateVariablesProvider } from "@src/providers/TemplateVariablesProvider";
 
 interface ExtensionInfo {
     value: string;
@@ -34,26 +22,17 @@ interface ExtensionInfo {
     csharp: boolean;
 }
 
-export class CSharpActionProvider implements ActionProvider {
+export class CSharpProvider implements ActionProvider, TemplateVariablesProvider {
     private readonly logger: Logger;
 
     public constructor(
         logger: Logger,
         private readonly config: CSharpConfig,
-        private readonly level: number,
         private readonly csprojFile: Path,
         private readonly fsService: FileSystemService, // todo kill это только для чтения файла
         private readonly actionFactory: ActionFactory,
     ) {
         this.logger = logger.create(this);
-    }
-
-    public getId(): string {
-        return Utils.getTypeName(this);
-    }
-
-    public getLevel(): number | undefined {
-        return this.level;
     }
 
     public getCommands(context: Context): Promise<CommandAction[]> {
@@ -78,7 +57,7 @@ export class CSharpActionProvider implements ActionProvider {
             return result;
         }
 
-        result[CSharpVars.csproj] = {
+        result[VarsNames.csproj] = {
             namespace: await this.getNamespace(),
             ...Utils.getFileVars(this.csprojFile, context.rootDir)
         };
@@ -159,15 +138,15 @@ export class CSharpActionProvider implements ActionProvider {
         for (const file of files) {
             const filename = file.getFileName();
 
-            let extension = CS_EXTENSIONS.find(e => filename.endsWith(e));
+            let extension = FileExtensions.csExtensions.find(e => filename.endsWith(e));
             const isPrimary = extension !== undefined;
 
-            if (extension === CS_EXT && filename.endsWith(XAML_CS_EXT)) {
-                extension = XAML_CS_EXT;
+            if (extension === FileExtensions.cs && filename.endsWith(FileExtensions.xamlCs)) {
+                extension = FileExtensions.xamlCs;
             }
 
-            if (extension === CS_EXT && filename.endsWith(AXAML_CS_EXT)) {
-                extension = AXAML_CS_EXT;
+            if (extension === FileExtensions.cs && filename.endsWith(FileExtensions.axamlCs)) {
+                extension = FileExtensions.axamlCs;
             }
 
             if (!extension) {
@@ -189,17 +168,17 @@ export class CSharpActionProvider implements ActionProvider {
     private getCsharpSuggestions(extensionInfos: ExtensionInfo[]): SuggestionAction[] {
         const result: SuggestionAction[] = [];
 
-        if (extensionInfos.some(ei => ei.value = CS_EXT)) {
+        if (extensionInfos.some(ei => ei.value = FileExtensions.cs)) {
             result.push(this.createCsFileSuggestion());
         }
 
-        if (this.isWpfProject() || extensionInfos.some(ei => ei.value = XAML_EXT)) {
-            const onlyXaml = !extensionInfos.some(ei => ei.value = XAML_CS_EXT);
+        if (this.isWpfProject() || extensionInfos.some(ei => ei.value = FileExtensions.xaml)) {
+            const onlyXaml = !extensionInfos.some(ei => ei.value = FileExtensions.xamlCs);
             // create xaml item
         }
 
-        if (this.isAvaloniaProject() || extensionInfos.some(ei => ei.value = AXAML_EXT)) {
-            const onlyXaml = !extensionInfos.some(ei => ei.value = AXAML_CS_EXT);
+        if (this.isAvaloniaProject() || extensionInfos.some(ei => ei.value = FileExtensions.axaml)) {
+            const onlyXaml = !extensionInfos.some(ei => ei.value = FileExtensions.axamlCs);
             // create axaml item
         }
 
@@ -217,24 +196,6 @@ export class CSharpActionProvider implements ActionProvider {
     private createCsFileSuggestion(): SuggestionAction {
         return new CsFileSuggestion(this.logger, this.actionFactory, this.config);
     }
-
-    /* move to dotnet
-    private createDirectoryPropsAction(): CommandAction {
-        const logger = this.logger;
-        const csprojFile = this.csprojFile;
-
-        return {
-            value: "Directory.Build.props",
-            description: "Create blank Directory.Build.props",
-            detail: "Override default property settings",
-            iconPath: undefined,
-            async execute(context: Context): Promise<Path | undefined> {
-                logger.trace(`Create Directory.Build.props at ${csprojFile.getDirectory()}`);
-                return; // todo
-            }
-        };
-    }
-    */
 
     private async getNamespace(): Promise<string> {
         const content = await this.fsService.readTextFile(this.csprojFile);

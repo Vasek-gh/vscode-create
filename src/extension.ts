@@ -7,7 +7,6 @@ import { Logger } from "./tools/Logger";
 import { Utils } from "./tools/Utils";
 import { ContextBuilder } from "./wizard/ContextBuilder";
 import { RunOnEditorCommand } from "./commands/RunOnEditorCommand";
-import { DotnetService } from "./services/dotnet/DotnetService";
 import { WizardAcceptMoveFocusCommand } from "./commands/WizardAcceptMoveFocusCommand";
 import { WizardAcceptKeepFocusCommand } from "./commands/WizardAcceptKeepFocusCommand";
 import { Config } from "./configuration/Config";
@@ -17,7 +16,7 @@ import { ActionFactoryImpl } from "@src/actions/common/ActionFactoryImpl";
 import { Extension } from "./tools/Extension";
 import { FileCreator } from "./services/FileCreator";
 import { Path } from "./tools/Path";
-import { CSharpActionProviderFactory } from "./services/csharp/CSharpActionProviderFactory";
+import { CSharpProvidersFactory } from "./services/dotnet/csharp/CSharpProvidersFactory";
 import { TestCommand } from "./commands/TestCommand";
 import { GenericActionProvider } from "./providers/GenericActionProvider";
 import { CommonActionProvider } from "./providers/CommonActionProvider";
@@ -56,9 +55,6 @@ class Host implements Extension, vscode.Disposable {
             const fileCreator = this.registerObject<FileCreator>(
                 new FileCreatorImpl(this.logger, this, fsService)
             );
-            const dotnetService = this.registerObject<DotnetService>(
-                new DotnetService(this.logger)
-            );
             const actionFactory = this.registerObject<ActionFactory>(
                 new ActionFactoryImpl(this.logger, config, fsService, fileCreator)
             );
@@ -76,7 +72,7 @@ class Host implements Extension, vscode.Disposable {
                             this.logger,
                             fileCreator
                         ),
-                        new CSharpActionProviderFactory(
+                        new CSharpProvidersFactory(
                             this.logger,
                             config,
                             fsService,

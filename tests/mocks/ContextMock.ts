@@ -4,6 +4,7 @@ import { Path } from "@src/tools/Path";
 import { ContextFilesMock } from "./ContextFilesMock";
 
 export class ContextMock implements Context {
+    public readonly uuid = new Date().toISOString();
     public readonly files: ContextFiles;
 
     public constructor(

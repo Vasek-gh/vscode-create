@@ -8,6 +8,8 @@ import { FileCreator } from "@src/services/FileCreator";
 import { Utils } from "@src/tools/Utils";
 import { Logger } from "../tools/Logger";
 import { Path } from "@src/tools/Path";
+import { TemplateVariablesProvider } from "./TemplateVariablesProvider";
+import { FileLevel } from "@src/context/FileLevel";
 
 class Commands {
     public static createReadmeMd(logger: Logger, fileCreator: FileCreator): CommandAction {
@@ -114,12 +116,16 @@ export class CommonActionProvider implements ActionProvider, ProvidersFactory {
         ];
     }
 
-    public create(context: Context): Promise<ActionProvider | undefined> {
+    public getLevel(context: Context): Promise<number | undefined> {
+        return Promise.resolve(FileLevel.Root);
+    }
+
+    public createActionProvider(context: Context): Promise<ActionProvider | undefined> {
         return Promise.resolve(this);
     }
 
-    public getLevel(): number | undefined {
-        return undefined;
+    public createTemplateVariablesProvider(context: Context): Promise<TemplateVariablesProvider | undefined> {
+        return Promise.resolve(undefined);
     }
 
     public getCommands(context: Context): Promise<CommandAction[]> {
@@ -132,9 +138,5 @@ export class CommonActionProvider implements ActionProvider, ProvidersFactory {
 
     public getSuggestions(context: Context): Promise<SuggestionAction[]> {
         return Promise.resolve([]);
-    }
-
-    public getTemplateVariables(context: Context): Promise<{ [key: string]: any }> {
-        return Promise.resolve({});
     }
 }

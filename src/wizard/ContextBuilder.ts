@@ -10,6 +10,7 @@ import { CommandAction } from "@src/actions/CommandAction";
 import { SuggestionAction } from "@src/actions/SuggestionAction";
 import { Utils } from "@src/tools/Utils";
 import { GenericActionProvider } from "@src/providers/GenericActionProvider";
+import { FileLevel } from "@src/context/FileLevel";
 
 export class ContextBuilder {
     private readonly logger: Logger;
@@ -18,7 +19,7 @@ export class ContextBuilder {
         logger: Logger,
         private readonly actionFactory: ActionFactory,
         private readonly genericActionProvider: GenericActionProvider,
-        private readonly actionProviderFactories: ProvidersFactory[],
+        private readonly providerFactories: ProvidersFactory[],
     ) {
         this.logger = logger.create(this);
     }
@@ -50,14 +51,20 @@ export class ContextBuilder {
         let suggestions: SuggestionAction[] = [];
         let templateVariables: { [key: string]: any } = {};
 
-        const actionProviders = await this.getProviders(tmpContext);
-        for (const actionProvider of actionProviders) {
-            commands.push(...await actionProvider.getCommands(tmpContext));
-            suggestions.push(...await actionProvider.getSuggestions(tmpContext));
+        const factories = await this.getProviderFactories(tmpContext);
+        for (const factory of factories) {
+            const actionProvider = await factory.createActionProvider(tmpContext);
+            if (actionProvider) {
+                commands.push(...await actionProvider.getCommands(tmpContext));
+                suggestions.push(...await actionProvider.getSuggestions(tmpContext));
+            }
 
-            const variabels = await actionProvider.getTemplateVariables(tmpContext);
-            for (const variableKey of Object.keys(variabels)) {
-                templateVariables[variableKey] = variabels[variableKey];
+            const templateVariablesProvider = await factory.createTemplateVariablesProvider(tmpContext);
+            if (templateVariablesProvider) {
+                const variabels = await templateVariablesProvider.getTemplateVariables(tmpContext);
+                for (const variableKey of Object.keys(variabels)) {
+                    templateVariables[variableKey] = variabels[variableKey];
+                }
             }
         }
 
@@ -80,20 +87,20 @@ export class ContextBuilder {
         );
     }
 
-    private async getProviders(context: WizardContext): Promise<ActionProvider[]> {
-        let result: ActionProvider[] = [];
-        let maxLevel = Number.MAX_VALUE;
-        const alwaysWorkingProviders: ActionProvider[] = [];
+    private async getProviderFactories(context: WizardContext): Promise<ProvidersFactory[]> {
+        let result: ProvidersFactory[] = [];
+        let maxLevel = Number.MIN_VALUE;
 
-        for (const actionProviderFactory of this.actionProviderFactories) {
-            const actionProvider = await actionProviderFactory.create(context);
-            if (!actionProvider) {
+        const alwaysWorkingFactories: ProvidersFactory[] = [];
+
+        for (const providerFactory of this.providerFactories) {
+            const level = await providerFactory.getLevel(context);
+            if (level === undefined) {
                 continue;
             }
 
-            const level = actionProvider?.getLevel();
-            if (!level) {
-                alwaysWorkingProviders.push(actionProvider);
+            if (level === FileLevel.Root) {
+                alwaysWorkingFactories.push(providerFactory);
                 continue;
             }
 
@@ -103,10 +110,10 @@ export class ContextBuilder {
             }
 
             if (level === maxLevel) {
-                result.push(actionProvider);
+                result.push(providerFactory);
             }
         }
 
-        return result.concat(alwaysWorkingProviders);
+        return result.concat(alwaysWorkingFactories);
     }
 }

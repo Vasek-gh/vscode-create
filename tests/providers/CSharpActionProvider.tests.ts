@@ -6,17 +6,17 @@ import { ExtensionMock } from "@tests/mocks/ExtensionMock";
 import { LoggerMock } from "@tests/mocks/LoggerMock";
 import { ActionFactoryMock } from "@tests/mocks/ActionFactoryMock";
 import { TestsUtils } from "@tests/TestsUtils";
-import { CSharpActionProvider } from "@src/services/csharp/CSharpActionProvider";
+import { CSharpProvider } from "@src/services/dotnet/csharp/CSharpProvider";
 import { FileSystemServiceImpl } from "@src/services/fs/FileSystemServiceImpl";
-import { CSharpVars } from "@src/services/csharp/CSharpVars";
+import { VarsNames } from "@src/services/dotnet/csharp/VarsNames";
 import { Utils } from "@src/tools/Utils";
 import { Context } from "@src/context/Context";
-import { CSharpConfig } from "@src/services/csharp/CSharpConfig";
+import { CSharpConfig } from "@src/services/dotnet/csharp/CSharpConfig";
 import { SuggestionAction } from "@src/actions/SuggestionAction";
 import { CommandAction } from "@src/actions/CommandAction";
 import { ContextFilesMock } from "@tests/mocks/ContextFilesMock";
 
-suite("CSharpActionProvider", () => {
+suite("CSharpProvider", () => {
     const csRootDir = TestsUtils.getProjPath("CSharpProj");
     const wsRoorDir = TestsUtils.getWsRootDir(csRootDir);
     const cliProjFile = csRootDir.appendFile("Src", "Proj1.Cli", "Proj1.Cli.csproj");
@@ -30,7 +30,7 @@ suite("CSharpActionProvider", () => {
         const context = createContext(libProjFile);
         const provider = createActionProvider(libProjFile);
 
-        const csprojVar = (await provider.getTemplateVariables(context))[CSharpVars.csproj];
+        const csprojVar = (await provider.getTemplateVariables(context))[VarsNames.csproj];
         const fileVars = Utils.getFileVars(libProjFile, wsRoorDir);
 
         assert.strictEqual(csprojVar.fullName, fileVars.fullName);
@@ -43,7 +43,7 @@ suite("CSharpActionProvider", () => {
         const context = createContext(libProjFile);
         const provider = createActionProvider(libProjFile);
 
-        const csprojVar = (await provider.getTemplateVariables(context))[CSharpVars.csproj];
+        const csprojVar = (await provider.getTemplateVariables(context))[VarsNames.csproj];
 
         assert.strictEqual(csprojVar.namespace, libProjFile.getFileName(true));
     });
@@ -52,7 +52,7 @@ suite("CSharpActionProvider", () => {
         const context = createContext(cliProjFile);
         const provider = createActionProvider(cliProjFile);
 
-        const csprojVar = (await provider.getTemplateVariables(context))[CSharpVars.csproj];
+        const csprojVar = (await provider.getTemplateVariables(context))[VarsNames.csproj];
 
         assert.strictEqual(csprojVar.namespace, "SuperCli");
     });
@@ -235,6 +235,7 @@ suite("CSharpActionProvider", () => {
 
     function createContext(at: Path, files?: Path[][], currentLevelIndex?: number): Context {
         return {
+            uuid: "test",
             rootDir: wsRoorDir,
             currentDir: at.getDirectory(),
             currentPath: at,
@@ -245,11 +246,10 @@ suite("CSharpActionProvider", () => {
         };
     }
 
-    function createActionProvider(csprojFile: Path): CSharpActionProvider {
-        return new CSharpActionProvider(
+    function createActionProvider(csprojFile: Path): CSharpProvider {
+        return new CSharpProvider(
             LoggerMock.instance,
             new CSharpConfig(new Config(ExtensionMock.instance)),
-            0,
             csprojFile,
             fsService,
             ActionFactoryMock.instance,

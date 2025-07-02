@@ -103,6 +103,7 @@ suite("GenericActionProvider", () => {
         currentLevelIndex?: number
     ): SuggestionAction[] {
         const context: Context = {
+            uuid: "test",
             rootDir: rootDir,
             currentDir: contextPath.getDirectory(),
             currentPath: contextPath,

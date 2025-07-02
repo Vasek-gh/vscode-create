@@ -11,6 +11,7 @@ export class WizardContext implements ContextInterface {
     private readonly folderSuggestion: SuggestionAction;
     private readonly templateVariables: { [key: string]: any };
 
+    public readonly uuid;
     public readonly rootDir: Path;
     public readonly currentDir: Path;
     public readonly currentPath: Path;
@@ -27,6 +28,7 @@ export class WizardContext implements ContextInterface {
         folderSuggestion: SuggestionAction,
         templateVariables: { [key: string]: any }
     ) {
+        this.uuid = new Date().toISOString();
         this.rootDir = rootDir;
         this.currentDir = currentDir;
         this.currentPath = currentPath;

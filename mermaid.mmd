@@ -68,7 +68,7 @@ namespace services {
 }
 
 namespace services.dotnet {
-    class CSharpActionProvider {
+    class CSharpProvider {
 
     }
 }
@@ -113,5 +113,6 @@ CommonActionProvider ..|> ActionProvider
 CommonActionProvider ..|> ProvidersFactory
 CommonActionProvider ..> FileCreator
 
-CSharpActionProvider ..|> ActionProvider
+CSharpProvider ..|> ActionProvider
+CSharpProvider ..|> TemplateVarsProvider
 
