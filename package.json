@@ -2,7 +2,7 @@
     "name": "vscode-create",
     "displayName": "vscode create",
     "description": "todo",
-    "version": "0.9.0",
+    "version": "0.8.0",
     "license": "MIT",
     "publisher": "vs-marketplace-vasek",
     "repository": {
@@ -24,21 +24,22 @@
         "project"
     ],
     "scripts": {
-        "lint": "eslint src --max-warnings 100",
-        "compile": "npm run check-types && npm run lint && node esbuild.js",
-        "package": "npm run check-types && npm run lint && node esbuild.js --production",
-        "compile-tests": "tsc -p . --outDir out && tsc-alias --outDir out && npm run copy-test-project",
-        "compile-api": "tsc --project tsconfig.api.json",
-        "pretest": "npm run compile-tests && npm run compile && npm run lint",
-        "check-types": "tsc --noEmit",
+        "lint": "eslint ./{src,tests}/** --max-warnings 0",
+        "lint-check": "eslint ./{src,tests}/** --max-warnings 100",
+
+        "pretest": "tsc -p . --outDir out && tsc-alias --outDir out && copyfiles -a tests/project/**/*.* out/",
         "test": "vscode-test",
         "coverage": "vscode-test --coverage",
+
+        "check-types": "tsc --noEmit",
+        "compile": "npm run check-types && npm run lint && node esbuild.js",
+        "package": "npm run check-types && npm run lint && node esbuild.js --production",
         "vscode:prepublish": "npm run package",
+
         "watch": "npm-run-all -p watch:*",
         "watch:esbuild": "node esbuild.js --watch",
         "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
-        "watch-tests": "tsc -p . -w --outDir out",
-        "copy-test-project": "copyfiles -a tests/project/**/*.* out/"
+        "watch-tests": "tsc -p . -w --outDir out"
     },
     "devDependencies": {
         "@stylistic/eslint-plugin": "^4.4.1",

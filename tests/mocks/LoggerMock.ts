@@ -7,4 +7,4 @@ export class LoggerMock extends Logger {
     ) {
         super("");
     }
-};
+}

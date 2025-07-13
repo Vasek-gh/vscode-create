@@ -1,8 +1,9 @@
 {
     "files.exclude": {
-        "**/out": true,
-        "**/dist": true,
-        "**/.vscode-test": true
+        "**/out": false,
+        "**/dist": false,
+        "**/coverage": false,
+        "**/.vscode-test": true,
     },
     "search.exclude": {
         "**/out": true,

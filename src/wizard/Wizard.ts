@@ -155,7 +155,7 @@ export class Wizard implements vscode.Disposable {
     private applyValue(input: string): void {
         if (this.ctx && this.quickPick) {
             debouncedTest(this.logger, "ddd");
-            this.logger.info(`applyValue`); // todo kill
+            this.logger.info("applyValue"); // todo kill
             const inputInfo = InputInfo.parse(input);
             this.quickPick.items = this.createItems(inputInfo);
             this.quickPick.title = this.ctx.currentPath.toString();

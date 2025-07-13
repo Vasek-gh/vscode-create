@@ -11,4 +11,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/check
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm i
+      - run: npm run test
+      - run: npm run coverage
+      - run: npm run compile

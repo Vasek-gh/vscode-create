@@ -13,6 +13,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm i
+      - run: npm install -g @vscode/vsce
+      - run: npm run test
+      - run: vsce package
 
       - name: Fetch tags
         run: git fetch --tags
@@ -50,13 +58,7 @@ jobs:
               lastTag: '${{ steps.get_last_tag.outputs.lastTag }}'
             });
 
-      - name: Echo dgb
-        run:  |
-          echo ${{ steps.prepare_notes.outputs.version }}
-          echo ${{ steps.prepare_notes.outputs.notes }}
-          cat ${{ steps.prepare_notes.outputs.notes }}
-
       - name: Create release
-        run: gh release create v${{ steps.prepare_notes.outputs.version }} --title ${{ steps.prepare_notes.outputs.version }} --notes-file ${{ steps.prepare_notes.outputs.notes }} --fail-on-no-commits ./README.md
+        run: gh release create v${{ steps.prepare_notes.outputs.version }} --title ${{ steps.prepare_notes.outputs.version }} --notes-file ${{ steps.prepare_notes.outputs.notes }} --fail-on-no-commits ./vscode-create-*.vsix
         env:
           GH_TOKEN: ${{ github.token }}
