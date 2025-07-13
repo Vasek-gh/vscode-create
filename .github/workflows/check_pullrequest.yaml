@@ -1,0 +1,14 @@
+name: Check pull request
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  Build:
+    name: Check pull request
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/check
