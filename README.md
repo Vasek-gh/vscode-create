@@ -1,5 +1,9 @@
 # vscode-create(dev branch)
 
+## Overview
+
+**Vs Code Create** is a simple extension for quickly creating files and folders in VS Code with template support
+
 ## Features
 * Quick file creation via hotkey(Ctrl+A by default) by Explorer or Editor
 * Single step quickpick input for all operations
@@ -23,3 +27,6 @@ This extension allows you to create files and folders in various ways. The resul
 ![sample2](./docs/images/sample2.png)
 ![sample4](./docs/images/sample4.png)
 ![sample5](./docs/images/sample5.png)
+
+## What's next
+For a more complete description of how it works and how it can be configured, read the [documentation](./docs/main.md)
