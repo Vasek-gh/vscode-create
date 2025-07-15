@@ -45,15 +45,15 @@ export class RunOnEditorCommand {
             const allCommands = await vscode.commands.getCommands();
             const selfCommands = allCommands.filter(c => c.startsWith("vscode-create"));
 
-            logger.info('Run cmd');
+            logger.info("Run cmd");
 
             const cmdRes = await vscode.commands.executeCommand("vscode-create.test", InputInfo.parse("ff.cs"));
 
             logger.info(`Run cmd end ${cmdRes}`);
 
-            logger.info('Run cmd 2');
+            logger.info("Run cmd 2");
             await vscode.commands.executeCommand("revealInExplorer", path.uri);
-            logger.info(`Run cmd 2 end`);
+            logger.info("Run cmd 2 end");
 
             return;
 

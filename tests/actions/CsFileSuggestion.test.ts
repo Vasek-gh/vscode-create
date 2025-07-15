@@ -2,7 +2,7 @@ import * as assert from "assert";
 import { CsFileSuggestion } from "../services/dotnet/csharp/CsFileSuggestion";
 import { Logger } from "../tools/Logger";
 import { TestsUtils } from "../TestsUtils";
-//import { ActionFactoryMock } from "@tests/mocks/ActionFactoryMock";
+// import { ActionFactoryMock } from "@tests/mocks/ActionFactoryMock";
 /*
 suite("CsFileSuggestion", () => {
 

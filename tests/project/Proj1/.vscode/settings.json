@@ -5,6 +5,14 @@
             "proj1": {
                 "template": ""
             }
+        },
+        "json": {
+            "object": {
+                "template": ">>{}"
+            },
+            "array": {
+                "template": ">>[]"
+            }
         }
     }
 }

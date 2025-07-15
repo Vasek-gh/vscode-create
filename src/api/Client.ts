@@ -4,21 +4,17 @@ import { SuggestionAction } from "@src/actions/SuggestionAction";
 import { Context } from "@src/context/Context";
 import { InputInfo } from "@src/actions/InputInfo";
 import { Path } from "@src/tools/Path";
-//import { Path } from "../shared/Path";
-//import { Context } from "@src/shared/Context";
-//import { InputInfo } from "@src/shared/InputInfo";
-
-//export { Path } from "../shared/Path";
-//export { Context } from "@src/shared/Context";
+// import { Path } from "../shared/Path";
+// import { Context } from "@src/shared/Context";
+// import { InputInfo } from "@src/shared/InputInfo";
+// export { Path } from "../shared/Path";
+// export { Context } from "@src/shared/Context";
 
 export { ActionDisplayDescriptor } from "@src/api/Protocol";
 
-    //export const x: 1;
-    //export { Context } from "@src/shared/Context";
-
-
-
-    interface ActionDisplayDescriptor {
+// export const x: 1;
+// export { Context } from "@src/shared/Context";
+interface ActionDisplayDescriptor {
     readonly caption: string;
     readonly description?: string;
     readonly detail?: string;
@@ -278,7 +274,7 @@ class ActionProviderHolder {
                 uuid: instanceUuid,
                 extension: suggestion.extension,
                 getDisplayInfoCommandId: ClientCommands.suggestionActionGetDisplayinfo,
-            })
+            });
         }
 
         return result;
@@ -291,7 +287,7 @@ class ActionProviderHolder {
 }
 
 class HostApi {
-    constructor() {
+    public constructor() {
 
     }
 /*

@@ -3,7 +3,6 @@ import { Logger } from "../tools/Logger";
 import { Path } from "../tools/Path";
 import { WizardContext } from "./WizardContext";
 import { ContextBuilder } from "./ContextBuilder";
-import { Action } from "@src/actions/Action";
 import { SuggestionAction } from "@src/actions/SuggestionAction";
 import { InputInfo } from "@src/actions/InputInfo";
 import { Config } from "../configuration/Config";
@@ -139,7 +138,8 @@ export class Wizard implements vscode.Disposable {
 
         this.quickPick.onDidAccept(async () => {
             this.logger.trace("OnDidAccept");
-            await this.accept(false/* todo true */, false);
+            await this.accept(true, false); // todo restore
+            // await this.accept(false, false);
         });
 
         this.quickPick.onDidChangeValue((value) => {
@@ -248,7 +248,7 @@ export class Wizard implements vscode.Disposable {
         return {
             label: label,
             description: action.description,
-            detail: action.detail ?? "fsdfsdfsdfdsfds",
+            detail: action.detail,
             alwaysShow: true,
             iconPath: inputInfo.isDirectory() ? vscode.ThemeIcon.Folder : vscode.ThemeIcon.File,
             execute(ctx): Promise<Path | undefined> {
