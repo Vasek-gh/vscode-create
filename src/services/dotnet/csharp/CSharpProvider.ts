@@ -29,7 +29,7 @@ export class CSharpProvider implements ActionProvider, TemplateVariablesProvider
         logger: Logger,
         private readonly config: CSharpConfig,
         private readonly csprojFile: Path,
-        private readonly fsService: FileSystemService, // todo kill это только для чтения файла
+        private readonly fsService: FileSystemService, // todo kill to decouple the code for dotnet from the extension code, it will be necessary to remake it into its own class for reading files
         private readonly actionFactory: ActionFactory,
     ) {
         this.logger = logger.create(this);
@@ -69,17 +69,17 @@ export class CSharpProvider implements ActionProvider, TemplateVariablesProvider
         const csprojDir = this.csprojFile.getDirectory();
         let extensionInfos = this.getCurrentExtensionInfo(context, csprojDir);
 
-        // в текущем пусто попробуем найти в родителе
+        // in the current empty let's try to find in the parent
         if (extensionInfos.length === 0) {
             extensionInfos = this.getParentExtensionInfo(context, csprojDir);
         }
 
-        // в родителе пусто попробуем найти в братьях
+        // there is nothing in the parent, let's try to find it in the siblings
         if (extensionInfos.length === 0) {
             extensionInfos = this.getLevelExtensionInfo(context, FileLevel.Siblings);
         }
 
-        // если ни чего не нашли считаем
+        // if we didn't find anything, we assume that this is a folder with a project
         if (extensionInfos.length === 0) {
             extensionInfos = [{
                 value: ".cs",
