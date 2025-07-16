@@ -5,7 +5,6 @@ import { Logger } from "../tools/Logger";
 import { ActionFactory } from "../actions/ActionFactory";
 import { ProvidersFactory } from "@src/providers/ProvidersFactory";
 import { ContextFilesImpl } from "./ContextFilesImpl";
-import { ActionProvider } from "@src/providers/ActionProvider";
 import { CommandAction } from "@src/actions/CommandAction";
 import { SuggestionAction } from "@src/actions/SuggestionAction";
 import { Utils } from "@src/tools/Utils";

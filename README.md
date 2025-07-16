@@ -1,5 +1,7 @@
 # vscode-create(dev branch)
 
+![sample1](./docs/images/readme.gif)
+
 ## Overview
 
 **Vs Code Create** is a simple extension for quickly creating files and folders in VS Code with template support

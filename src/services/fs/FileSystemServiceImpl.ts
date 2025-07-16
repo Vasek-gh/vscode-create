@@ -28,6 +28,14 @@ export class FileSystemServiceImpl implements FileSystemService {
         return this.internalStat(path.uri);
     }
 
+    public async createDir(path: Path): Promise<void> {
+        if (!path.isDirectory()) {
+            throw new Error(`Path ${path} is not directory`);
+        }
+
+        await vscode.workspace.fs.createDirectory(path.uri);
+    }
+
     public async readTextFile(path: Path): Promise<string | undefined> {
         if (!path.isFile()) {
             throw new Error(`Path ${path} is not file`);
@@ -49,10 +57,6 @@ export class FileSystemServiceImpl implements FileSystemService {
 
             return undefined;
         }
-    }
-
-    public async createDir(path: Path): Promise<void> {
-        await vscode.workspace.fs.createDirectory(path.uri);
     }
 
     private async internalStat(uri: vscode.Uri): Promise<vscode.FileStat | undefined> {

@@ -37,7 +37,7 @@ export class RunOnExplorerCommand {
                 return;
             }
 
-            var path = await fsService.getPath(file);
+            const path = await fsService.getPath(file);
 
             await wizard.show(path);
         }));

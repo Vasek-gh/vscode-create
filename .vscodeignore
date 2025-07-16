@@ -1,11 +1,12 @@
 .github/**
 .vscode/**
 .vscode-test/**
-coverage/**
-tests/**
-out/**
 node_modules/**
+out/**
+docs/**
 src/**
+tests/**
+coverage/**
 
 .gitignore
 .vscode-test.*
