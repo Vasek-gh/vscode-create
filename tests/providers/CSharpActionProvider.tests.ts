@@ -45,7 +45,7 @@ suite("CSharpProvider", () => {
 
         const csprojVar = (await provider.getTemplateVariables(context))[VarsNames.csproj];
 
-        assert.strictEqual(csprojVar.namespace, libProjFile.getFileName(true));
+        assert.strictEqual(csprojVar.namespace, libProjFile.getBaseName(true));
     });
 
     test("Namesapce detect from RootNamespace", async () => {

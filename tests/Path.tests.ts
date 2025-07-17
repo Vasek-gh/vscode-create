@@ -19,8 +19,8 @@ suite("Path", () => {
         assert.strictEqual(path.getDirectory().fullPath, dir.fullPath);
         assert.strictEqual(path.getParentDirectory().fullPath, dir.fullPath);
         assert.strictEqual(path.getRelative(dir), filename);
-        assert.strictEqual(path.getFileName(false), filename);
-        assert.strictEqual(path.getFileName(true), basename);
+        assert.strictEqual(path.getBaseName(false), filename);
+        assert.strictEqual(path.getBaseName(true), basename);
         assert.strictEqual(path.getExtension(false), "." + extension);
         assert.strictEqual(path.getExtension(true), extension);
 
@@ -42,8 +42,8 @@ suite("Path", () => {
         assert.strictEqual(path.getDirectory().fullPath, dir.appendDir(dirName).fullPath);
         assert.strictEqual(path.getParentDirectory().fullPath, dir.fullPath);
         assert.strictEqual(path.getRelative(dir), dirName);
-        assert.strictEqual(path.getFileName(false), dirName);
-        assert.strictEqual(path.getFileName(true), dirName);
+        assert.strictEqual(path.getBaseName(false), dirName);
+        assert.strictEqual(path.getBaseName(true), dirName);
         assert.strictEqual(path.getExtension(false), "");
         assert.strictEqual(path.getExtension(true), "");
         assert.strictEqual(path.appendDir("qwerty").isFile(), false);
@@ -124,16 +124,6 @@ suite("Path", () => {
     }
 
     function getExtensionDir(): Path {
-        const extension = vscode.extensions.getExtension(new ExtensionMock().id); // todo get from mock
-        if (!extension) {
-            assert.ok(false, `extension is emtpy: ${extension}`);
-        }
-
-        const extensionUri = extension.extensionUri;
-        if (!extensionUri) {
-            assert.ok(false, `extensionUri is emtpy: ${extensionUri}`);
-        }
-
-        return Path.fromDir(extensionUri);
+        return ExtensionMock.instance.extensionDir;
     }
 });

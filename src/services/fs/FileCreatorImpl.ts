@@ -55,7 +55,7 @@ export class FileCreatorImpl implements FileCreator {
         }
 
         const existsList = filesInfo.filter(fi => fi.exists)
-            .map(fi => `    ${fi.path.getFileName()}`)
+            .map(fi => `    ${fi.path.getBaseName()}`)
             .join("\n");
 
         if (existsList) {
@@ -122,7 +122,7 @@ export class FileCreatorImpl implements FileCreator {
 
         const result: FileInfo[] = [];
         const directory = file.getDirectory();
-        const baseFilename: string = file.getFileName(true);
+        const baseFilename: string = file.getBaseName(true);
         const items = templateConfig.template;
         for (const item of items) {
             if (!item.extension) {

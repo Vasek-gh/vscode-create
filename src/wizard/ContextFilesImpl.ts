@@ -29,7 +29,7 @@ export class ContextFilesImpl implements ContextFiles {
         }
 
         const regExp = new RegExp(pattern);
-        return files.filter(f => regExp.test(f.getFileName()));
+        return files.filter(f => regExp.test(f.getBaseName()));
     }
 
     private levelToIndex(level: number | FileLevel): number | undefined {

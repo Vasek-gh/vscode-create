@@ -14,25 +14,22 @@ interface QuickPickItem extends vscode.QuickPickItem {
     execute(ctx: WizardContext): Promise<Path | undefined>;
 }
 
-// todo
-function debounce<TParams extends any[]>(
-    func: (...args: TParams) => any,
-    timeout: number,
-): (...args: TParams) => void {
-    let timer: NodeJS.Timeout;
-    return (...args: TParams) => {
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-            func(...args);
-        }, timeout);
+function debounce<T extends (...args: any[]) => any>(
+    func: T,
+    delay: number
+): (...args: Parameters<T>) => void {
+    let timeout: ReturnType<typeof setTimeout> | null = null;
+
+    return function (this: ThisParameterType<T>, ...args: Parameters<T>): void {
+        if (timeout) {
+            clearTimeout(timeout);
+        }
+
+        timeout = setTimeout(() => {
+            func.apply(this, args);
+        }, delay);
     };
 }
-
-function test(logger: Logger, message: string): void {
-    logger.info(message);
-}
-
-const debouncedTest = debounce(test, 300);
 
 export class Wizard implements vscode.Disposable {
     private readonly logger: Logger;
@@ -47,6 +44,7 @@ export class Wizard implements vscode.Disposable {
         private readonly contextBuilder: ContextBuilder,
     ) {
         this.logger = logger.create(this);
+        this.applyValue = debounce(this.applyValue, 300);
     }
 
     public dispose(): void {
@@ -69,12 +67,12 @@ export class Wizard implements vscode.Disposable {
     public async accept(hide: boolean, keepFocus: boolean): Promise<void> {
         this.logger.trace(`Accept hide: ${hide} keepFocus: ${keepFocus} `);
         if (!this.ctx) {
-            this.logger.error("Accepting when no context"); // todo show error
+            this.logger.error("Accepting when no context");
             return;
         }
 
         if (!this.quickPick) {
-            this.logger.error("Accepting when no quick pick"); // todo show error
+            this.logger.error("Accepting when no quick pick");
             return;
         }
 
@@ -114,7 +112,7 @@ export class Wizard implements vscode.Disposable {
 
         const rootDir = Utils.getRootDirectory(path);
         if (!rootDir) {
-            this.logger.error(`Current path is outside workspace: ${path}`); // todo show error
+            this.logger.error(`Current path is outside workspace: ${path}`);
             return;
         }
 
@@ -128,7 +126,6 @@ export class Wizard implements vscode.Disposable {
         this.quickPick.title = `New in: ${relativePath}`;
         this.quickPick.placeholder = "Start typing a file name or filter";
         this.quickPick.keepScrollPosition = true;
-        this.quickPick.ignoreFocusOut = true; // todo kill
         (this.quickPick as any).sortByLabel = false;
 
         this.quickPick.onDidHide(() => {
@@ -138,8 +135,7 @@ export class Wizard implements vscode.Disposable {
 
         this.quickPick.onDidAccept(async () => {
             this.logger.trace("OnDidAccept");
-            await this.accept(true, false); // todo restore
-            // await this.accept(false, false);
+            await this.accept(true, false);
         });
 
         this.quickPick.onDidChangeValue((value) => {
@@ -147,6 +143,10 @@ export class Wizard implements vscode.Disposable {
         });
 
         this.quickPick.value = value;
+        if (value === "") {
+            this.applyValue(value);
+        }
+
         this.quickPick.show();
 
         this.logger.trace("QuickPick opened");
@@ -154,8 +154,6 @@ export class Wizard implements vscode.Disposable {
 
     private applyValue(input: string): void {
         if (this.ctx && this.quickPick) {
-            debouncedTest(this.logger, "ddd");
-            this.logger.info("applyValue"); // todo kill
             const inputInfo = InputInfo.parse(input);
             this.quickPick.items = this.createItems(inputInfo);
             this.quickPick.title = this.ctx.currentPath.toString();

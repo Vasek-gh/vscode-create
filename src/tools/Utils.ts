@@ -26,8 +26,8 @@ export class Utils {
         const dir = file.getDirectory();
 
         return {
-            fullName: file.getFileName(false),
-            baseName: file.getFileName(true),
+            fullName: file.getBaseName(false),
+            baseName: file.getBaseName(true),
             fullDir: dir.getRelative(baseDir),
             baseDir: dir.getRelative(dir.getParentDirectory())
         };
@@ -50,15 +50,4 @@ export class Utils {
         return rows.slice(startIndex, endIndex + 1).map(r => r.substring(whiteSpaceCount).trimEnd())
             .join("\n");
     }
-
-    /* todo kill
-    public static groupBy<T, TKey>(items: T[], predicate: (item: T) => TKey): Map<TKey, T[]> {
-        return items.reduce<Map<TKey, T[]>>((map, item, index, array): Map<TKey, T[]> => {
-            const key = predicate(item);
-            map.set(key, map.get(key) || []);
-            map.get(key)?.push(item);
-            return map;
-        }, new Map<TKey, T[]>());
-    }
-    */
 }

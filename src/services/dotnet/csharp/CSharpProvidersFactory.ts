@@ -35,7 +35,7 @@ export class CSharpProvidersFactory implements ProvidersFactory {
     }
 
     public getLevel(context: Context): Promise<number | undefined> {
-        if (!this.config.enableAll) {
+        if (!this.config.isEnableAll()) {
             return Promise.resolve(undefined);
         }
 
@@ -43,7 +43,7 @@ export class CSharpProvidersFactory implements ProvidersFactory {
     }
 
     public createActionProvider(context: Context): Promise<ActionProvider | undefined> {
-        if (!this.config.enableAll) {
+        if (!this.config.isEnableAll()) {
             return Promise.resolve(undefined);
         }
 
@@ -51,7 +51,7 @@ export class CSharpProvidersFactory implements ProvidersFactory {
     }
 
     public createTemplateVariablesProvider(context: Context): Promise<TemplateVariablesProvider | undefined> {
-        if (!this.config.enableAll) {
+        if (!this.config.isEnableAll()) {
             return Promise.resolve(undefined);
         }
 

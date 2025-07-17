@@ -17,7 +17,6 @@ import { Extension } from "./tools/Extension";
 import { FileCreator } from "./services/FileCreator";
 import { Path } from "./tools/Path";
 import { CSharpProvidersFactory } from "./services/dotnet/csharp/CSharpProvidersFactory";
-import { TestCommand } from "./commands/TestCommand";
 import { GenericActionProvider } from "./providers/GenericActionProvider";
 import { CommonActionProvider } from "./providers/CommonActionProvider";
 
@@ -95,8 +94,6 @@ class Host implements Extension, vscode.Disposable {
             new RunOnExplorerCommand(this.logger, this, extensionContext, fsService, wizard);
             new WizardAcceptMoveFocusCommand(this, extensionContext, wizard);
             new WizardAcceptKeepFocusCommand(this, extensionContext, wizard);
-
-            new TestCommand(this.logger, this, extensionContext);
 
             this.logger.info("Initialization complete");
         }

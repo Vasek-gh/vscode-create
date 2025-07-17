@@ -27,11 +27,6 @@ todo
             "default": true,
             "description": "Enable C# features"
         },
-        "vscode-create.csharp.enableAutoInterfaceDetection": {
-            "type": "boolean",
-            "default": true,
-            "description": "Enables interface autodetection for files with the \"I\" prefix"
-        },
         "vscode-create.extensions": {
             "type": "object",
             "description": "Sets custom extensions configuration",

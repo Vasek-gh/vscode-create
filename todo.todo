@@ -1,17 +1,4 @@
-0.8.0
-    Test context builder
-    Test commands
-    Test wizard ???
-    Test FileSystemServiceImpl
-    Remove readTextFile from FileSystemService
-0.9.0
-    Filename templates
-    fs: readonly stat not work https://github.com/microsoft/vscode-discussions/discussions/673
-1.0.0
-    C#: move all in separate extension
-1.1.0
-    ActionProvider from configure
-    TemplateVariablesProvider from configure
--.-.-
-    fs: check virual fs ???
-    Wizard: Split the extension into core and UI to support web browser ???
+Filename templates
+C#: move all in separate extension
+ActionProvider from configure
+TemplateVariablesProvider from configure

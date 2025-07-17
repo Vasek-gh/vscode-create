@@ -1,6 +1,7 @@
 import * as cp from "child_process";
 import { Logger } from "./Logger";
 
+// todo kill ???
 export class Shell {
     public constructor(
         private readonly logger: Logger
@@ -15,7 +16,7 @@ export class Shell {
                     command,
                     {
                         cwd: cwd,
-                        shell: "powershell.exe" // todo check os
+                        shell: "powershell.exe"
                     },
                     (err, out) => {
                         return resolve([err, out]);

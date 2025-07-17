@@ -40,7 +40,7 @@ export class CSharpProvider implements ActionProvider, TemplateVariablesProvider
     }
 
     public async getSuggestions(context: Context): Promise<SuggestionAction[]> {
-        if (!this.config.enableAll.get()) {
+        if (!this.config.isEnableAll()) {
             return [];
         }
 
@@ -53,7 +53,7 @@ export class CSharpProvider implements ActionProvider, TemplateVariablesProvider
 
     public async getTemplateVariables(context: Context): Promise<{ [key: string]: any }> {
         const result: { [key: string]: any } = {};
-        if (!this.config.enableAll.get()) {
+        if (!this.config.isEnableAll()) {
             return result;
         }
 
@@ -136,7 +136,7 @@ export class CSharpProvider implements ActionProvider, TemplateVariablesProvider
         }
 
         for (const file of files) {
-            const filename = file.getFileName();
+            const filename = file.getBaseName();
 
             let extension = FileExtensions.csExtensions.find(e => filename.endsWith(e));
             const isPrimary = extension !== undefined;
@@ -208,6 +208,6 @@ export class CSharpProvider implements ActionProvider, TemplateVariablesProvider
 
         return match !== null
             ? match[1]
-            : this.csprojFile.getFileName(true);
+            : this.csprojFile.getBaseName(true);
     }
 }

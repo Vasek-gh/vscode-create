@@ -121,11 +121,6 @@
                     "default": true,
                     "description": "Enable C# features"
                 },
-                "vscode-create.csharp.enableAutoInterfaceDetection": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Enables interface autodetection for files with the \"I\" prefix"
-                },
                 "vscode-create.extensions": {
                     "type": "object",
                     "description": "Sets custom extensions configuration",
@@ -134,6 +129,7 @@
                         "type": "object",
                         "properties": {
                             "default": {
+                                "description": "A template that will be selected automatically if the template is not specified explicitly during creation",
                                 "type": "string"
                             }
                         },
@@ -147,6 +143,7 @@
                                     "type": "object"
                                 },
                                 "template": {
+                                    "description": "template file name",
                                     "anyOf": [
                                         {
                                             "type": "string"
@@ -227,9 +224,6 @@
                     }
                 },
                 "ts": {
-                    "react": {
-                        "template": "ts.react.hbs"
-                    },
                     "class": {
                         "template": "ts.type.hbs",
                         "vars": {

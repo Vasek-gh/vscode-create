@@ -57,7 +57,7 @@ suite("FileCreator", () => {
 
     test("Template from the extension found", async () => {
         const content = await createFile("extension.fct", "extensionTemplate");
-        assert.strictEqual(content, "todo");
+        assert.strictEqual(content, "package Test\r\n\r\n");
     });
 
     test("Template from absolute path found", async () => {

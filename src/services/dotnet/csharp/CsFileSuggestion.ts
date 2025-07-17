@@ -60,6 +60,6 @@ export class CsFileSuggestion implements SuggestionAction {
     }
 
     private isInterface(filename: string): boolean {
-        return filename.length > 1 && filename[0] === "I" && filename[0] === filename[0].toUpperCase(); // todo check
+        return filename.length > 1 && filename[0] === "I" && filename[1] === filename[1].toUpperCase();
     }
 }

@@ -34,12 +34,10 @@ export class Path {
         return new Path(uri, vscode.FileType.File);
     }
 
-    // todo kill ??
     public get length(): number {
         return this.uri.toString().length;
     }
 
-    // todo kill ??
     public get fullPath(): string {
         return this.uri.toString();
     }
@@ -88,13 +86,13 @@ export class Path {
         );
     }
 
-    public getRelative(base: Path): string { // todo null if false ???
+    public getRelative(base: Path): string {
         return !this.fullPath.startsWith(base.fullPath)
             ? ""
             : this.fullPath.substring(base.fullPath.length + 1);
     }
 
-    public getFileName(withoutExtension: boolean = false): string { // todo rename to basename
+    public getBaseName(withoutExtension: boolean = false): string {
         const suffix = withoutExtension
             ? this.getExtension()
             : "";

@@ -14,7 +14,7 @@
             "@tests/*": ["./tests/*"],
         },
 		"strict": true,
-        "sourceMap": true, // todo not work
+        "sourceMap": true, // todo not work?
 		"noImplicitReturns": true,
 	}
 }

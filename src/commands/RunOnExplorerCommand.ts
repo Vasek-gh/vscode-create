@@ -50,12 +50,12 @@ export class RunOnExplorerCommand {
         const clipboardText = await vscode.env.clipboard.readText();
         await vscode.env.clipboard.writeText(originalClipboard);
 
-        var selectedItems = clipboardText.split("\n");
+        const selectedItems = clipboardText.split("\n");
         if (selectedItems.length === 0) {
             return undefined;
         }
 
-        return RunOnExplorerCommand.getUri(selectedItems[0]);
+        return RunOnExplorerCommand.getUri(selectedItems[0].trimEnd());
     }
 
     private static getUri(filename: string): vscode.Uri {
