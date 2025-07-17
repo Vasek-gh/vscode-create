@@ -11,6 +11,7 @@ export default defineConfig({
         files: "./out/tests/**/*.tests.js",
         srcDir: fixedCwd,
         workspaceFolder: "out/tests/project/project.code-workspace",
+        version: "1.97.0"
     }],
     coverage: {
         includeAll: true,
