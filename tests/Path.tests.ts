@@ -53,17 +53,6 @@ suite("Path", () => {
         assert.doesNotThrow(() => path.appendFile("qwerty.txt"), Error);
     });
 
-    test("Driver case", () => {
-        const uriUpper = vscode.Uri.file("C:\\somedir\\qwerty.txt");
-        const pathUpper = Path.fromFile(uriUpper);
-        const uriLower = vscode.Uri.file("c:\\somedir\\qwerty.txt");
-        const pathLower = Path.fromFile(uriLower);
-
-        assert.notStrictEqual(uriLower.path, uriUpper.path);
-
-        assert.ok(pathLower.isSame(pathUpper), "isSame");
-    });
-
     test("Query and fragment unsupported", () => {
         assert.throws(
             () =>
@@ -87,6 +76,19 @@ suite("Path", () => {
             Error
         );
     });
+
+    if (process.platform === "win32") {
+        test("Driver case", () => {
+            const uriUpper = vscode.Uri.file("C:\\somedir\\qwerty.txt");
+            const pathUpper = Path.fromFile(uriUpper);
+            const uriLower = vscode.Uri.file("c:\\somedir\\qwerty.txt");
+            const pathLower = Path.fromFile(uriLower);
+
+            assert.notStrictEqual(uriLower.path, uriUpper.path);
+
+            assert.ok(pathLower.isSame(pathUpper), "isSame");
+        });
+    }
 
     const isSameTestCases = [
         {

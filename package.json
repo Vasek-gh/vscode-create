@@ -27,7 +27,7 @@
         "lint": "eslint ./{src,tests}/** --max-warnings 0",
         "lint-check": "eslint ./{src,tests}/** --max-warnings 100",
 
-        "pretest": "tsc -p . --outDir out && tsc-alias --outDir out && copyfiles -a tests/project/**/*.* out/",
+        "pretest": "tsc -p . --outDir out && tsc-alias --outDir out && copyfiles -a \"tests/project/**/*.*\" out/",
         "test": "vscode-test",
         "coverage": "vscode-test --coverage",
 
@@ -45,7 +45,7 @@
         "@stylistic/eslint-plugin": "^4.4.1",
         "@types/mocha": "^10.0.10",
         "@types/node": "20.x",
-        "@types/vscode": "^1.99.0",
+        "@types/vscode": "^1.97.0",
         "@typescript-eslint/eslint-plugin": "^8.31.1",
         "@typescript-eslint/parser": "^8.31.1",
         "@vscode/test-cli": "^0.0.10",
