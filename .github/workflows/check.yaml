@@ -8,14 +8,14 @@ on:
 
 jobs:
   Build:
-    name: Build ${{ matrix.os }}
+    name: Check ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
         os: [
           ubuntu-latest,
-          #windows-latest todo too slow
+          windows-latest
           #macos-latest todo fix lint problem
         ]
 
