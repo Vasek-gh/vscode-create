@@ -46,7 +46,7 @@ jobs:
           echo "beforeTestRun=xvfb-run -a" >> $GITHUB_OUTPUT
 
       - name: Test
-        run: echo ${{ steps.prepare.outputs.beforeTestRun }}
+        run: echo "${{ steps.prepare.outputs.beforeTestRun }}"
 
       - name: Install
         run: npm i
