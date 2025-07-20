@@ -29,7 +29,7 @@ export class CSharpProvider implements ActionProvider, TemplateVariablesProvider
         logger: Logger,
         private readonly config: CSharpConfig,
         private readonly csprojFile: Path,
-        private readonly fsService: FileSystemService, // todo kill to decouple the code for dotnet from the extension code, it will be necessary to remake it into its own class for reading files
+        private readonly fsService: FileSystemService,
         private readonly actionFactory: ActionFactory,
     ) {
         this.logger = logger.create(this);

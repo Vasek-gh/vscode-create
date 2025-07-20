@@ -1,9 +1,7 @@
 import * as vscode from "vscode";
 import * as assert from "assert";
 import { Path } from "@src/tools/Path";
-import { LoggerMock } from "@tests/mocks/LoggerMock";
 import { TestsUtils } from "@tests/TestsUtils";
-import { FileSystemServiceImpl } from "@src/services/fs/FileSystemServiceImpl";
 import { ContextFilesImpl } from "@src/wizard/ContextFilesImpl";
 import { ContextFiles } from "@src/context/ContextFiles";
 import { FileLevel } from "@src/context/FileLevel";
