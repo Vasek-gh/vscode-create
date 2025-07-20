@@ -2,6 +2,7 @@ Filename templates
 ActionProvider from configure
 TemplateVariablesProvider from configure
 
+
 keybindings
 {
     "command": "vscode-create.accept-keep-focus",
