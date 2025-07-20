@@ -10,7 +10,8 @@ export default defineConfig({
     tests: [{
         files: "./out/tests/**/*.tests.js",
         srcDir: fixedCwd,
-        workspaceFolder: "out/tests/project/project.code-workspace"
+        workspaceFolder: "out/tests/project/project.code-workspace",
+        launchArgs: [ "disable-hardware-acceleration" ]
     }],
     coverage: {
         includeAll: true,
