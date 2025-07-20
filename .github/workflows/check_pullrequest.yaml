@@ -37,23 +37,25 @@ jobs:
           path: node_modules
           key: node_modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
-      - name: Configure environment
+      - name: Prepare
+        id: prepare
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
           /usr/bin/Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
           echo ">>> Started xvfb"
+          echo "beforeTestRun=xvfb-run -a" >> $GITHUB_OUTPUT
 
-      - name: List global
-        run: npm list -g
-
-      - name: Install vsce
-        run: npm install -g @vscode/vsce
+      - name: Test
+        run: excho ${{ steps.prepare.outputs.beforeTestRun }}
 
       - name: Install
         run: npm i
 
       - name: Test
-        run: xvfb-run -a npm run test
+        run: ${{ steps.prepare.outputs.beforeTestRun }} npm run test
+
+      - name: Install vsce
+        run: npm install -g @vscode/vsce
 
       # - run: npm i
       # - run: npm run test
