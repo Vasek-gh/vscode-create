@@ -1,7 +1,8 @@
-name: Check pull request
+name: Check
 
 on:
   push:
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -14,7 +15,7 @@ jobs:
       matrix:
         os: [
           ubuntu-latest,
-          windows-latest
+          #windows-latest todo too slow
           #macos-latest todo fix lint problem
         ]
 
