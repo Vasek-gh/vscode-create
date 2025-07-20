@@ -1,0 +1,18 @@
+{
+    "vscode-create.extensions": {
+        "txt": {
+            "default": "proj1",
+            "proj1": {
+                "template": ""
+            }
+        },
+        "json": {
+            "object": {
+                "template": ">>{}"
+            },
+            "array": {
+                "template": ">>[]"
+            }
+        }
+    }
+}

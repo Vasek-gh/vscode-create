@@ -1,0 +1,242 @@
+{
+    "name": "vscode-create",
+    "displayName": "vscode-create",
+    "description": "Simple extension for quickly creating files and folders",
+    "version": "0.8.0",
+    "license": "MIT",
+    "publisher": "vs-marketplace-vasek",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Vasek-gh/vscode-create"
+    },
+    "main": "./dist/extension.js",
+    "engines": {
+        "vscode": "^1.97.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "keywords": [
+        "new",
+        "create",
+        "file",
+        "folder",
+        "project"
+    ],
+    "scripts": {
+        "lint": "eslint ./{src,tests}/** --max-warnings 0",
+        "lint-check": "eslint ./{src,tests}/** --max-warnings 100",
+
+        "pretest": "tsc -p . --outDir out && tsc-alias --outDir out && copyfiles -a \"tests/project/**/*.*\" out/",
+        "test": "vscode-test",
+        "coverage": "vscode-test --coverage",
+
+        "check-types": "tsc --noEmit",
+        "compile": "npm run check-types && npm run lint && node esbuild.js",
+        "package": "npm run check-types && npm run lint && node esbuild.js --production",
+        "vscode:prepublish": "npm run package",
+
+        "watch": "npm-run-all -p watch:*",
+        "watch:esbuild": "node esbuild.js --watch",
+        "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+        "watch-tests": "tsc -p . -w --outDir out"
+    },
+    "dependencies": {
+        "handlebars": "^4.7.8"
+    },
+    "devDependencies": {
+        "@stylistic/eslint-plugin": "^4.4.1",
+        "@types/mocha": "^10.0.10",
+        "@types/node": "20.x",
+        "@types/vscode": "^1.97.0",
+        "@typescript-eslint/eslint-plugin": "^8.31.1",
+        "@typescript-eslint/parser": "^8.31.1",
+        "@vscode/test-cli": "^0.0.10",
+        "@vscode/test-electron": "^2.5.2",
+        "copyfiles": "^2.4.1",
+        "esbuild": "^0.25.3",
+        "eslint": "^9.25.1",
+        "npm-run-all": "^4.1.5",
+        "tsc-alias": "^1.8.16",
+        "typescript": "^5.8.3"
+    },
+    "contributes": {
+        "commands": [
+            {
+                "command": "vscode-create.run-on-editor",
+                "title": "vscode-create: Run on editor",
+                "enablement": "editorTextFocus"
+            },
+            {
+                "command": "vscode-create.run-on-explorer",
+                "title": "vscode-create: Run on explorer",
+                "enablement": "filesExplorerFocus"
+            },
+            {
+                "command": "vscode-create.accept-keep-focus",
+                "title": "vscode-create: Accept and keep context",
+                "enablement": "vscode-create.wizard.active"
+            },
+            {
+                "command": "vscode-create.accept-move-focus",
+                "title": "vscode-create: Accept and move context",
+                "enablement": "vscode-create.wizard.active"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "vscode-create.run-on-editor",
+                "key": "ctrl+shift+a",
+                "when": "editorTextFocus"
+            },
+            {
+                "command": "vscode-create.run-on-explorer",
+                "key": "ctrl+shift+a",
+                "when": "filesExplorerFocus"
+            }
+        ],
+        "menus": {
+            "explorer/context": [
+                {
+                    "command": "vscode-create.run-on-explorer",
+                    "group": "navigation@1"
+                }
+            ]
+        },
+        "configuration": {
+            "title": "vscode new",
+            "properties": {
+                "vscode-create.csharp.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable C# features"
+                },
+                "vscode-create.extensions": {
+                    "type": "object",
+                    "description": "Sets custom extensions configuration",
+                    "scope": "resource",
+                    "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                            "default": {
+                                "description": "A template that will be selected automatically if the template is not specified explicitly during creation",
+                                "type": "string"
+                            }
+                        },
+                        "additionalProperties": {
+                            "type": "object",
+                            "properties": {
+                                "hidden": {
+                                    "type": "boolean"
+                                },
+                                "vars": {
+                                    "type": "object"
+                                },
+                                "template": {
+                                    "description": "template file name",
+                                    "anyOf": [
+                                        {
+                                            "type": "string"
+                                        },
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "extension": {
+                                                        "type": "string"
+                                                    },
+                                                    "template": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "extension",
+                                                    "template"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "template"
+                            ],
+                            "additionalProperties": false
+                        }
+                    }
+                }
+            }
+        },
+        "configurationDefaults": {
+            "vscode-create.extensions": {
+                "cs": {
+                    "default": "class",
+                    "class": {
+                        "template": "cs.type.hbs",
+                        "vars": {
+                            "csfile": {
+                                "type": "class"
+                            }
+                        }
+                    },
+                    "interface": {
+                        "template": "cs.type.hbs",
+                        "vars": {
+                            "csfile": {
+                                "type": "interface"
+                            }
+                        }
+                    },
+                    "record": {
+                        "template": "cs.type.hbs",
+                        "vars": {
+                            "csfile": {
+                                "type": "record"
+                            }
+                        }
+                    },
+                    "enum": {
+                        "template": "cs.type.hbs",
+                        "vars": {
+                            "csfile": {
+                                "type": "enum"
+                            }
+                        }
+                    },
+                    "struct": {
+                        "template": "cs.type.hbs",
+                        "vars": {
+                            "csfile": {
+                                "type": "struct"
+                            }
+                        }
+                    }
+                },
+                "ts": {
+                    "class": {
+                        "template": "ts.type.hbs",
+                        "vars": {
+                            "tsfile": {
+                                "type": "class"
+                            }
+                        }
+                    },
+                    "interface": {
+                        "template": "ts.type.hbs",
+                        "vars": {
+                            "tsfile": {
+                                "type": "interface"
+                            }
+                        }
+                    }
+                },
+                "go": {
+                    "empty": {
+                        "template": "go.hbs"
+                    }
+                }
+            }
+        }
+    }
+}

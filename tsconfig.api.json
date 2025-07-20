@@ -1,0 +1,23 @@
+{
+	"include": ["./src/api/Client.ts"],
+    "exclude": [
+        "./node_modules",
+        "./out_api/**"
+    ],
+    "compilerOptions": {
+        "paths": {
+            "@src/*": ["./src/*"],
+        },
+        "module": "es2022",
+        "moduleResolution": "node",
+        "target": "ES2022",
+        "lib": ["ES2022"],
+		"strict": true,
+		"noImplicitReturns": true,
+        "declaration": true,
+        "outFile": "./out_api/gg.d.ts",
+        //"outDir": "./out_api",
+        "allowSyntheticDefaultImports": true,
+        "emitDeclarationOnly": true
+	}
+}

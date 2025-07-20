@@ -1,0 +1,9 @@
+{{#if csproj}}
+namespace {{csproj.namespace}}{{replace (replace file.fullDir csproj.fullDir "") "/" "."}};
+{{else}}
+namespace {{replace file.fullDir "/" "."}};
+{{/if}}
+
+public {{denull csfile.type "class"}} {{file.baseName}}
+{
+}

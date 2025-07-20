@@ -1,0 +1,43 @@
+name: 'Build'
+description: ''
+runs:
+  using: "composite"
+  steps:
+    - name: Get last vscode release
+      id: vscode_last_release
+      shell: bash
+      run: |
+        echo "vscode_version=`curl --silent https://update.code.visualstudio.com/api/releases/stable | jq -r '.[0]'`" >> $GITHUB_OUTPUT
+
+    - uses: actions/cache@v4
+      with:
+        path: .vscode-test
+        key: vscode-test_${{ runner.os }}_${{ steps.vscode_last_release.outputs.vscode_version }}
+
+    - uses: actions/cache@v4
+      with:
+        path: node_modules
+        key: node_modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+    - name: Prepare xvfb
+      id: prepare_xvfb
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+      shell: bash
+      run: |
+        /usr/bin/Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+        echo ">>> Started xvfb"
+        echo "beforeTestRun=xvfb-run -a" >> $GITHUB_OUTPUT
+
+    - name: Install
+      shell: bash
+      run: npm i
+
+    - name: Test
+      shell: bash
+      run: ${{ steps.prepare_xvfb.outputs.beforeTestRun }} npm run test
+
+    - name: Package
+      shell: bash
+      run: |
+        npm install -g @vscode/vsce
+        vsce package

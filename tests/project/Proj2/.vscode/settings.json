@@ -1,0 +1,14 @@
+{
+    "files.readonlyInclude" : {
+        "readonly": true,
+        "readonly/**/*.*": true
+    },
+    "vscode-create.extensions": {
+        "txt": {
+            "default": "proj2",
+            "proj2": {
+                "template": ""
+            }
+        }
+    }
+}

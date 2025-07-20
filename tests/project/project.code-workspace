@@ -1,0 +1,78 @@
+{
+    "folders": [
+        {
+            "path": "Proj1"
+        },
+        {
+            "path": "Proj2"
+        },
+        {
+            "path": "CSharpProj"
+        }
+    ],
+    "settings": {
+        "vscode-create.extensions": {
+            "txt": {
+                "default": "ws",
+                "ws": {
+                    "template": "unit-test"
+                }
+            },
+            "fstu": {
+                "template1": {
+                    "template": "template1"
+                },
+                "template2": {
+                    "template": "template2"
+                },
+                "_template3": {
+                    "template": "template3"
+                },
+                "temp4": {
+                    "template": "template4"
+                }
+            },
+            "fstd": {
+                "default": "template2",
+                "template1": {
+                    "template": "template1"
+                },
+                "template2": {
+                    "template": "template2"
+                }
+            },
+            "fct": {
+                "nullTemplate": {
+
+                },
+                "emptyTemplate": {
+                    "template": ""
+                },
+                "proj1Template": {
+                    "template": "proj1.hbs"
+                },
+                "extensionTemplate": {
+                    "template": "go.hbs"
+                },
+                "workspaceTemplate": {
+                    "template": "Templates/ws.hbs"
+                },
+                "comlexTemplate": {
+                    "template": [
+                        {
+                            "extension": "fct.zxc",
+                            "template": ">>html"
+                        },
+                        {
+                            "extension": "fct.qwe",
+                            "template": ">>css"
+                        }
+                    ]
+                },
+                "varTemplate": {
+                    "template":  "vars.hbs"
+                }
+            }
+        }
+    }
+}

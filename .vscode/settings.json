@@ -1,0 +1,19 @@
+{
+    "files.exclude": {
+        "**/out": false,
+        "**/dist": false,
+        "**/coverage": false,
+        "**/.vscode-test": true,
+    },
+    "search.exclude": {
+        "**/out": true,
+        "**/dist": true,
+        "**/coverage": true,
+        "**/.vscode-test": true,
+        "**/node_modules/**": true
+    },
+    "files.readonlyInclude" : {
+        "**/node_modules/**": true
+    },
+    "typescript.tsc.autoDetect": "off",
+}

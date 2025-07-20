@@ -1,0 +1,118 @@
+classDiagram
+
+namespace tools {
+    class Path {
+    }
+}
+
+namespace actions {
+    class InputInfo {
+    }
+    class Action {
+        <<interface>>
+    }
+    class ActionFactory {
+        <<interface>>
+    }
+    class CommandAction {
+        <<interface>>
+    }
+    class SuggestionAction {
+        <<interface>>
+    }
+}
+
+namespace actions.common {
+    class FileSuggestion {
+    }
+    class FolderSuggestion {
+    }
+    class GenericExtensionSuggestion {
+    }
+    class ActionFactoryImpl {
+    }
+}
+
+namespace context {
+    class Context {
+        <<interface>>
+    }
+    class ContextFiles {
+        <<interface>>
+    }
+}
+
+namespace providers {
+    class ActionProvider {
+        <<interface>>
+    }
+    class ProvidersFactory {
+        <<interface>>
+    }
+    class TemplateVarsProvider {
+        <<interface>>
+    }
+    class CommonActionProvider {
+    }
+    class GenericActionProvider {
+    }
+}
+
+namespace services {
+    class FileCreator {
+        <<interface>>
+    }
+    class FileSystemService {
+        <<interface>>
+    }
+}
+
+namespace services.dotnet {
+    class CSharpProvider {
+
+    }
+}
+
+
+Action ..> Path
+Action ..> Context
+ActionFactory ..> SuggestionAction
+CommandAction ..> Action
+SuggestionAction ..> Action
+SuggestionAction ..> Path
+SuggestionAction ..> Context
+SuggestionAction ..> CommandAction
+SuggestionAction ..> InputInfo
+
+FileSuggestion ..> Path
+FileSuggestion ..> Context
+FileSuggestion ..> InputInfo
+FileSuggestion ..> CommandAction
+FileSuggestion ..> SuggestionAction
+FileSuggestion ..> FileCreator
+
+FolderSuggestion ..> Path
+FolderSuggestion ..> Context
+FolderSuggestion ..> InputInfo
+FolderSuggestion ..> CommandAction
+FolderSuggestion ..> SuggestionAction
+FolderSuggestion ..> FileSystemService
+
+ActionProvider ..> Context
+ActionProvider ..> CommandAction
+ActionProvider ..> SuggestionAction
+
+ProvidersFactory ..> Context
+ProvidersFactory ..> ActionProvider
+
+Context ..> Path
+Context ..> ContextFiles
+ContextFiles ..> Path
+
+CommonActionProvider ..|> ActionProvider
+CommonActionProvider ..|> ProvidersFactory
+CommonActionProvider ..> FileCreator
+
+CSharpProvider ..|> ActionProvider
+CSharpProvider ..|> TemplateVarsProvider
+
