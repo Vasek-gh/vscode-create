@@ -10,8 +10,7 @@ export default defineConfig({
     tests: [{
         files: "./out/tests/**/*.tests.js",
         srcDir: fixedCwd,
-        workspaceFolder: "out/tests/project/project.code-workspace",
-        version: "1.97.0"
+        workspaceFolder: "out/tests/project/project.code-workspace"
     }],
     coverage: {
         includeAll: true,

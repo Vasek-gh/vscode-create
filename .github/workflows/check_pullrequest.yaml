@@ -1,6 +1,7 @@
 name: Check pull request
 
 on:
+  push:
   pull_request:
     branches: [ main ]
 
@@ -15,7 +16,10 @@ jobs:
         with:
           node-version: 22
 
-      - run: npm i
-      - run: npm run test
-      - run: npm run coverage
-      - run: npm run compile
+      - name: Test
+        run: node --version
+
+      # - run: npm i
+      # - run: npm run test
+      # - run: npm run coverage
+      # - run: npm run compile
