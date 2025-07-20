@@ -53,7 +53,7 @@ jobs:
         run: npm i
 
       - name: Test
-        run: npm run test
+        run: xvfb-run -a npm run test
 
       # - run: npm i
       # - run: npm run test
