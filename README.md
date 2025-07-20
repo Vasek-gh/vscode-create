@@ -1,4 +1,4 @@
-# vscode-create(dev branch)
+# vscode-create
 
 ![sample1](./docs/images/readme.gif)
 
