@@ -1,7 +1,7 @@
 {
     "name": "vscode-create",
-    "displayName": "vscode create",
-    "description": "todo",
+    "displayName": "vscode-create",
+    "description": "Simple extension for quickly creating files and folders",
     "version": "0.8.0",
     "license": "MIT",
     "publisher": "vs-marketplace-vasek",

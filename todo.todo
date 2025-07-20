@@ -1,3 +1,15 @@
 Filename templates
 ActionProvider from configure
 TemplateVariablesProvider from configure
+
+keybindings
+{
+    "command": "vscode-create.accept-keep-focus",
+    "key": "ctrl+n",
+    "when": "vscode-create.wizard.active"
+},
+{
+    "command": "vscode-create.accept-move-focus",
+    "key": "ctrl+shift+n",
+    "when": "vscode-create.wizard.active"
+}
