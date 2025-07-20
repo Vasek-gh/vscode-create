@@ -28,12 +28,15 @@ runs:
         echo "beforeTestRun=xvfb-run -a" >> $GITHUB_OUTPUT
 
     - name: Install
+      shell: bash
       run: npm i
 
     - name: Test
+      shell: bash
       run: ${{ steps.prepare_xvfb.outputs.beforeTestRun }} npm run test
 
     - name: Package
+      shell: bash
       run: |
         npm install -g @vscode/vsce
         vsce package
