@@ -15,7 +15,7 @@ jobs:
       matrix:
         os: [
           ubuntu-latest,
-          windows-latest todo too slow
+          windows-latest
           #macos-latest todo fix lint problem
         ]
 
