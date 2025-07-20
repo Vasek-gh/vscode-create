@@ -25,8 +25,9 @@ jobs:
 
       - name: Get last vscode release
         id: vscode_last_release
+        shell: bash
         run: |
-          echo "vscode_version=`curl --silent https://update.code.visualstudio.com/api/releases/stable | jq -r '.[0]'`" >> "$GITHUB_OUTPUT"
+          echo "vscode_version=`curl --silent https://update.code.visualstudio.com/api/releases/stable | jq -r '.[0]'`" >> $GITHUB_OUTPUT
 
       - name: Test
         run: echo ${{ steps.vscode_last_release.outputs.vscode_version }}
