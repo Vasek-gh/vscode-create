@@ -20,6 +20,16 @@ jobs:
         with:
           node-version: 22
 
+      - uses: actions/cache@v4
+        with:
+          path: .vscode-test
+          key: vscode-test_${{ runner.os }}_${{ steps.vscode_last_release.outputs.vscode_version }}
+
+      - uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node_modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
       - name: Install vsce
         run: npm install -g @vscode/vsce
 
@@ -28,11 +38,6 @@ jobs:
         shell: bash
         run: |
           echo "vscode_version=`curl --silent https://update.code.visualstudio.com/api/releases/stable | jq -r '.[0]'`" >> $GITHUB_OUTPUT
-
-      - uses: actions/cache@v4
-        with:
-          path: .vscode-test
-          key: vscode-test_${{ runner.os }}_${{ steps.vscode_last_release.outputs.vscode_version }}
 
       - name: Install
         run: npm i
