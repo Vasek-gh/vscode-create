@@ -29,8 +29,16 @@ jobs:
         run: |
           echo "vscode_version=`curl --silent https://update.code.visualstudio.com/api/releases/stable | jq -r '.[0]'`" >> $GITHUB_OUTPUT
 
+      - uses: actions/cache@v4
+        with:
+          path: .vscode-test
+          key: vscode-test_${{ runner.os }}_${{ steps.vscode_last_release.outputs.vscode_version }}
+
+      - name: Install
+        run: npm i
+
       - name: Test
-        run: echo ${{ steps.vscode_last_release.outputs.vscode_version }}
+        run: npm run test
 
       # - run: npm i
       # - run: npm run test
