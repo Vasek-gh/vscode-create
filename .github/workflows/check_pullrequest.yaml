@@ -20,6 +20,12 @@ jobs:
         with:
           node-version: 22
 
+      - name: Get last vscode release
+        id: vscode_last_release
+        shell: bash
+        run: |
+          echo "vscode_version=`curl --silent https://update.code.visualstudio.com/api/releases/stable | jq -r '.[0]'`" >> $GITHUB_OUTPUT
+
       - uses: actions/cache@v4
         with:
           path: .vscode-test
@@ -32,12 +38,6 @@ jobs:
 
       - name: Install vsce
         run: npm install -g @vscode/vsce
-
-      - name: Get last vscode release
-        id: vscode_last_release
-        shell: bash
-        run: |
-          echo "vscode_version=`curl --silent https://update.code.visualstudio.com/api/releases/stable | jq -r '.[0]'`" >> $GITHUB_OUTPUT
 
       - name: Install
         run: npm i
