@@ -10,11 +10,34 @@ todo
 
 ### Templates
 
-todo
+The handlebars library is used for templates
 
 ## Configuration
 
-todo
+List of all available settings:
+
+| Section  | Description |
+| ------------- | ------------- |
+| vscode-create.extensions  | Sets custom extensions configuration. [More detailed description](#vscode-create.extensions) |
+| vscode-create.csharp.enable  | Enable C# features  |
+
+
+### vscode-create.extensions
+
+Configuration containing templates for different types of file extensions. Each element of this object contains a setting for a specific extension. The key is used to determine which extension the configuration is created for:
+```
+"vscode-create.extensions": {
+    "txt": {
+        // This section will be used to configure the txt extension
+    },
+    "json": {
+        // This section will be used to configure the json extension
+    }
+}
+```
+
+Each extension in turn has a list of templates that can be used to create a file.
+
 
 ### Schema
 
