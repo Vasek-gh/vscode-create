@@ -1,0 +1,43 @@
+
+<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" fill="#40404a" rx="135" ry="135"/>
+
+
+  <g stroke="#fb8f47" stroke-width="30" stroke-linecap="round" stroke-linejoin="round">
+     <path
+      fill="none"
+      d="
+        M 120.0,70.0
+        L 304.0,70.0
+        A 20,20,0,0,1,314,80
+        L314.0,158.0
+        A 20,20,0,0,0,324,168
+        L392.0,168.0
+        A 20,20,0,0,1,412,178
+        L412.0,432.0
+        A 20,20,0,0,1,392,442
+        L120.0,442.0
+        A 20,20,0,0,1,100,432
+        L100.0,80.0
+        A 20,20,0,0,1,120,70
+        Z
+        "
+    >
+    </path>
+
+    <line x1="310" y1="65" x2="415" y2="168" stroke-width="10"/>
+
+    <line x1="150" y1="230" x2="350" y2="230"/>
+    <line x1="150" y1="280" x2="330" y2="280"/>
+    <line x1="150" y1="330" x2="350" y2="330"/>
+    <line x1="150" y1="380" x2="320" y2="380"/>
+  </g>
+
+  <circle cx="412" cy="412" r="70" fill="#fb8f47"/>
+
+  <g stroke="#7be29b" stroke-width="30" stroke-linecap="round">
+    <line x1="372" y1="412" x2="452" y2="412"/>
+    <line x1="412" y1="372" x2="412" y2="452"/>
+  </g>
+
+</svg>

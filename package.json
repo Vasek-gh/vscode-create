@@ -5,6 +5,7 @@
     "version": "0.8.0",
     "license": "MIT",
     "publisher": "vs-marketplace-vasek",
+    "icon": "icon.png",
     "repository": {
         "type": "git",
         "url": "https://github.com/Vasek-gh/vscode-create"
