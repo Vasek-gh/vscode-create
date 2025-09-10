@@ -65,23 +65,21 @@
         "commands": [
             {
                 "command": "vscode-create.run-on-editor",
-                "title": "vscode-create: Run on editor",
-                "enablement": "editorTextFocus"
+                "title": "Create File",
+                "enablement": "editorTextFocus",
+                "category": "vscode-create"
             },
             {
-                "command": "vscode-create.run-on-explorer",
-                "title": "vscode-create: Run on explorer",
-                "enablement": "filesExplorerFocus"
+                "command": "vscode-create.run-on-explorer-at-root",
+                "title": "Create File",
+                "enablement": "filesExplorerFocus && explorerResourceIsRoot",
+                "category": "vscode-create"
             },
             {
-                "command": "vscode-create.accept-keep-focus",
-                "title": "vscode-create: Accept and keep context",
-                "enablement": "vscode-create.wizard.active"
-            },
-            {
-                "command": "vscode-create.accept-move-focus",
-                "title": "vscode-create: Accept and move context",
-                "enablement": "vscode-create.wizard.active"
+                "command": "vscode-create.run-on-explorer-at-resource",
+                "title": "Create File",
+                "enablement": "filesExplorerFocus && !explorerResourceIsRoot",
+                "category": "vscode-create"
             }
         ],
         "keybindings": [
@@ -91,16 +89,27 @@
                 "when": "editorTextFocus"
             },
             {
-                "command": "vscode-create.run-on-explorer",
+                "command": "vscode-create.run-on-explorer-at-root",
                 "key": "ctrl+shift+a",
-                "when": "filesExplorerFocus"
+                "when": "filesExplorerFocus && explorerResourceIsRoot"
+            },
+            {
+                "command": "vscode-create.run-on-explorer-at-resource",
+                "key": "ctrl+shift+a",
+                "when": "filesExplorerFocus && !explorerResourceIsRoot"
             }
         ],
         "menus": {
             "explorer/context": [
                 {
-                    "command": "vscode-create.run-on-explorer",
-                    "group": "navigation@1"
+                    "command": "vscode-create.run-on-explorer-at-root",
+                    "group": "navigation@1",
+                    "when": "filesExplorerFocus && explorerResourceIsRoot"
+                },
+                {
+                    "command": "vscode-create.run-on-explorer-at-resource",
+                    "group": "navigation@1",
+                    "when": "filesExplorerFocus && !explorerResourceIsRoot"
                 }
             ]
         },

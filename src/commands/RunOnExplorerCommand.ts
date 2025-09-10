@@ -7,6 +7,10 @@ import { Extension } from "@src/tools/Extension";
 import { Path } from "@src/tools/Path";
 
 export class RunOnExplorerCommand {
+    private readonly logger: Logger;
+    private readonly fsService: FileSystemService;
+    private readonly wizard: Wizard;
+
     public constructor(
         logger: Logger,
         extension: Extension,
@@ -14,33 +18,54 @@ export class RunOnExplorerCommand {
         fsService: FileSystemService,
         wizard: Wizard,
     ) {
-        logger = logger.create(this);
+        this.logger = logger.create(this);
+        this.fsService = fsService;
+        this.wizard = wizard;
 
-        extensionCtx.subscriptions.push(vscode.commands.registerCommand(`${extension.name}.run-on-explorer`, async (file: vscode.Uri | undefined, selectedFiles: vscode.Uri[]) => {
-            logger.trace("Execute");
+        extensionCtx.subscriptions.push(vscode.commands.registerCommand(`${extension.name}.run-on-explorer-at-root`, async () => {
+            this.logger.trace("Execute");
+            if (!vscode.workspace.workspaceFolders) {
+                this.logger.trace("Skipping because: Empty workspace");
+                return;
+            }
+
+            if (vscode.workspace.workspaceFolders.length !== 1) {
+                this.logger.trace("Skipping because: To many workspaces");
+                return;
+            }
+
+            await this.execute(vscode.workspace.workspaceFolders[0].uri);
+        }));
+
+        extensionCtx.subscriptions.push(vscode.commands.registerCommand(`${extension.name}.run-on-explorer-at-resource`, async (file: vscode.Uri | undefined, selectedFiles: vscode.Uri[]) => {
+            this.logger.trace("Execute");
 
             if (!file) {
-                logger.trace("Argument 'file' is not assigned. Trying to get it through workaround...");
+                this.logger.trace("Argument 'file' is not assigned. Trying to get it through workaround...");
                 file = await RunOnExplorerCommand.getSelectionFile();
                 selectedFiles = file ? [file] : [];
             }
 
             if (!file || selectedFiles.length > 1) {
-                logger.trace("Unable to determine where to create the file");
+                this.logger.trace("Unable to determine where to create the file");
                 return;
             }
 
-            logger.trace(`Command will be executed for ${file}`);
-            const pathError = Path.validate(file);
-            if (pathError) {
-                logger.error(pathError);
-                return;
-            }
-
-            const path = await fsService.getPath(file);
-
-            await wizard.show(path);
+            await this.execute(file);
         }));
+    }
+
+    private async execute(uri: vscode.Uri): Promise<void> {
+        this.logger.trace(`Command will be executed for ${uri}`);
+        const pathError = Path.validate(uri);
+        if (pathError) {
+            this.logger.error(pathError);
+            return;
+        }
+
+        const path = await this.fsService.getPath(uri);
+
+        await this.wizard.show(path);
     }
 
     // workaround for https://github.com/microsoft/vscode/issues/3553
