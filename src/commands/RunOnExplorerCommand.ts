@@ -23,7 +23,7 @@ export class RunOnExplorerCommand {
         this.wizard = wizard;
 
         extensionCtx.subscriptions.push(vscode.commands.registerCommand(`${extension.name}.run-on-explorer-at-root`, async () => {
-            this.logger.trace("Execute");
+            this.logger.trace("Execute at root");
             if (!vscode.workspace.workspaceFolders) {
                 this.logger.trace("Skipping because: Empty workspace");
                 return;
@@ -38,7 +38,7 @@ export class RunOnExplorerCommand {
         }));
 
         extensionCtx.subscriptions.push(vscode.commands.registerCommand(`${extension.name}.run-on-explorer-at-resource`, async (file: vscode.Uri | undefined, selectedFiles: vscode.Uri[]) => {
-            this.logger.trace("Execute");
+            this.logger.trace("Execute at resource");
 
             if (!file) {
                 this.logger.trace("Argument 'file' is not assigned. Trying to get it through workaround...");
