@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import os from "os";
 import { FileSystemService } from "@src/services/FileSystemService";
 import { Path } from "@src/tools/Path";
 import { Logger } from "@src/tools/Logger";
@@ -8,11 +9,18 @@ import { Logger } from "@src/tools/Logger";
 export class FileSystemServiceImpl implements FileSystemService {
     private readonly fileNotFound = vscode.FileSystemError.FileNotFound("dummy");
     private readonly logger: Logger;
+    private readonly eol?: string;
 
     public constructor(
-        logger: Logger
+        logger: Logger,
+        eol?: string
     ) {
         this.logger = logger.create(this);
+        this.eol = eol;
+    }
+
+    public getEol(): string {
+        return this.eol ?? os.EOL;
     }
 
     public async getPath(uri: vscode.Uri): Promise<Path> {

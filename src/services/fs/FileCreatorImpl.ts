@@ -36,10 +36,7 @@ export class FileCreatorImpl implements FileCreator {
 
     public async createByContent(file: Path, content: string): Promise<Path | undefined> {
         const workspaceEdit = new vscode.WorkspaceEdit();
-        workspaceEdit.createFile(file.uri, {
-            overwrite: true,
-            contents: Buffer.from(content)
-        });
+        this.createFile(workspaceEdit, file, content);
 
         const result = await this.createFiles(file, workspaceEdit);
 
@@ -75,15 +72,34 @@ export class FileCreatorImpl implements FileCreator {
         const workspaceEdit = new vscode.WorkspaceEdit();
         for (const fileInfo of filesInfo) {
             const fileBody = await this.getFileBody(ctx.rootDir, fileInfo, vars);
-            workspaceEdit.createFile(fileInfo.path.uri, {
-                overwrite: true,
-                contents: Buffer.from(fileBody)
-            });
+            this.createFile(workspaceEdit, fileInfo.path, fileBody);
         }
 
         const result = await this.createFiles(file, workspaceEdit);
 
         return result ? filesInfo[0].path : undefined;
+    }
+
+    private createFile(we: vscode.WorkspaceEdit, file: Path, content: string): void {
+        content = this.setOsLineEnding(content);
+        we.createFile(file.uri, {
+            overwrite: true,
+            contents: Buffer.from(content)
+        });
+    }
+
+    private setOsLineEnding(content: string): string {
+        var osEol = this.fsService.getEol();
+        var fileEol = this.getFileLineEnding(content);
+        return osEol === fileEol
+            ? content
+            : content.replaceAll(fileEol, osEol);
+    }
+
+    private getFileLineEnding(content: string): string {
+        return content.includes("\r\n")
+            ? "\r\n"
+            : "\n";
     }
 
     private async createFiles(file: Path, workspaceEdit: vscode.WorkspaceEdit): Promise<boolean> {

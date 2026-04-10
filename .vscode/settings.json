@@ -16,4 +16,5 @@
         "**/node_modules/**": true
     },
     "typescript.tsc.autoDetect": "off",
+    "js/ts.tsdk.path": "node_modules\\typescript\\lib",
 }

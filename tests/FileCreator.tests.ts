@@ -10,6 +10,7 @@ import { TestsUtils } from "@tests/TestsUtils";
 import { FileCreatorImpl } from "@src/services/fs/FileCreatorImpl";
 import { FileSystemServiceImpl } from "@src/services/fs/FileSystemServiceImpl";
 import { ContextMock } from "@tests/mocks/ContextMock";
+import { FileCreator } from "@src/services/FileCreator";
 
 suite("FileCreator", () => {
     const fsService = new FileSystemServiceImpl(
@@ -127,6 +128,50 @@ suite("FileCreator", () => {
         assert.strictEqual(rows[6], "vars_test_dir");
     });
 
+    test("Posix eol", async () => {
+        const fsService = new FileSystemServiceImpl(
+            LoggerMock.instance,
+            "\n"
+        );
+
+        const fileCreator = new FileCreatorImpl(
+            LoggerMock.instance,
+            ExtensionMock.instance,
+            fsService
+        );
+
+        assert.strictEqual(
+            await createFileByContent(fileCreator, "vars_test_dir/posix_posix.txt", "test\n\ntest"),
+            "test\n\ntest"
+        );
+        assert.strictEqual(
+            await createFileByContent(fileCreator, "vars_test_dir/posix_windows.txt", "test\r\n\r\ntest"),
+            "test\n\ntest"
+        );
+    });
+
+    test("Windows eol", async () => {
+        const fsService = new FileSystemServiceImpl(
+            LoggerMock.instance,
+            "\r\n"
+        );
+
+        const fileCreator = new FileCreatorImpl(
+            LoggerMock.instance,
+            ExtensionMock.instance,
+            fsService
+        );
+
+        assert.strictEqual(
+            await createFileByContent(fileCreator, "vars_test_dir/windows_posix.txt", "test\n\ntest"),
+            "test\r\n\r\ntest"
+        );
+        assert.strictEqual(
+            await createFileByContent(fileCreator, "vars_test_dir/windows_windows.txt", "test\r\n\r\ntest"),
+            "test\r\n\r\ntest"
+        );
+    });
+
     async function createFile(name: string, template: string): Promise<string> {
         const newFile = TestsUtils.assertIfNull(
             await fileCreator.create(contextMock, proj1Dir.appendFile(name), fctExtensionConfig[template])
@@ -137,6 +182,18 @@ suite("FileCreator", () => {
         );
 
         return content;
+    }
+
+    async function createFileByContent(fileCreator: FileCreator, name: string, content: string): Promise<string> {
+        const newFile = TestsUtils.assertIfNull(
+            await fileCreator.createByContent(proj1Dir.appendFile(name), content)
+        );
+
+        const result = TestsUtils.assertIfNull(
+            await fsService.readTextFile(newFile)
+        );
+
+        return result;
     }
 
     async function withMessageMock(overwrite: boolean, action: () => Promise<void>): Promise<void> {
