@@ -8,6 +8,7 @@ const fixedCwd = currentDir[0].toLowerCase() + currentDir.substring(1);
 
 export default defineConfig({
     tests: [{
+        version: "1.97.0",
         files: "./out/tests/**/*.tests.js",
         srcDir: fixedCwd,
         workspaceFolder: "out/tests/project/project.code-workspace",

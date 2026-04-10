@@ -3,6 +3,11 @@ import { Path } from "@src/tools/Path";
 
 export interface FileSystemService {
     /**
+     * Return the operating system-specific end-of-line marker.
+     */
+    getEol(): string;
+
+    /**
      * Create Path object from vscode.Uri.
      * If the path leads to a non-existent file or folder throw error.
      */
